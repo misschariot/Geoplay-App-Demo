@@ -2,17 +2,15 @@
 // CREATE PLAYER MARKER
 // ==================================================
 //
-// ENHANCED PLAYER MARKER:
+// PLAYER AVATAR MARKER
 //
 // - Existing Cloudflare R2 avatar remains unchanged.
-// - Stronger cyan Geoplay ring.
-// - Stronger glow.
-// - Clearly visible location point.
-// - Pulsing ground ring.
-// - Avatar stays comfortably visible when zooming in.
-// - Marker becomes slightly larger when zooming out.
-// - Inner visual wrapper handles scaling so MapLibre's
-//   geographic positioning remains unaffected.
+// - Avatar has a fixed screen size.
+// - Zooming IN never makes the avatar smaller.
+// - Zooming OUT allows a small size increase.
+// - Geographic position remains anchored to the
+//   player's actual location.
+// - Avatar visual scaling is handled explicitly.
 //
 // ==================================================
 
@@ -35,12 +33,7 @@ function geoplayMapCreatePlayerMarker()
 
 
     // --------------------------------------------------
-    // OUTER MAPLIBRE MARKER CONTAINER
-    // --------------------------------------------------
-    //
-    // MapLibre controls the position of this element.
-    // Do NOT apply visual scaling directly to it.
-    //
+    // MAPLIBRE MARKER CONTAINER
     // --------------------------------------------------
 
     var markerElement =
@@ -69,30 +62,22 @@ function geoplayMapCreatePlayerMarker()
         "none";
 
 
+    markerElement.style.overflow =
+        "visible";
+
+
     markerElement.style.boxSizing =
         "border-box";
 
 
     // --------------------------------------------------
-    // INNER VISUAL WRAPPER
-    // --------------------------------------------------
-    //
-    // This is what we scale when the map zoom changes.
-    //
-    // Keeping it separate from the MapLibre marker
-    // prevents our transform from interfering with the
-    // geographic positioning.
-    //
+    // FIXED-SIZE VISUAL CONTAINER
     // --------------------------------------------------
 
     var markerVisual =
         document.createElement(
             "div"
         );
-
-
-    markerVisual.id =
-        "geoplay-player-marker-visual";
 
 
     markerVisual.style.position =
@@ -115,20 +100,24 @@ function geoplayMapCreatePlayerMarker()
         "112px";
 
 
-    markerVisual.style.transformOrigin =
-        "50% 100%";
+    markerVisual.style.marginLeft =
+        "-48px";
 
 
     markerVisual.style.transform =
-        "translateX(-50%) scale(1)";
+        "none";
+
+
+    markerVisual.style.transformOrigin =
+        "50% 100%";
 
 
     markerVisual.style.pointerEvents =
         "none";
 
 
-    markerVisual.style.boxSizing =
-        "border-box";
+    markerVisual.style.overflow =
+        "visible";
 
 
     markerElement.appendChild(
@@ -307,6 +296,18 @@ function geoplayMapCreatePlayerMarker()
     height:
         58px;
 
+    min-width:
+        58px;
+
+    min-height:
+        58px;
+
+    max-width:
+        none;
+
+    max-height:
+        none;
+
     object-fit:
         contain;
 
@@ -317,6 +318,9 @@ function geoplayMapCreatePlayerMarker()
         translateX(
             -50%
         );
+
+    transform-origin:
+        center center;
 
     z-index:
         3;
@@ -864,95 +868,8 @@ function geoplayMapCreatePlayerMarker()
         );
 
 
-    // --------------------------------------------------
-    // ZOOM RESPONSIVE SCALING
-    // --------------------------------------------------
-    //
-    // Close zoom:
-    //     stays at 1.0
-    //
-    // Zooming OUT:
-    //     gradually grows.
-    //
-    // Zooming IN:
-    //     NEVER becomes smaller than 1.0.
-    //
-    // This keeps the avatar readable while still giving
-    // it more presence when the camera pulls back.
-    //
-    // --------------------------------------------------
-
-    function updatePlayerMarkerZoomScale()
-    {
-        if (
-            !window.geoplayMap ||
-            !markerVisual
-        )
-        {
-            return;
-        }
-
-
-        var zoom =
-            window.geoplayMap.getZoom();
-
-
-        var referenceZoom =
-            15.5;
-
-
-        var scale =
-            1;
-
-
-        if (
-            zoom <
-            referenceZoom
-        )
-        {
-            scale =
-                1 +
-                (
-                    referenceZoom -
-                    zoom
-                ) *
-                0.10;
-        }
-
-
-        // --------------------------------------------------
-        // Keep the marker from becoming enormous.
-        // --------------------------------------------------
-
-        scale =
-            Math.min(
-                scale,
-                1.20
-            );
-
-
-        markerVisual.style.transform =
-            "translateX(-50%) scale(" +
-            scale +
-            ")";
-    }
-
-
-    // Initial scale.
-
-    updatePlayerMarkerZoomScale();
-
-
-    // Update while zooming.
-
-    window.geoplayMap.on(
-        "zoom",
-        updatePlayerMarkerZoomScale
-    );
-
-
     console.log(
-        "GEOPLAY MAP: Enhanced player marker created with responsive zoom scaling."
+        "GEOPLAY MAP: Player marker created with fixed screen size."
     );
 
 
