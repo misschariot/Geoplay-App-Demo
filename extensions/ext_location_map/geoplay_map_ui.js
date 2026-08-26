@@ -4,7 +4,6 @@
 //
 // RESPONSIBILITY:
 // - Robot dialogue
-// - Player found effect
 // - Searching visual
 // - Pine Ridge destination card
 // - Pine Ridge off-screen indicator
@@ -28,8 +27,6 @@
 window.geoplayMapUI = null;
 
 window.geoplayMapUIInitialized = false;
-
-window.geoplayPlayerFoundEffectActive = false;
 
 window.geoplaySearchVisible = false;
 
@@ -123,8 +120,6 @@ function geoplayMapUICreate()
     geoplayMapUIAddStyles();
 
     geoplayMapUICreateDialogue();
-
-    geoplayMapUICreatePlayerFoundEffect();
 
     geoplayMapUICreateSearchVisual();
 
@@ -291,131 +286,6 @@ function geoplayMapUIAddStyles()
 
 
 /* ==================================================
-   PLAYER FOUND RADIAL EFFECT
-   ================================================== */
-
-.geoplay-player-found-effect
-{
-    position:
-        absolute;
-
-    width:
-        62px;
-
-    height:
-        62px;
-
-    border-radius:
-        50%;
-
-    border:
-        3px solid
-        rgba(
-            39,
-            186,
-            255,
-            .95
-        );
-
-    box-shadow:
-        0 0 12px
-        rgba(
-            39,
-            186,
-            255,
-            .9
-        ),
-
-        0 0 30px
-        rgba(
-            39,
-            186,
-            255,
-            .5
-        );
-
-    transform:
-        translate(
-            -50%,
-            -50%
-        )
-        scale(
-            .45
-        );
-
-    opacity:
-        0;
-
-    pointer-events:
-        none;
-
-    z-index:
-        90;
-}
-
-
-.geoplay-player-found-effect.active
-{
-    animation:
-        geoplayPlayerFoundPulse
-        1.5s
-        ease-out
-        forwards;
-}
-
-
-@keyframes geoplayPlayerFoundPulse
-{
-    0%
-    {
-        transform:
-            translate(
-                -50%,
-                -50%
-            )
-            scale(
-                .45
-            );
-
-        opacity:
-            .9;
-    }
-
-
-    45%
-    {
-        transform:
-            translate(
-                -50%,
-                -50%
-            )
-            scale(
-                1.2
-            );
-
-        opacity:
-            .7;
-    }
-
-
-    100%
-    {
-        transform:
-            translate(
-                -50%,
-                -50%
-            )
-            scale(
-                2
-            );
-
-        opacity:
-            0;
-    }
-}
-
-
-/* ==================================================
    SEARCH
    ================================================== */
 
@@ -454,46 +324,6 @@ function geoplayMapUIAddStyles()
 {
     opacity:
         1;
-}
-
-
-.geoplay-search-radar
-{
-    position:
-        absolute;
-
-    width:
-        48px;
-
-    height:
-        48px;
-
-    border-radius:
-        50%;
-
-    border:
-        2px solid
-        rgba(
-            70,
-            210,
-            255,
-            .9
-        );
-
-    box-shadow:
-        0 0 12px
-        rgba(
-            70,
-            210,
-            255,
-            .75
-        );
-
-    transform:
-        translate(
-            -50%,
-            -50%
-        );
 }
 
 
@@ -1013,32 +843,6 @@ function geoplayMapUICreateDialogue()
 
 
 // ==================================================
-// CREATE PLAYER FOUND EFFECT
-// ==================================================
-
-function geoplayMapUICreatePlayerFoundEffect()
-{
-    var effect =
-        document.createElement(
-            "div"
-        );
-
-
-    effect.id =
-        "geoplay-player-found-effect";
-
-
-    effect.className =
-        "geoplay-player-found-effect";
-
-
-    window.geoplayMapUI.appendChild(
-        effect
-    );
-}
-
-
-// ==================================================
 // CREATE SEARCH VISUAL
 // ==================================================
 
@@ -1056,29 +860,6 @@ function geoplayMapUICreateSearchVisual()
 
     visual.className =
         "geoplay-search-visual";
-
-
-    var radar =
-        document.createElement(
-            "div"
-        );
-
-
-    radar.id =
-        "geoplay-search-radar";
-
-
-    radar.className =
-        "geoplay-search-radar";
-
-
-    visual.appendChild(
-        radar
-    );
-
-
-    window.geoplaySearchRadar =
-        radar;
 
 
     var robot =
@@ -1221,10 +1002,6 @@ function geoplayMapUICreateOffscreenIndicator()
     );
 
 
-    // --------------------------------------------------
-    // CLICK
-    // --------------------------------------------------
-
     indicator.addEventListener(
         "click",
         function(event)
@@ -1246,10 +1023,6 @@ function geoplayMapUICreateOffscreenIndicator()
         }
     );
 
-
-    // --------------------------------------------------
-    // TOUCH
-    // --------------------------------------------------
 
     indicator.addEventListener(
         "touchend",
@@ -1396,104 +1169,6 @@ function geoplayMapUISay(
 
 
 // ==================================================
-// PLAYER FOUND EFFECT
-// ==================================================
-
-function geoplayMapUIShowPlayerFoundEffect()
-{
-    var effect =
-        document.getElementById(
-            "geoplay-player-found-effect"
-        );
-
-
-    if (!effect)
-    {
-        return 0;
-    }
-
-
-    geoplayMapUIPositionPlayerFoundEffect();
-
-
-    effect.classList.remove(
-        "active"
-    );
-
-
-    void effect.offsetWidth;
-
-
-    effect.classList.add(
-        "active"
-    );
-
-
-    window.geoplayPlayerFoundEffectActive =
-        true;
-
-
-    setTimeout(
-        function()
-        {
-            effect.classList.remove(
-                "active"
-            );
-
-
-            window.geoplayPlayerFoundEffectActive =
-                false;
-        },
-        1600
-    );
-
-
-    return 1;
-}
-
-
-function geoplayMapUIPositionPlayerFoundEffect()
-{
-    if (
-        !window.geoplayMap
-    )
-    {
-        return;
-    }
-
-
-    var effect =
-        document.getElementById(
-            "geoplay-player-found-effect"
-        );
-
-
-    if (!effect)
-    {
-        return;
-    }
-
-
-    var point =
-        window.geoplayMap.project(
-        [
-            geoplayMapLongitude,
-            geoplayMapLatitude
-        ]);
-
-
-    effect.style.left =
-        point.x +
-        "px";
-
-
-    effect.style.top =
-        point.y +
-        "px";
-}
-
-
-// ==================================================
 // SEARCH
 // ==================================================
 
@@ -1518,9 +1193,6 @@ function geoplayMapUIStartSearchAnimation()
     visual.classList.add(
         "visible"
     );
-
-
-    geoplayMapUIPositionSearchRadar();
 
 
     return 1;
@@ -1551,45 +1223,8 @@ function geoplayMapUIStopSearchAnimation()
 }
 
 
-function geoplayMapUIPositionSearchRadar()
-{
-    if (
-        !window.geoplayMap ||
-        !window.geoplaySearchRadar
-    )
-    {
-        return;
-    }
-
-
-    var point =
-        window.geoplayMap.project(
-        [
-            geoplayMapLongitude,
-            geoplayMapLatitude
-        ]);
-
-
-    window.geoplaySearchRadar.style.left =
-        point.x +
-        "px";
-
-
-    window.geoplaySearchRadar.style.top =
-        point.y +
-        "px";
-}
-
-
 // ==================================================
 // SHOW DESTINATION
-// ==================================================
-//
-// This activates the destination presentation.
-//
-// PositionDestination() immediately decides whether
-// Pine Ridge is visible.
-//
 // ==================================================
 
 function geoplayMapUIShowDestination()
@@ -1632,20 +1267,6 @@ function geoplayMapUIShowDestination()
 
 // ==================================================
 // POSITION DESTINATION
-// ==================================================
-//
-// DESTINATION VISIBLE:
-//
-//     Card appears directly at destination.
-//
-// DESTINATION OFF-SCREEN:
-//
-//     Card disappears.
-//
-//     Edge indicator appears.
-//
-//     Arrow points toward destination.
-//
 // ==================================================
 
 function geoplayMapUIPositionDestination()
@@ -1703,11 +1324,6 @@ function geoplayMapUIPositionDestination()
     }
 
 
-    // --------------------------------------------------
-    // Project Pine Ridge's geographic coordinates into
-    // the CURRENT viewport.
-    // --------------------------------------------------
-
     var point =
         window.geoplayMap.project(
         [
@@ -1727,10 +1343,6 @@ function geoplayMapUIPositionDestination()
     var margin =
         45;
 
-
-    // --------------------------------------------------
-    // Is Pine Ridge actually visible?
-    // --------------------------------------------------
 
     var visible =
         point.x >= margin &&
@@ -1756,23 +1368,15 @@ function geoplayMapUIPositionDestination()
             false;
 
 
-        // Hide edge indicator.
-
         indicator.classList.remove(
             "visible"
         );
 
 
-        // Show Pine Ridge card.
-
         card.classList.add(
             "visible"
         );
 
-
-        // --------------------------------------------------
-        // Measure card.
-        // --------------------------------------------------
 
         var cardWidth =
             card.offsetWidth;
@@ -1781,10 +1385,6 @@ function geoplayMapUIPositionDestination()
         var cardHeight =
             card.offsetHeight;
 
-
-        // --------------------------------------------------
-        // Card starts directly above Pine Ridge.
-        // --------------------------------------------------
 
         var left =
             point.x;
@@ -1799,10 +1399,6 @@ function geoplayMapUIPositionDestination()
             cardWidth /
             2;
 
-
-        // --------------------------------------------------
-        // Keep card inside horizontal viewport.
-        // --------------------------------------------------
 
         if (
             left -
@@ -1830,12 +1426,6 @@ function geoplayMapUIPositionDestination()
         }
 
 
-        // --------------------------------------------------
-        // Normally place card ABOVE destination.
-        //
-        // If there isn't room above, place it BELOW.
-        // --------------------------------------------------
-
         if (
             point.y -
             cardHeight -
@@ -1862,10 +1452,6 @@ function geoplayMapUIPositionDestination()
                 "translate(-50%,-100%)";
         }
 
-
-        // --------------------------------------------------
-        // Final vertical safety.
-        // --------------------------------------------------
 
         if (
             top <
@@ -1909,14 +1495,10 @@ function geoplayMapUIPositionDestination()
     // DESTINATION IS OFF-SCREEN
     // ==================================================
 
-    // Hide Pine Ridge card.
-
     card.classList.remove(
         "visible"
     );
 
-
-    // Show edge indicator.
 
     indicator.classList.add(
         "visible"
@@ -1927,10 +1509,6 @@ function geoplayMapUIPositionDestination()
         true;
 
 
-    // --------------------------------------------------
-    // Viewport center.
-    // --------------------------------------------------
-
     var centerX =
         width /
         2;
@@ -1940,10 +1518,6 @@ function geoplayMapUIPositionDestination()
         height /
         2;
 
-
-    // --------------------------------------------------
-    // Direction from center toward Pine Ridge.
-    // --------------------------------------------------
 
     var dx =
         point.x -
@@ -1966,10 +1540,6 @@ function geoplayMapUIPositionDestination()
     var padding =
         24;
 
-
-    // --------------------------------------------------
-    // Determine which edge Pine Ridge is toward.
-    // --------------------------------------------------
 
     if (
         Math.abs(dx) >
@@ -2032,10 +1602,6 @@ function geoplayMapUIPositionDestination()
     }
 
 
-    // --------------------------------------------------
-    // Keep indicator inside viewport.
-    // --------------------------------------------------
-
     edgeX =
         Math.max(
             60,
@@ -2067,10 +1633,6 @@ function geoplayMapUIPositionDestination()
         edgeY +
         "px";
 
-
-    // --------------------------------------------------
-    // Rotate arrow toward Pine Ridge.
-    // --------------------------------------------------
 
     var angle =
         Math.atan2(
@@ -2152,22 +1714,6 @@ function geoplayMapUIHideDestination()
 function geoplayMapUIUpdatePositions()
 {
     if (
-        window.geoplayPlayerFoundEffectActive
-    )
-    {
-        geoplayMapUIPositionPlayerFoundEffect();
-    }
-
-
-    if (
-        window.geoplaySearchVisible
-    )
-    {
-        geoplayMapUIPositionSearchRadar();
-    }
-
-
-    if (
         window.geoplayDestinationVisible
     )
     {
@@ -2182,10 +1728,6 @@ function geoplayMapUIUpdatePositions()
 
 function geoplayMapUIGoToDestination()
 {
-    // --------------------------------------------------
-    // Never allow this to interrupt the story.
-    // --------------------------------------------------
-
     if (
         window.geoplayMapStoryLocked
     )
