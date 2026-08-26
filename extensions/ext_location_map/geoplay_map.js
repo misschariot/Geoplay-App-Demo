@@ -984,12 +984,32 @@ function geoplayMapCreatePlayerMarker()
         );
 
 
+    // ==================================================
+    // MARKER CONTAINER
+    // ==================================================
+    //
+    // The player's geographic coordinate is now aligned
+    // with the bottom of the avatar itself.
+    //
+    // The avatar is 68px tall and begins at 8px.
+    // Therefore:
+    //
+    // 8px + 68px = 76px
+    //
+    // The marker container is 76px tall so its bottom
+    // anchor corresponds directly with the bottom of
+    // the avatar.
+    //
+    // The pulse is allowed to render outside the
+    // container.
+    // ==================================================
+
     markerElement.style.width =
         "94px";
 
 
     markerElement.style.height =
-        "94px";
+        "76px";
 
 
     markerElement.style.position =
@@ -1006,6 +1026,10 @@ function geoplayMapCreatePlayerMarker()
 
     markerElement.style.boxSizing =
         "border-box";
+
+
+    markerElement.style.overflow =
+        "visible";
 
 
     if (
