@@ -995,15 +995,14 @@ function initGeoplayMap()
 // CREATE PLAYER MARKER
 // ==================================================
 //
-// TEST VERSION:
+// ENHANCED PLAYER MARKER:
 //
-// The player marker is now loaded from our
-// Cloudflare R2 image host.
-//
-// If the image does not load inside MapLibre,
-// we will know the issue is specifically the
-// browser/MapLibre image request rather than
-// GameMaker's sprite system.
+// - Existing Cloudflare R2 avatar remains unchanged.
+// - Adds cyan Geoplay glow ring.
+// - Adds subtle outer pulse.
+// - Adds small glowing location point.
+// - Adds subtle ground pulse.
+// - Geographic anchor is now the location point.
 //
 // ==================================================
 
@@ -1036,23 +1035,19 @@ function geoplayMapCreatePlayerMarker()
 
 
     markerElement.style.width =
-        "58px";
+        "82px";
 
 
     markerElement.style.height =
-        "58px";
+        "96px";
+
+
+    markerElement.style.position =
+        "relative";
 
 
     markerElement.style.display =
-        "flex";
-
-
-    markerElement.style.alignItems =
-        "center";
-
-
-    markerElement.style.justifyContent =
-        "center";
+        "block";
 
 
     markerElement.style.pointerEvents =
@@ -1064,7 +1059,579 @@ function geoplayMapCreatePlayerMarker()
 
 
     // --------------------------------------------------
-    // ROBOT IMAGE
+    // PLAYER MARKER ANIMATION STYLES
+    // --------------------------------------------------
+
+    if (
+        !document.getElementById(
+            "geoplay-player-marker-styles"
+        )
+    )
+    {
+        var markerStyle =
+            document.createElement(
+                "style"
+            );
+
+
+        markerStyle.id =
+            "geoplay-player-marker-styles";
+
+
+        markerStyle.textContent = `
+
+.geoplay-player-marker-ground
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    bottom:
+        3px;
+
+    width:
+        18px;
+
+    height:
+        8px;
+
+    border:
+        2px solid
+        rgba(
+            52,
+            210,
+            255,
+            .90
+        );
+
+    border-radius:
+        50%;
+
+    transform:
+        translateX(
+            -50%
+        );
+
+    box-shadow:
+        0 0 8px
+        rgba(
+            52,
+            210,
+            255,
+            .70
+        );
+
+    pointer-events:
+        none;
+}
+
+
+.geoplay-player-ground-pulse
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    bottom:
+        2px;
+
+    width:
+        28px;
+
+    height:
+        10px;
+
+    border:
+        2px solid
+        rgba(
+            52,
+            210,
+            255,
+            .72
+        );
+
+    border-radius:
+        50%;
+
+    transform:
+        translateX(
+            -50%
+        )
+        scale(
+            .55
+        );
+
+    opacity:
+        .85;
+
+    animation:
+        geoplayPlayerGroundPulse
+        2.4s
+        ease-out
+        infinite;
+
+    pointer-events:
+        none;
+}
+
+
+.geoplay-player-marker-ring
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        5px;
+
+    width:
+        64px;
+
+    height:
+        64px;
+
+    border:
+        2px solid
+        rgba(
+            52,
+            210,
+            255,
+            .90
+        );
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(
+            52,
+            210,
+            255,
+            .08
+        );
+
+    transform:
+        translateX(
+            -50%
+        );
+
+    box-shadow:
+        0 0 9px
+        rgba(
+            52,
+            210,
+            255,
+            .85
+        ),
+        0 0 22px
+        rgba(
+            52,
+            210,
+            255,
+            .42
+        );
+
+    animation:
+        geoplayPlayerMarkerGlow
+        2.8s
+        ease-in-out
+        infinite;
+
+    pointer-events:
+        none;
+}
+
+
+.geoplay-player-marker-ring-outer
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        1px;
+
+    width:
+        72px;
+
+    height:
+        72px;
+
+    border:
+        1px solid
+        rgba(
+            52,
+            210,
+            255,
+            .34
+        );
+
+    border-radius:
+        50%;
+
+    transform:
+        translateX(
+            -50%
+        );
+
+    animation:
+        geoplayPlayerOuterPulse
+        2.8s
+        ease-out
+        infinite;
+
+    pointer-events:
+        none;
+}
+
+
+.geoplay-player-marker-image
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        8px;
+
+    width:
+        58px;
+
+    height:
+        58px;
+
+    object-fit:
+        contain;
+
+    display:
+        block;
+
+    transform:
+        translateX(
+            -50%
+        );
+
+    z-index:
+        3;
+
+    pointer-events:
+        none;
+
+    user-select:
+        none;
+
+    -webkit-user-drag:
+        none;
+}
+
+
+.geoplay-player-marker-point
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    bottom:
+        8px;
+
+    width:
+        12px;
+
+    height:
+        12px;
+
+    background:
+        #34D2FF;
+
+    border:
+        2px solid
+        #ffffff;
+
+    border-radius:
+        50%;
+
+    transform:
+        translateX(
+            -50%
+        );
+
+    box-shadow:
+        0 0 8px
+        rgba(
+            52,
+            210,
+            255,
+            1
+        ),
+        0 0 16px
+        rgba(
+            52,
+            210,
+            255,
+            .65
+        );
+
+    z-index:
+        4;
+
+    pointer-events:
+        none;
+}
+
+
+.geoplay-player-marker-point-line
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    bottom:
+        17px;
+
+    width:
+        2px;
+
+    height:
+        14px;
+
+    background:
+        rgba(
+            52,
+            210,
+            255,
+            .72
+        );
+
+    transform:
+        translateX(
+            -50%
+        );
+
+    box-shadow:
+        0 0 6px
+        rgba(
+            52,
+            210,
+            255,
+            .65
+        );
+
+    z-index:
+        2;
+
+    pointer-events:
+        none;
+}
+
+
+@keyframes geoplayPlayerMarkerGlow
+{
+    0%,
+    100%
+    {
+        opacity:
+            .72;
+
+        box-shadow:
+            0 0 9px
+            rgba(
+                52,
+                210,
+                255,
+                .75
+            ),
+            0 0 20px
+            rgba(
+                52,
+                210,
+                255,
+                .32
+            );
+    }
+
+
+    50%
+    {
+        opacity:
+            1;
+
+        box-shadow:
+            0 0 12px
+            rgba(
+                52,
+                210,
+                255,
+                .95
+            ),
+            0 0 28px
+            rgba(
+                52,
+                210,
+                255,
+                .50
+            );
+    }
+}
+
+
+@keyframes geoplayPlayerOuterPulse
+{
+    0%
+    {
+        transform:
+            translateX(
+                -50%
+            )
+            scale(
+                .88
+            );
+
+        opacity:
+            .65;
+    }
+
+
+    70%
+    {
+        transform:
+            translateX(
+                -50%
+            )
+            scale(
+                1.08
+            );
+
+        opacity:
+            .18;
+    }
+
+
+    100%
+    {
+        transform:
+            translateX(
+                -50%
+            )
+            scale(
+                1.16
+            );
+
+        opacity:
+            0;
+    }
+}
+
+
+@keyframes geoplayPlayerGroundPulse
+{
+    0%
+    {
+        transform:
+            translateX(
+                -50%
+            )
+            scale(
+                .55
+            );
+
+        opacity:
+            .82;
+    }
+
+
+    75%
+    {
+        transform:
+            translateX(
+                -50%
+            )
+            scale(
+                1.55
+            );
+
+        opacity:
+            .12;
+    }
+
+
+    100%
+    {
+        transform:
+            translateX(
+                -50%
+            )
+            scale(
+                1.8
+            );
+
+        opacity:
+            0;
+    }
+}
+
+`;
+
+
+        document.head.appendChild(
+            markerStyle
+        );
+    }
+
+
+    // --------------------------------------------------
+    // OUTER PULSING RING
+    // --------------------------------------------------
+
+    var outerRing =
+        document.createElement(
+            "div"
+        );
+
+
+    outerRing.className =
+        "geoplay-player-marker-ring-outer";
+
+
+    markerElement.appendChild(
+        outerRing
+    );
+
+
+    // --------------------------------------------------
+    // MAIN GLOW RING
+    // --------------------------------------------------
+
+    var ring =
+        document.createElement(
+            "div"
+        );
+
+
+    ring.className =
+        "geoplay-player-marker-ring";
+
+
+    markerElement.appendChild(
+        ring
+    );
+
+
+    // --------------------------------------------------
+    // PLAYER IMAGE
     // --------------------------------------------------
 
     var playerImage =
@@ -1081,24 +1648,8 @@ function geoplayMapCreatePlayerMarker()
         "Geoplay player";
 
 
-    playerImage.style.width =
-        "58px";
-
-
-    playerImage.style.height =
-        "58px";
-
-
-    playerImage.style.objectFit =
-        "contain";
-
-
-    playerImage.style.display =
-        "block";
-
-
-    playerImage.style.pointerEvents =
-        "none";
+    playerImage.className =
+        "geoplay-player-marker-image";
 
 
     playerImage.draggable =
@@ -1134,6 +1685,44 @@ function geoplayMapCreatePlayerMarker()
 
 
     // --------------------------------------------------
+    // LOCATION STEM
+    // --------------------------------------------------
+
+    var pointLine =
+        document.createElement(
+            "div"
+        );
+
+
+    pointLine.className =
+        "geoplay-player-marker-point-line";
+
+
+    markerElement.appendChild(
+        pointLine
+    );
+
+
+    // --------------------------------------------------
+    // LOCATION POINT
+    // --------------------------------------------------
+
+    var point =
+        document.createElement(
+            "div"
+        );
+
+
+    point.className =
+        "geoplay-player-marker-point";
+
+
+    markerElement.appendChild(
+        point
+    );
+
+
+    // --------------------------------------------------
     // CREATE MAPLIBRE MARKER
     // --------------------------------------------------
 
@@ -1144,7 +1733,7 @@ function geoplayMapCreatePlayerMarker()
                 markerElement,
 
             anchor:
-                "center"
+                "bottom"
         })
         .setLngLat(
         [
@@ -1157,7 +1746,7 @@ function geoplayMapCreatePlayerMarker()
 
 
     console.log(
-        "GEOPLAY MAP: Player marker created using Cloudflare R2 asset."
+        "GEOPLAY MAP: Enhanced player marker created."
     );
 
 
