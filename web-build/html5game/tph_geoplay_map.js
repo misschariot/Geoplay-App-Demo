@@ -1180,7 +1180,7 @@ function geoplayMapCreatePlayerMarker()
         50%;
 
     top:
-        2px;
+        5px;
 
     width:
         74px;
