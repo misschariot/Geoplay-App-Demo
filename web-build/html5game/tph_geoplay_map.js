@@ -988,13 +988,13 @@ function geoplayMapCreatePlayerMarker()
     // MARKER CONTAINER
     // ==================================================
     //
-    // The player's geographic coordinate is now aligned
+    // The player's geographic coordinate is aligned
     // with the bottom of the avatar itself.
     //
-    // The avatar is 68px tall and begins at 8px.
+    // The avatar is 74px tall and begins at 2px.
     // Therefore:
     //
-    // 8px + 68px = 76px
+    // 2px + 74px = 76px
     //
     // The marker container is 76px tall so its bottom
     // anchor corresponds directly with the bottom of
@@ -1180,25 +1180,25 @@ function geoplayMapCreatePlayerMarker()
         50%;
 
     top:
-        8px;
+        2px;
 
     width:
-        68px;
+        74px;
 
     height:
-        68px;
+        74px;
 
     min-width:
-        68px;
+        74px;
 
     min-height:
-        68px;
+        74px;
 
     max-width:
-        68px;
+        74px;
 
     max-height:
-        68px;
+        74px;
 
     flex-shrink:
         0;
