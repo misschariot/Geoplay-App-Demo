@@ -84,11 +84,11 @@
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
+    {"roomId":{"name":"rm_location_map","path":"rooms/rm_location_map/rm_location_map.yy",},},
     {"roomId":{"name":"rm_signin","path":"rooms/rm_signin/rm_signin.yy",},},
     {"roomId":{"name":"rm_loading","path":"rooms/rm_loading/rm_loading.yy",},},
     {"roomId":{"name":"rm_location_check","path":"rooms/rm_location_check/rm_location_check.yy",},},
     {"roomId":{"name":"rm_location_verify","path":"rooms/rm_location_verify/rm_location_verify.yy",},},
-    {"roomId":{"name":"rm_location_map","path":"rooms/rm_location_map/rm_location_map.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[
