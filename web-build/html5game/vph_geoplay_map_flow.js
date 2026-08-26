@@ -200,7 +200,13 @@ function geoplayMapFlowPlayerFound()
     geoplayMapShowPlayerMarker();
 
 
-    geoplayMapUIShowPlayerFoundEffect();
+    if (
+        typeof geoplayMapPlayerMarkerPop ===
+        "function"
+    )
+    {
+        geoplayMapPlayerMarkerPop();
+    }
 
 
     geoplayMapUISay(
@@ -1370,12 +1376,6 @@ function geoplayMapFlowAnimateRoute(
     // ==================================================
     // ROUTE GLOW
     // ==================================================
-    //
-    // Soft blue aura underneath the route.
-    //
-    // This is intentionally subtle so the map
-    // remains readable.
-    // ==================================================
 
     window.geoplayMap.addLayer(
     {
@@ -1422,9 +1422,6 @@ function geoplayMapFlowAnimateRoute(
 
     // ==================================================
     // ROUTE CORE
-    // ==================================================
-    //
-    // Bright electric cyan-blue dotted route.
     // ==================================================
 
     window.geoplayMap.addLayer(
