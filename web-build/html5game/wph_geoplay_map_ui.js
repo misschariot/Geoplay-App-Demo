@@ -30,7 +30,7 @@
 //      ↓
 // EXPANDED
 //      ↓
-// Image + distance + address + PLAY HERE
+// Image + distance/address columns + PLAY HERE
 //
 // This remains active after the story finishes.
 // ==================================================
@@ -1037,6 +1037,43 @@ function geoplayMapUIAddStyles()
 }
 
 
+/* ==================================================
+   DISTANCE + ADDRESS TWO-COLUMN LAYOUT
+   ================================================== */
+
+.geoplay-destination-expanded-details
+{
+    display:
+        grid;
+
+    grid-template-columns:
+        minmax(
+            0,
+            1fr
+        )
+        minmax(
+            0,
+            1.35fr
+        );
+
+    column-gap:
+        12px;
+
+    align-items:
+        start;
+
+    width:
+        100%;
+
+    margin-bottom:
+        13px;
+}
+
+
+/* ==================================================
+   DISTANCE
+   ================================================== */
+
 .geoplay-destination-expanded-distance
 {
     display:
@@ -1048,8 +1085,8 @@ function geoplayMapUIAddStyles()
     gap:
         8px;
 
-    margin-bottom:
-        9px;
+    min-width:
+        0;
 
     color:
         #ffffff;
@@ -1061,18 +1098,24 @@ function geoplayMapUIAddStyles()
 
     font-size:
         clamp(
-            12px,
-            3.2vw,
+            11px,
+            3vw,
             14px
         );
 
     font-weight:
         700;
+
+    line-height:
+        1.35;
 }
 
 
 .geoplay-destination-distance-icon
 {
+    flex:
+        0 0 auto;
+
     width:
         26px;
 
@@ -1107,6 +1150,10 @@ function geoplayMapUIAddStyles()
 }
 
 
+/* ==================================================
+   ADDRESS
+   ================================================== */
+
 .geoplay-destination-expanded-address
 {
     display:
@@ -1118,8 +1165,8 @@ function geoplayMapUIAddStyles()
     gap:
         8px;
 
-    margin-bottom:
-        13px;
+    min-width:
+        0;
 
     color:
         #ffffff;
@@ -1187,6 +1234,15 @@ function geoplayMapUIAddStyles()
 {
     flex:
         1;
+
+    min-width:
+        0;
+
+    overflow-wrap:
+        break-word;
+
+    word-break:
+        normal;
 }
 
 
@@ -1677,6 +1733,57 @@ function geoplayMapUIAddStyles()
     }
 
 
+    .geoplay-destination-expanded-details
+    {
+        grid-template-columns:
+            minmax(
+                0,
+                0.9fr
+            )
+            minmax(
+                0,
+                1.3fr
+            );
+
+        column-gap:
+            9px;
+    }
+
+
+    .geoplay-destination-expanded-distance
+    {
+        gap:
+            6px;
+
+        font-size:
+            10px;
+    }
+
+
+    .geoplay-destination-expanded-address
+    {
+        gap:
+            6px;
+
+        font-size:
+            10px;
+    }
+
+
+    .geoplay-destination-distance-icon,
+    .geoplay-destination-address-icon
+    {
+        width:
+            24px;
+
+        height:
+            24px;
+
+        font-size:
+            13px;
+    }
+
+
     .geoplay-destination-offscreen
     {
         padding:
@@ -2146,29 +2253,35 @@ function geoplayMapUISetDestinationExpanded(
         "<div class='geoplay-destination-expanded-divider'></div>" +
 
 
-        "<div class='geoplay-destination-expanded-distance'>" +
-
-            "<span class='geoplay-destination-distance-icon'>" +
-                "➜" +
-            "</span>" +
-
-            "<span>" +
-                "2.4 MI AWAY" +
-            "</span>" +
-
-        "</div>" +
+        "<div class='geoplay-destination-expanded-details'>" +
 
 
-        "<div class='geoplay-destination-expanded-address'>" +
+            "<div class='geoplay-destination-expanded-distance'>" +
 
-            "<span class='geoplay-destination-address-icon'>" +
-                "📍" +
-            "</span>" +
+                "<span class='geoplay-destination-distance-icon'>" +
+                    "➜" +
+                "</span>" +
 
-            "<span class='geoplay-destination-address-text'>" +
-                "777 Pine Ridge Road<br>" +
-                "Pine Ridge, CA 95563" +
-            "</span>" +
+                "<span>" +
+                    "2.4 MI AWAY" +
+                "</span>" +
+
+            "</div>" +
+
+
+            "<div class='geoplay-destination-expanded-address'>" +
+
+                "<span class='geoplay-destination-address-icon'>" +
+                    "📍" +
+                "</span>" +
+
+                "<span class='geoplay-destination-address-text'>" +
+                    "777 Pine Ridge Road<br>" +
+                    "Pine Ridge, CA 95563" +
+                "</span>" +
+
+            "</div>" +
+
 
         "</div>" +
 
