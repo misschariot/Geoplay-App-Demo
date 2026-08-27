@@ -163,10 +163,6 @@ function geoplayMapUICreate()
 //
 // html5game/
 //
-// The current generated build filename is:
-//
-// zph_geoplay_map.css
-//
 // ==================================================
 
 function geoplayMapUILoadStylesheet()
@@ -300,28 +296,6 @@ function geoplayMapUICreateStoryActions()
     window.geoplayMapUI.appendChild(
         actions
     );
-}
-
-
-// ==================================================
-// SEARCH COMPATIBILITY
-// ==================================================
-//
-// The old searching robot has been removed.
-//
-// These functions remain because the map flow
-// may still call them.
-// ==================================================
-
-function geoplayMapUIStartSearchAnimation()
-{
-    return 1;
-}
-
-
-function geoplayMapUIStopSearchAnimation()
-{
-    return 1;
 }
 
 

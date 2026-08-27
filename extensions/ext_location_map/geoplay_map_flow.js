@@ -300,9 +300,6 @@ function geoplayMapFlowSearchArea()
     );
 
 
-    geoplayMapUIStartSearchAnimation();
-
-
     if (
         window.geoplayMap
     )
@@ -352,9 +349,6 @@ function geoplayMapFlowSearchComplete()
     console.log(
         "GEOPLAY FLOW: Property discovered."
     );
-
-
-    geoplayMapUIStopSearchAnimation();
 
 
     geoplayMapUISay(
@@ -1863,11 +1857,6 @@ function geoplayMapFlowFinish()
 
     // ==================================================
     // RECALCULATE DESTINATION POSITION
-    // ==================================================
-    //
-    // If Pine Ridge is currently off-screen, this
-    // immediately allows the directional indicator
-    // to appear.
     // ==================================================
 
     if (
