@@ -60,6 +60,17 @@ window.geoplayDestinationExpanded = false;
 
 
 // ==================================================
+// DIALOGUE AUTO-HIDE TIMER
+// ==================================================
+//
+// Used for short destination-arrival messages such as
+// "There it is!" so they do not remain on screen.
+// ==================================================
+
+window.geoplayDialogueHideTimer = null;
+
+
+// ==================================================
 // NEW:
 // OFF-SCREEN INDICATOR STATE
 // ==================================================
@@ -358,6 +369,20 @@ function geoplayMapUIAddStyles()
             -50%,
             0
         );
+}
+
+
+/* ==================================================
+   DESTINATION ARRIVAL DIALOGUE
+   ==================================================
+   "There it is!" sits higher than normal narration so
+   it stays clearly above the story action buttons.
+*/
+
+.geoplay-dialogue.destination-arrival
+{
+    bottom:
+        165px;
 }
 
 
@@ -1770,6 +1795,13 @@ function geoplayMapUIAddStyles()
     }
 
 
+    .geoplay-dialogue.destination-arrival
+    {
+        bottom:
+            165px;
+    }
+
+
     .geoplay-dialogue-robot
     {
         left:
@@ -1916,7 +1948,7 @@ function geoplayMapUIAddStyles()
             360px;
 
         bottom:
-            105px;
+            120px;
 
         gap:
             8px;
@@ -1959,6 +1991,13 @@ function geoplayMapUIAddStyles()
 
         padding:
             13px 24px;
+    }
+
+
+    .geoplay-dialogue.destination-arrival
+    {
+        bottom:
+            175px;
     }
 
 
@@ -2019,6 +2058,9 @@ function geoplayMapUIAddStyles()
                 68vw,
                 300px
             );
+
+        bottom:
+            95px;
     }
 }
 
@@ -2899,6 +2941,32 @@ function geoplayMapUISay(
     }
 
 
+    // ==================================================
+    // CLEAR ANY PREVIOUS AUTO-HIDE TIMER
+    // ==================================================
+
+    if (
+        window.geoplayDialogueHideTimer
+    )
+    {
+        clearTimeout(
+            window.geoplayDialogueHideTimer
+        );
+
+        window.geoplayDialogueHideTimer =
+            null;
+    }
+
+
+    // ==================================================
+    // RESET SPECIAL ARRIVAL POSITION
+    // ==================================================
+
+    dialogue.classList.remove(
+        "destination-arrival"
+    );
+
+
     text.textContent =
         message ||
         "";
@@ -2906,9 +2974,55 @@ function geoplayMapUISay(
 
     if (message)
     {
-        dialogue.classList.add(
-            "visible"
-        );
+        // ==================================================
+        // DESTINATION ARRIVAL MESSAGE
+        // ==================================================
+        //
+        // This short message is positioned above the story
+        // action buttons and automatically disappears.
+        // ==================================================
+
+        if (
+            String(message).trim().toLowerCase() ===
+            "there it is!"
+        )
+        {
+            dialogue.classList.add(
+                "destination-arrival"
+            );
+
+
+            dialogue.classList.add(
+                "visible"
+            );
+
+
+            window.geoplayDialogueHideTimer =
+                setTimeout(
+                    function()
+                    {
+                        dialogue.classList.remove(
+                            "visible"
+                        );
+
+
+                        dialogue.classList.remove(
+                            "destination-arrival"
+                        );
+
+
+                        window.geoplayDialogueHideTimer =
+                            null;
+                    },
+                    2200
+                );
+        }
+        else
+        {
+            dialogue.classList.add(
+                "visible"
+            );
+        }
     }
     else
     {
@@ -3489,6 +3603,33 @@ function geoplayMapUIPositionDestination()
 
 function geoplayMapUIHideDestination()
 {
+    if (
+        window.geoplayDialogueHideTimer
+    )
+    {
+        clearTimeout(
+            window.geoplayDialogueHideTimer
+        );
+
+        window.geoplayDialogueHideTimer =
+            null;
+    }
+
+
+    var dialogue =
+        document.getElementById(
+            "geoplay-dialogue"
+        );
+
+
+    if (dialogue)
+    {
+        dialogue.classList.remove(
+            "destination-arrival"
+        );
+    }
+
+
     var card =
         document.getElementById(
             "geoplay-destination"
