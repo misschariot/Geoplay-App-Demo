@@ -382,7 +382,7 @@ function geoplayMapUIAddStyles()
 .geoplay-dialogue.destination-arrival
 {
     bottom:
-        165px;
+        205px;
 }
 
 
@@ -1798,7 +1798,7 @@ function geoplayMapUIAddStyles()
     .geoplay-dialogue.destination-arrival
     {
         bottom:
-            165px;
+            205px;
     }
 
 
@@ -1997,7 +1997,7 @@ function geoplayMapUIAddStyles()
     .geoplay-dialogue.destination-arrival
     {
         bottom:
-            175px;
+            215px;
     }
 
 
