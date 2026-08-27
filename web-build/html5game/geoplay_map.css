@@ -1247,6 +1247,448 @@
 
 
 /* ==================================================
+   ROBOT DIALOGUE
+   ================================================== */
+
+.geoplay-dialogue
+{
+    position:
+        absolute;
+
+    left:
+        calc(
+            50% +
+            28px
+        );
+
+    bottom:
+        clamp(
+            112px,
+            15vh,
+            145px
+        );
+
+    width:
+        max-content;
+
+    min-width:
+        220px;
+
+    max-width:
+        min(
+            82vw,
+            430px
+        );
+
+    min-height:
+        68px;
+
+    box-sizing:
+        border-box;
+
+    padding:
+        10px 24px;
+
+    border-radius:
+        20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(
+                18,
+                8,
+                42,
+                .97
+            ),
+            rgba(
+                11,
+                5,
+                29,
+                .97
+            )
+        );
+
+    border:
+        1px solid
+        rgba(
+            173,
+            78,
+            255,
+            .78
+        );
+
+    box-shadow:
+        0 0 14px
+        rgba(
+            155,
+            65,
+            230,
+            .32
+        ),
+        0 8px 24px
+        rgba(
+            0,
+            0,
+            0,
+            .30
+        );
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    text-align:
+        center;
+
+    opacity:
+        0;
+
+    transform:
+        translate(
+            -50%,
+            10px
+        );
+
+    transition:
+        opacity .35s ease,
+        transform .35s ease,
+        width .18s ease,
+        min-height .12s ease;
+
+    z-index:
+        100;
+}
+
+
+.geoplay-dialogue.visible
+{
+    opacity:
+        1;
+
+    transform:
+        translate(
+            -50%,
+            0
+        );
+}
+
+
+/* ==================================================
+   DESTINATION ARRIVAL DIALOGUE
+   ================================================== */
+
+.geoplay-dialogue.destination-arrival
+{
+    bottom:
+        205px;
+}
+
+
+/* ==================================================
+   ROBOT HEAD
+   ================================================== */
+
+.geoplay-dialogue-robot
+{
+    position:
+        absolute;
+
+    left:
+        -52px;
+
+    top:
+        50%;
+
+    width:
+        78px;
+
+    height:
+        78px;
+
+    object-fit:
+        contain;
+
+    display:
+        block;
+
+    transform:
+        translateY(
+            -50%
+        )
+        scale(
+            .82
+        );
+
+    transform-origin:
+        center center;
+
+    opacity:
+        0;
+
+    filter:
+        drop-shadow(
+            0 0 7px
+            rgba(
+                173,
+                78,
+                255,
+                .38
+            )
+        );
+
+    transition:
+        opacity .35s ease .08s,
+        transform .45s
+        cubic-bezier(
+            .22,
+            1.25,
+            .36,
+            1
+        );
+
+    pointer-events:
+        none;
+
+    user-select:
+        none;
+
+    -webkit-user-drag:
+        none;
+
+    z-index:
+        3;
+}
+
+
+.geoplay-dialogue.visible
+.geoplay-dialogue-robot
+{
+    opacity:
+        1;
+
+    transform:
+        translateY(
+            -50%
+        )
+        scale(
+            1
+        );
+}
+
+
+/* ==================================================
+   DIALOGUE TEXT
+   ================================================== */
+
+.geoplay-dialogue-text
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    width:
+        fit-content;
+
+    max-width:
+        calc(
+            82vw -
+            48px
+        );
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        clamp(
+            13px,
+            3.25vw,
+            17px
+        );
+
+    font-weight:
+        600;
+
+    line-height:
+        1.45;
+
+    letter-spacing:
+        .05px;
+
+    color:
+        #ffffff;
+
+    text-align:
+        center;
+
+    overflow-wrap:
+        break-word;
+}
+
+
+/* ==================================================
+   DIALOGUE — SMALL SCREEN
+   ================================================== */
+
+@media (max-width:430px)
+{
+    .geoplay-dialogue
+    {
+        left:
+            calc(
+                50% +
+                24px
+            );
+
+        width:
+            max-content;
+
+        min-width:
+            210px;
+
+        max-width:
+            calc(
+                100% -
+                76px
+            );
+
+        min-height:
+            68px;
+
+        bottom:
+            112px;
+
+        padding:
+            9px 16px;
+
+        border-radius:
+            18px;
+    }
+
+
+    .geoplay-dialogue.destination-arrival
+    {
+        bottom:
+            205px;
+    }
+
+
+    .geoplay-dialogue-robot
+    {
+        left:
+            -48px;
+
+        width:
+            70px;
+
+        height:
+            70px;
+    }
+
+
+    .geoplay-dialogue-text
+    {
+        width:
+            fit-content;
+
+        max-width:
+            calc(
+                100vw -
+                108px
+            );
+
+        font-size:
+            clamp(
+                12px,
+                3.35vw,
+                15px
+            );
+
+        line-height:
+            1.42;
+    }
+}
+
+
+/* ==================================================
+   DIALOGUE — LARGER VIEWPORT
+   ================================================== */
+
+@media (min-width:431px)
+{
+    .geoplay-dialogue
+    {
+        left:
+            calc(
+                50% +
+                34px
+            );
+
+        min-width:
+            240px;
+
+        min-height:
+            90px;
+
+        padding:
+            13px 24px;
+    }
+
+
+    .geoplay-dialogue.destination-arrival
+    {
+        bottom:
+            215px;
+    }
+
+
+    .geoplay-dialogue-robot
+    {
+        left:
+            -58px;
+
+        width:
+            82px;
+
+        height:
+            82px;
+    }
+
+
+    .geoplay-dialogue-text
+    {
+        max-width:
+            min(
+                72vw,
+                370px
+            );
+
+        font-size:
+            clamp(
+                15px,
+                2.25vw,
+                18px
+            );
+
+        line-height:
+            1.45;
+    }
+}
+
+
+/* ==================================================
    SMALL SCREEN
    ================================================== */
 
