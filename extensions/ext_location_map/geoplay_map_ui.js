@@ -7,7 +7,17 @@
 // - Searching visual
 // - Pine Ridge destination card
 // - Pine Ridge off-screen indicator
-// - Continue button
+// - Post-story actions
+//
+// POST-STORY ACTIONS:
+//
+// FIND ANOTHER
+//      ↓
+// Future location-search flow
+//
+// BROWSE
+//      ↓
+// Future app browsing flow
 //
 // DESTINATION BEHAVIOR:
 //
@@ -141,7 +151,7 @@ function geoplayMapUICreate()
 
     geoplayMapUICreateOffscreenIndicator();
 
-    geoplayMapUICreateContinue();
+    geoplayMapUICreateStoryActions();
 
 
     window.geoplayMapUIInitialized =
@@ -1519,10 +1529,10 @@ function geoplayMapUIAddStyles()
 
 
 /* ==================================================
-   CONTINUE
+   STORY ACTIONS
    ================================================== */
 
-.geoplay-continue
+.geoplay-story-actions
 {
     position:
         absolute;
@@ -1539,49 +1549,18 @@ function geoplayMapUIAddStyles()
 
     width:
         min(
-            58vw,
-            220px
+            72vw,
+            280px
         );
 
-    min-height:
-        44px;
+    display:
+        flex;
 
-    padding:
-        10px 20px;
+    flex-direction:
+        column;
 
-    border:
-        0;
-
-    border-radius:
-        25px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #ff9418,
-            #ffc34d
-        );
-
-    color:
-        #281000;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    font-size:
-        clamp(
-            13px,
-            3vw,
-            16px
-        );
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        .2px;
+    gap:
+        9px;
 
     opacity:
         0;
@@ -1606,7 +1585,7 @@ function geoplayMapUIAddStyles()
 }
 
 
-.geoplay-continue.visible
+.geoplay-story-actions.visible
 {
     opacity:
         1;
@@ -1621,6 +1600,113 @@ function geoplayMapUIAddStyles()
 
     pointer-events:
         auto;
+}
+
+
+.geoplay-story-action
+{
+    width:
+        100%;
+
+    min-height:
+        44px;
+
+    padding:
+        10px 18px;
+
+    border:
+        0;
+
+    border-radius:
+        23px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff9418,
+            #ffc34d
+        );
+
+    color:
+        #281000;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        clamp(
+            12px,
+            3vw,
+            15px
+        );
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        .2px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        0 5px 14px
+        rgba(
+            255,
+            148,
+            24,
+            .24
+        );
+
+    -webkit-tap-highlight-color:
+        transparent;
+
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+}
+
+
+.geoplay-story-action:active
+{
+    transform:
+        scale(
+            .97
+        );
+}
+
+
+.geoplay-story-action-browse
+{
+    background:
+        linear-gradient(
+            90deg,
+            #8b42d8,
+            #b66cff
+        );
+
+    color:
+        #ffffff;
+
+    box-shadow:
+        0 5px 14px
+        rgba(
+            139,
+            66,
+            216,
+            .25
+        );
 }
 
 
@@ -1796,6 +1882,29 @@ function geoplayMapUIAddStyles()
         font-size:
             11px;
     }
+
+
+    .geoplay-story-actions
+    {
+        width:
+            min(
+                72vw,
+                270px
+            );
+
+        gap:
+            8px;
+    }
+
+
+    .geoplay-story-action
+    {
+        min-height:
+            43px;
+
+        font-size:
+            12px;
+    }
 }
 
 
@@ -1871,6 +1980,16 @@ function geoplayMapUIAddStyles()
     {
         height:
             155px;
+    }
+
+
+    .geoplay-story-actions
+    {
+        width:
+            min(
+                68vw,
+                300px
+            );
     }
 }
 
@@ -2485,13 +2604,8 @@ function geoplayMapUIPlayHere()
     );
 
 
-    // Return the card to its compact state.
-
     geoplayMapUICollapseDestination();
 
-
-    // Use the existing Pine Ridge destination
-    // navigation behavior.
 
     geoplayMapUIGoToDestination();
 
@@ -2621,57 +2735,142 @@ function geoplayMapUICreateOffscreenIndicator()
 
 
 // ==================================================
-// CREATE CONTINUE
+// CREATE STORY ACTIONS
 // ==================================================
 
-function geoplayMapUICreateContinue()
+function geoplayMapUICreateStoryActions()
 {
-    var button =
+    var actions =
+        document.createElement(
+            "div"
+        );
+
+
+    actions.id =
+        "geoplay-story-actions";
+
+
+    actions.className =
+        "geoplay-story-actions";
+
+
+    // ==================================================
+    // FIND ANOTHER
+    // ==================================================
+
+    var findAnother =
         document.createElement(
             "button"
         );
 
 
-    button.id =
-        "geoplay-continue";
-
-
-    button.className =
-        "geoplay-continue";
-
-
-    button.type =
+    findAnother.type =
         "button";
 
 
-    button.textContent =
-        "CONTINUE  →";
+    findAnother.className =
+        "geoplay-story-action";
 
 
-    button.addEventListener(
+    findAnother.textContent =
+        "FIND ANOTHER";
+
+
+    findAnother.addEventListener(
         "click",
-        function()
+        function(event)
         {
+            event.preventDefault();
+
+            event.stopPropagation();
+
+
+            geoplayMapUIHideStoryActions();
+
+
             console.log(
-                "GEOPLAY UI: Continue clicked."
+                "GEOPLAY UI: FIND ANOTHER selected."
             );
 
 
             if (
                 typeof
-                window.gml_Script_gmcallback_geoplay_location_continue
+                window.gml_Script_gmcallback_geoplay_location_find_another
                 ===
                 "function"
             )
             {
-                window.gml_Script_gmcallback_geoplay_location_continue();
+                window.gml_Script_gmcallback_geoplay_location_find_another();
             }
         }
     );
 
 
+    // ==================================================
+    // BROWSE
+    // ==================================================
+
+    var browse =
+        document.createElement(
+            "button"
+        );
+
+
+    browse.type =
+        "button";
+
+
+    browse.className =
+        "geoplay-story-action " +
+        "geoplay-story-action-browse";
+
+
+    browse.textContent =
+        "BROWSE";
+
+
+    browse.addEventListener(
+        "click",
+        function(event)
+        {
+            event.preventDefault();
+
+            event.stopPropagation();
+
+
+            geoplayMapUIHideStoryActions();
+
+
+            console.log(
+                "GEOPLAY UI: BROWSE selected."
+            );
+
+
+            if (
+                typeof
+                window.gml_Script_gmcallback_geoplay_location_browse
+                ===
+                "function"
+            )
+            {
+                window.gml_Script_gmcallback_geoplay_location_browse();
+            }
+        }
+    );
+
+
+    actions.appendChild(
+        findAnother
+    );
+
+
+    actions.appendChild(
+        browse
+    );
+
+
     window.geoplayMapUI.appendChild(
-        button
+        actions
     );
 }
 
@@ -2821,9 +3020,6 @@ function geoplayMapUIShowDestination()
     window.geoplayDestinationVisible =
         true;
 
-
-    // Always reveal the destination in its
-    // compact state.
 
     geoplayMapUICollapseDestination();
 
@@ -3007,9 +3203,6 @@ function geoplayMapUIPositionDestination()
             window.geoplayDestinationExpanded
         )
         {
-            // Prefer placing the expanded card
-            // above the destination marker.
-
             if (
                 point.y -
                 cardHeight -
@@ -3027,9 +3220,6 @@ function geoplayMapUIPositionDestination()
             }
             else
             {
-                // If there isn't enough room above,
-                // place it below the marker.
-
                 top =
                     point.y +
                     18;
@@ -3468,20 +3658,20 @@ function geoplayMapUIGoToDestination()
 
 
 // ==================================================
-// CONTINUE
+// SHOW STORY ACTIONS
 // ==================================================
 
-function geoplayMapUIShowContinue()
+function geoplayMapUIShowStoryActions()
 {
-    var button =
+    var actions =
         document.getElementById(
-            "geoplay-continue"
+            "geoplay-story-actions"
         );
 
 
-    if (button)
+    if (actions)
     {
-        button.classList.add(
+        actions.classList.add(
             "visible"
         );
     }
@@ -3491,21 +3681,46 @@ function geoplayMapUIShowContinue()
 }
 
 
-function geoplayMapUIHideContinue()
+// ==================================================
+// HIDE STORY ACTIONS
+// ==================================================
+
+function geoplayMapUIHideStoryActions()
 {
-    var button =
+    var actions =
         document.getElementById(
-            "geoplay-continue"
+            "geoplay-story-actions"
         );
 
 
-    if (button)
+    if (actions)
     {
-        button.classList.remove(
+        actions.classList.remove(
             "visible"
         );
     }
 
 
     return 1;
+}
+
+
+// ==================================================
+// LEGACY CONTINUE COMPATIBILITY
+// ==================================================
+//
+// Kept temporarily so older GameMaker code
+// calling the previous Continue functions
+// does not break.
+// ==================================================
+
+function geoplayMapUIShowContinue()
+{
+    return geoplayMapUIShowStoryActions();
+}
+
+
+function geoplayMapUIHideContinue()
+{
+    return geoplayMapUIHideStoryActions();
 }

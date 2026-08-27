@@ -1862,7 +1862,26 @@ function geoplayMapFlowFinish()
     }
 
 
-    geoplayMapUIShowContinue();
+    // ==================================================
+    // CLOSE ROBOT DIALOGUE
+    // ==================================================
+
+    geoplayMapUISay(
+        ""
+    );
+
+
+    // ==================================================
+    // SHOW POST-STORY ACTIONS
+    // ==================================================
+
+    if (
+        typeof geoplayMapUIShowStoryActions ===
+        "function"
+    )
+    {
+        geoplayMapUIShowStoryActions();
+    }
 }
 
 
@@ -1933,15 +1952,55 @@ function geoplayMapFlowRouteFallback()
 
 
 // ==================================================
-// CONTINUE
+// FIND ANOTHER
 // ==================================================
+
+function gmcallback_geoplay_location_find_another()
+{
+    console.log(
+        "GEOPLAY FLOW: Find Another selected."
+    );
+
+
+    // Future location-search flow goes here.
+}
+
+
+// ==================================================
+// BROWSE
+// ==================================================
+
+function gmcallback_geoplay_location_browse()
+{
+    console.log(
+        "GEOPLAY FLOW: Browse selected."
+    );
+
+
+    // Future app browsing flow goes here.
+}
+
+
+// ==================================================
+// LEGACY CONTINUE
+// ==================================================
+//
+// Kept temporarily so existing GameMaker
+// references do not break.
+//
 
 function gmcallback_geoplay_location_continue()
 {
     console.log(
-        "GEOPLAY FLOW: Continue selected."
+        "GEOPLAY FLOW: Legacy Continue selected."
     );
 
 
-    // Future GameMaker transition goes here.
+    if (
+        typeof geoplayMapUIShowStoryActions ===
+        "function"
+    )
+    {
+        geoplayMapUIShowStoryActions();
+    }
 }
