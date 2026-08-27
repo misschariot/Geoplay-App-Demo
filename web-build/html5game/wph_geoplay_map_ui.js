@@ -60,6 +60,20 @@ window.geoplayDestinationExpanded = false;
 
 
 // ==================================================
+// NEW:
+// OFF-SCREEN INDICATOR STATE
+// ==================================================
+//
+// The Pine Ridge destination card can be visible
+// during narration, but the off-screen directional
+// indicator remains hidden until the story finishes.
+// ==================================================
+
+window.geoplayDestinationIndicatorEnabled =
+    false;
+
+
+// ==================================================
 // CREATE UI
 // ==================================================
 
@@ -3284,6 +3298,34 @@ function geoplayMapUIPositionDestination()
     card.classList.remove(
         "visible"
     );
+
+
+    // ==================================================
+    // OFF-SCREEN INDICATOR
+    // ==================================================
+    //
+    // The Pine Ridge card is allowed to participate
+    // in the normal destination positioning logic.
+    //
+    // The directional indicator, however, remains
+    // hidden until the story has finished.
+    // ==================================================
+
+    if (
+        !window.geoplayDestinationIndicatorEnabled
+    )
+    {
+        indicator.classList.remove(
+            "visible"
+        );
+
+
+        window.geoplayDestinationOffscreen =
+            false;
+
+
+        return;
+    }
 
 
     indicator.classList.add(

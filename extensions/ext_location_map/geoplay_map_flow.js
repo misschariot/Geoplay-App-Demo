@@ -140,6 +140,15 @@ function geoplayMapFlowStart()
         false;
 
 
+    // ==================================================
+    // KEEP PINE RIDGE OFF-SCREEN INDICATOR HIDDEN
+    // DURING THE ENTIRE STORY.
+    // ==================================================
+
+    window.geoplayDestinationIndicatorEnabled =
+        false;
+
+
     console.log(
         "GEOPLAY FLOW: Story beginning."
     );
@@ -1841,6 +1850,33 @@ function geoplayMapFlowFinish()
 
     window.geoplayMapFlowFinished =
         true;
+
+
+    // ==================================================
+    // STORY IS NOW COMPLETE.
+    // ENABLE THE PINE RIDGE OFF-SCREEN INDICATOR.
+    // ==================================================
+
+    window.geoplayDestinationIndicatorEnabled =
+        true;
+
+
+    // ==================================================
+    // RECALCULATE DESTINATION POSITION
+    // ==================================================
+    //
+    // If Pine Ridge is currently off-screen, this
+    // immediately allows the directional indicator
+    // to appear.
+    // ==================================================
+
+    if (
+        typeof geoplayMapUIUpdatePositions ===
+        "function"
+    )
+    {
+        geoplayMapUIUpdatePositions();
+    }
 
 
     console.log(
