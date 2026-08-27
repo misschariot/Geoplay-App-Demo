@@ -1902,7 +1902,7 @@ function geoplayMapUIAddStyles()
             360px;
 
         bottom:
-            78px;
+            105px;
 
         gap:
             8px;
@@ -2009,7 +2009,6 @@ function geoplayMapUIAddStyles()
 }
 
 `;
-
 
     document.head.appendChild(
         style
