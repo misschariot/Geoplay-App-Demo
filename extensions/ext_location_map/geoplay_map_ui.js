@@ -1542,25 +1542,31 @@ function geoplayMapUIAddStyles()
 
     bottom:
         clamp(
-            22px,
-            4vh,
-            42px
+            70px,
+            9vh,
+            90px
         );
 
     width:
         min(
-            72vw,
-            280px
+            88vw,
+            360px
         );
 
     display:
         flex;
 
     flex-direction:
-        column;
+        row;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
 
     gap:
-        9px;
+        10px;
 
     opacity:
         0;
@@ -1599,14 +1605,17 @@ function geoplayMapUIAddStyles()
         );
 
     pointer-events:
-        auto;
+        none;
 }
 
 
 .geoplay-story-action
 {
-    width:
-        100%;
+    flex:
+        1 1 0;
+
+    min-width:
+        0;
 
     min-height:
         44px;
@@ -1658,7 +1667,7 @@ function geoplayMapUIAddStyles()
         center;
 
     cursor:
-        pointer;
+        default;
 
     box-shadow:
         0 5px 14px
@@ -1673,17 +1682,14 @@ function geoplayMapUIAddStyles()
         transparent;
 
     transition:
-        transform .15s ease,
-        box-shadow .15s ease;
+        none;
 }
 
 
 .geoplay-story-action:active
 {
     transform:
-        scale(
-            .97
-        );
+        none;
 }
 
 
@@ -1887,10 +1893,16 @@ function geoplayMapUIAddStyles()
     .geoplay-story-actions
     {
         width:
-            min(
-                72vw,
-                270px
+            calc(
+                100vw -
+                32px
             );
+
+        max-width:
+            360px;
+
+        bottom:
+            78px;
 
         gap:
             8px;
@@ -1902,8 +1914,11 @@ function geoplayMapUIAddStyles()
         min-height:
             43px;
 
+        padding:
+            10px 10px;
+
         font-size:
-            12px;
+            11px;
     }
 }
 
@@ -2776,34 +2791,13 @@ function geoplayMapUICreateStoryActions()
         "FIND ANOTHER";
 
 
-    findAnother.addEventListener(
-        "click",
-        function(event)
-        {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
-            geoplayMapUIHideStoryActions();
-
-
-            console.log(
-                "GEOPLAY UI: FIND ANOTHER selected."
-            );
-
-
-            if (
-                typeof
-                window.gml_Script_gmcallback_geoplay_location_find_another
-                ===
-                "function"
-            )
-            {
-                window.gml_Script_gmcallback_geoplay_location_find_another();
-            }
-        }
-    );
+    // ==================================================
+    // FIND ANOTHER IS VISUAL ONLY FOR NOW.
+    // ==================================================
+    //
+    // No click/touch handler intentionally.
+    // Future functionality will be added later.
+    // ==================================================
 
 
     // ==================================================
@@ -2829,34 +2823,13 @@ function geoplayMapUICreateStoryActions()
         "BROWSE";
 
 
-    browse.addEventListener(
-        "click",
-        function(event)
-        {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
-            geoplayMapUIHideStoryActions();
-
-
-            console.log(
-                "GEOPLAY UI: BROWSE selected."
-            );
-
-
-            if (
-                typeof
-                window.gml_Script_gmcallback_geoplay_location_browse
-                ===
-                "function"
-            )
-            {
-                window.gml_Script_gmcallback_geoplay_location_browse();
-            }
-        }
-    );
+    // ==================================================
+    // BROWSE IS VISUAL ONLY FOR NOW.
+    // ==================================================
+    //
+    // No click/touch handler intentionally.
+    // Future functionality will be added later.
+    // ==================================================
 
 
     actions.appendChild(
