@@ -19,6 +19,9 @@
 //
 // FLOW:
 // geoplay_map_flow.js
+//
+// CSS:
+// geoplay_map.css
 // ==================================================
 
 
@@ -987,22 +990,6 @@ function geoplayMapCreatePlayerMarker()
     // ==================================================
     // MARKER CONTAINER
     // ==================================================
-    //
-    // The player's geographic coordinate is aligned
-    // with the bottom of the avatar itself.
-    //
-    // The avatar is 74px tall and begins at 2px.
-    // Therefore:
-    //
-    // 2px + 74px = 76px
-    //
-    // The marker container is 76px tall so its bottom
-    // anchor corresponds directly with the bottom of
-    // the avatar.
-    //
-    // The pulse is allowed to render outside the
-    // container.
-    // ==================================================
 
     markerElement.style.width =
         "94px";
@@ -1032,390 +1019,9 @@ function geoplayMapCreatePlayerMarker()
         "visible";
 
 
-    if (
-        !document.getElementById(
-            "geoplay-player-marker-styles"
-        )
-    )
-    {
-        var markerStyle =
-            document.createElement(
-                "style"
-            );
-
-
-        markerStyle.id =
-            "geoplay-player-marker-styles";
-
-
-        markerStyle.textContent = `
-
-.geoplay-player-marker-ring
-{
-    position:
-        absolute;
-
-    left:
-        50%;
-
-    top:
-        4px;
-
-    width:
-        76px;
-
-    height:
-        76px;
-
-    border:
-        2px solid
-        rgba(
-            52,
-            210,
-            255,
-            .90
-        );
-
-    border-radius:
-        50%;
-
-    background:
-        rgba(
-            52,
-            210,
-            255,
-            .08
-        );
-
-    transform:
-        translateX(
-            -50%
-        );
-
-    box-shadow:
-        0 0 10px
-        rgba(
-            52,
-            210,
-            255,
-            .88
-        ),
-        0 0 24px
-        rgba(
-            52,
-            210,
-            255,
-            .45
-        );
-
-    animation:
-        geoplayPlayerMarkerGlow
-        2.8s
-        ease-in-out
-        infinite;
-
-    pointer-events:
-        none;
-}
-
-
-.geoplay-player-marker-pulse
-{
-    position:
-        absolute;
-
-    left:
-        50%;
-
-    top:
-        42px;
-
-    width:
-        86px;
-
-    height:
-        86px;
-
-    border:
-        1px solid
-        rgba(
-            52,
-            210,
-            255,
-            .38
-        );
-
-    border-radius:
-        50%;
-
-    transform:
-        translate(
-            -50%,
-            -50%
-        )
-        scale(
-            .25
-        );
-
-    opacity:
-        .72;
-
-    animation:
-        geoplayPlayerMarkerPulse
-        2.8s
-        ease-out
-        infinite;
-
-    pointer-events:
-        none;
-}
-
-
-.geoplay-player-marker-image
-{
-    position:
-        absolute;
-
-    left:
-        50%;
-
-    top:
-        5px;
-
-    width:
-        74px;
-
-    height:
-        74px;
-
-    min-width:
-        74px;
-
-    min-height:
-        74px;
-
-    max-width:
-        74px;
-
-    max-height:
-        74px;
-
-    flex-shrink:
-        0;
-
-    object-fit:
-        contain;
-
-    display:
-        block;
-
-    transform:
-        translateX(
-            -50%
-        );
-
-    transform-origin:
-        center center;
-
-    z-index:
-        3;
-
-    pointer-events:
-        none;
-
-    user-select:
-        none;
-
-    -webkit-user-drag:
-        none;
-}
-
-
-.geoplay-player-marker-image.geoplay-player-marker-pop
-{
-    animation:
-        geoplayPlayerMarkerPop
-        .45s
-        cubic-bezier(
-            .22,
-            1.25,
-            .36,
-            1
-        );
-}
-
-
-@keyframes geoplayPlayerMarkerGlow
-{
-    0%,
-    100%
-    {
-        opacity:
-            .72;
-
-        box-shadow:
-            0 0 10px
-            rgba(
-                52,
-                210,
-                255,
-                .78
-            ),
-            0 0 22px
-            rgba(
-                52,
-                210,
-                255,
-                .34
-            );
-    }
-
-
-    50%
-    {
-        opacity:
-            1;
-
-        box-shadow:
-            0 0 14px
-            rgba(
-                52,
-                210,
-                255,
-                .98
-            ),
-            0 0 32px
-            rgba(
-                52,
-                210,
-                255,
-                .58
-            );
-    }
-}
-
-
-@keyframes geoplayPlayerMarkerPop
-{
-    0%
-    {
-        transform:
-            translateX(
-                -50%
-            )
-            scale(
-                .78
-            );
-
-        opacity:
-            0;
-    }
-
-
-    55%
-    {
-        transform:
-            translateX(
-                -50%
-            )
-            scale(
-                1.08
-            );
-
-        opacity:
-            1;
-    }
-
-
-    78%
-    {
-        transform:
-            translateX(
-                -50%
-            )
-            scale(
-                .98
-            );
-
-        opacity:
-            1;
-    }
-
-
-    100%
-    {
-        transform:
-            translateX(
-                -50%
-            )
-            scale(
-                1
-            );
-
-        opacity:
-            1;
-    }
-}
-
-
-@keyframes geoplayPlayerMarkerPulse
-{
-    0%
-    {
-        transform:
-            translate(
-                -50%,
-                -50%
-            )
-            scale(
-                .25
-            );
-
-        opacity:
-            .72;
-    }
-
-
-    65%
-    {
-        transform:
-            translate(
-                -50%,
-                -50%
-            )
-            scale(
-                1.05
-            );
-
-        opacity:
-            .30;
-    }
-
-
-    100%
-    {
-        transform:
-            translate(
-                -50%,
-                -50%
-            )
-            scale(
-                1.55
-            );
-
-        opacity:
-            0;
-    }
-}
-
-`;
-
-
-        document.head.appendChild(
-            markerStyle
-        );
-    }
-
+    // ==================================================
+    // PULSE
+    // ==================================================
 
     var pulse =
         document.createElement(
@@ -1432,6 +1038,10 @@ function geoplayMapCreatePlayerMarker()
     );
 
 
+    // ==================================================
+    // RING
+    // ==================================================
+
     var ring =
         document.createElement(
             "div"
@@ -1446,6 +1056,10 @@ function geoplayMapCreatePlayerMarker()
         ring
     );
 
+
+    // ==================================================
+    // PLAYER IMAGE
+    // ==================================================
 
     var playerImage =
         document.createElement(
@@ -1492,6 +1106,10 @@ function geoplayMapCreatePlayerMarker()
         playerImage
     );
 
+
+    // ==================================================
+    // CREATE MAP MARKER
+    // ==================================================
 
     window.geoplayPlayerMarker =
         new maplibregl.Marker(
@@ -1677,18 +1295,6 @@ function geoplayMapCreateDestinationMarker()
     // ==================================================
     // DESTINATION MARKER CONTAINER
     // ==================================================
-    //
-    // Pine Ridge uses the same visual structure as the
-    // player marker:
-    //
-    // - 76px ring
-    // - 74px avatar
-    // - continuous pulse
-    //
-    // The destination version uses yellow instead of
-    // the player's cyan so the two markers are clearly
-    // differentiated.
-    // ==================================================
 
     var markerElement =
         document.createElement(
@@ -1724,313 +1330,9 @@ function geoplayMapCreateDestinationMarker()
         "visible";
 
 
-    if (
-        !document.getElementById(
-            "geoplay-destination-marker-styles"
-        )
-    )
-    {
-        var destinationStyle =
-            document.createElement(
-                "style"
-            );
-
-
-        destinationStyle.id =
-            "geoplay-destination-marker-styles";
-
-
-        destinationStyle.textContent = `
-
-.geoplay-destination-marker-ring
-{
-    position:
-        absolute;
-
-    left:
-        50%;
-
-    top:
-        4px;
-
-    width:
-        76px;
-
-    height:
-        76px;
-
-    border:
-        2px solid
-        rgba(
-            255,
-            190,
-            70,
-            .95
-        );
-
-    border-radius:
-        50%;
-
-    background:
-        rgba(
-            255,
-            190,
-            70,
-            .08
-        );
-
-    transform:
-        translateX(
-            -50%
-        );
-
-    box-shadow:
-        0 0 10px
-        rgba(
-            255,
-            190,
-            70,
-            .90
-        ),
-        0 0 24px
-        rgba(
-            255,
-            190,
-            70,
-            .45
-        );
-
-    animation:
-        geoplayDestinationMarkerGlow
-        2.8s
-        ease-in-out
-        infinite;
-
-    pointer-events:
-        none;
-}
-
-
-.geoplay-destination-marker-pulse
-{
-    position:
-        absolute;
-
-    left:
-        50%;
-
-    top:
-        42px;
-
-    width:
-        86px;
-
-    height:
-        86px;
-
-    border:
-        1px solid
-        rgba(
-            255,
-            190,
-            70,
-            .42
-        );
-
-    border-radius:
-        50%;
-
-    transform:
-        translate(
-            -50%,
-            -50%
-        )
-        scale(
-            .25
-        );
-
-    opacity:
-        .72;
-
-    animation:
-        geoplayDestinationMarkerPulse
-        2.8s
-        ease-out
-        infinite;
-
-    pointer-events:
-        none;
-}
-
-
-.geoplay-destination-marker-image
-{
-    position:
-        absolute;
-
-    left:
-        50%;
-
-    top:
-        5px;
-
-    width:
-        74px;
-
-    height:
-        74px;
-
-    min-width:
-        74px;
-
-    min-height:
-        74px;
-
-    max-width:
-        74px;
-
-    max-height:
-        74px;
-
-    flex-shrink:
-        0;
-
-    object-fit:
-        contain;
-
-    display:
-        block;
-
-    transform:
-        translateX(
-            -50%
-        );
-
-    transform-origin:
-        center center;
-
-    z-index:
-        3;
-
-    pointer-events:
-        none;
-
-    user-select:
-        none;
-
-    -webkit-user-drag:
-        none;
-}
-
-
-@keyframes geoplayDestinationMarkerGlow
-{
-    0%,
-    100%
-    {
-        opacity:
-            .72;
-
-        box-shadow:
-            0 0 10px
-            rgba(
-                255,
-                190,
-                70,
-                .82
-            ),
-            0 0 22px
-            rgba(
-                255,
-                190,
-                70,
-                .34
-            );
-    }
-
-
-    50%
-    {
-        opacity:
-            1;
-
-        box-shadow:
-            0 0 14px
-            rgba(
-                255,
-                190,
-                70,
-                1
-            ),
-            0 0 32px
-            rgba(
-                255,
-                190,
-                70,
-                .58
-            );
-    }
-}
-
-
-@keyframes geoplayDestinationMarkerPulse
-{
-    0%
-    {
-        transform:
-            translate(
-                -50%,
-                -50%
-            )
-            scale(
-                .25
-            );
-
-        opacity:
-            .72;
-    }
-
-
-    65%
-    {
-        transform:
-            translate(
-                -50%,
-                -50%
-            )
-            scale(
-                1.05
-            );
-
-        opacity:
-            .30;
-    }
-
-
-    100%
-    {
-        transform:
-            translate(
-                -50%,
-                -50%
-            )
-            scale(
-                1.55
-            );
-
-        opacity:
-            0;
-    }
-}
-
-`;
-
-
-        document.head.appendChild(
-            destinationStyle
-        );
-    }
-
+    // ==================================================
+    // PULSE
+    // ==================================================
 
     var pulse =
         document.createElement(
@@ -2047,6 +1349,10 @@ function geoplayMapCreateDestinationMarker()
     );
 
 
+    // ==================================================
+    // RING
+    // ==================================================
+
     var ring =
         document.createElement(
             "div"
@@ -2061,6 +1367,10 @@ function geoplayMapCreateDestinationMarker()
         ring
     );
 
+
+    // ==================================================
+    // DESTINATION IMAGE
+    // ==================================================
 
     var destinationImage =
         document.createElement(
@@ -2107,6 +1417,10 @@ function geoplayMapCreateDestinationMarker()
         destinationImage
     );
 
+
+    // ==================================================
+    // CREATE MAP MARKER
+    // ==================================================
 
     window.geoplayDestinationMarker =
         new maplibregl.Marker(

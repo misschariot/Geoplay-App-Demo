@@ -1860,3 +1860,534 @@
             95px;
     }
 }
+
+/* ==================================================
+   PLAYER MAP MARKER
+   ================================================== */
+
+.geoplay-player-marker-ring
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        48px;
+
+    height:
+        48px;
+
+    border:
+        2px solid
+        rgba(
+            173,
+            78,
+            255,
+            .9
+        );
+
+    border-radius:
+        50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    box-shadow:
+        0 0 10px
+        rgba(
+            173,
+            78,
+            255,
+            .55
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        1;
+
+    animation:
+        geoplayPlayerMarkerGlow
+        2s ease-in-out
+        infinite;
+}
+
+
+.geoplay-player-marker-pulse
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        34px;
+
+    height:
+        34px;
+
+    border:
+        2px solid
+        rgba(
+            173,
+            78,
+            255,
+            .45
+        );
+
+    border-radius:
+        50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        0;
+
+    animation:
+        geoplayPlayerMarkerPulse
+        2s ease-out
+        infinite;
+}
+
+
+.geoplay-player-marker-image
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        56px;
+
+    height:
+        56px;
+
+    object-fit:
+        contain;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    transform-origin:
+        center center;
+
+    display:
+        block;
+
+    pointer-events:
+        none;
+
+    user-select:
+        none;
+
+    -webkit-user-drag:
+        none;
+
+    z-index:
+        2;
+}
+
+
+.geoplay-player-marker-pop
+{
+    animation:
+        geoplayPlayerMarkerPop
+        .45s
+        cubic-bezier(
+            .22,
+            1.25,
+            .36,
+            1
+        );
+}
+
+
+@keyframes geoplayPlayerMarkerGlow
+{
+    0%,
+    100%
+    {
+        opacity:
+            .65;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                .96
+            );
+    }
+
+    50%
+    {
+        opacity:
+            1;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1.06
+            );
+    }
+}
+
+
+@keyframes geoplayPlayerMarkerPulse
+{
+    0%
+    {
+        opacity:
+            .65;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                .85
+            );
+    }
+
+    70%
+    {
+        opacity:
+            0;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1.55
+            );
+    }
+
+    100%
+    {
+        opacity:
+            0;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1.55
+            );
+    }
+}
+
+
+@keyframes geoplayPlayerMarkerPop
+{
+    0%
+    {
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                .75
+            );
+    }
+
+    65%
+    {
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1.12
+            );
+    }
+
+    100%
+    {
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1
+            );
+    }
+}
+
+
+/* ==================================================
+   PINE RIDGE MAP MARKER
+   ================================================== */
+
+.geoplay-destination-marker-ring
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        48px;
+
+    height:
+        48px;
+
+    border:
+        2px solid
+        rgba(
+            255,
+            173,
+            34,
+            .95
+        );
+
+    border-radius:
+        50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    box-shadow:
+        0 0 12px
+        rgba(
+            255,
+            173,
+            34,
+            .65
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        1;
+
+    animation:
+        geoplayDestinationMarkerGlow
+        2s ease-in-out
+        infinite;
+}
+
+
+.geoplay-destination-marker-pulse
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        34px;
+
+    height:
+        34px;
+
+    border:
+        2px solid
+        rgba(
+            255,
+            173,
+            34,
+            .5
+        );
+
+    border-radius:
+        50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        0;
+
+    animation:
+        geoplayDestinationMarkerPulse
+        2s ease-out
+        infinite;
+}
+
+
+.geoplay-destination-marker-image
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        56px;
+
+    height:
+        56px;
+
+    object-fit:
+        contain;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    transform-origin:
+        center center;
+
+    display:
+        block;
+
+    pointer-events:
+        none;
+
+    user-select:
+        none;
+
+    -webkit-user-drag:
+        none;
+
+    z-index:
+        2;
+}
+
+
+@keyframes geoplayDestinationMarkerGlow
+{
+    0%,
+    100%
+    {
+        opacity:
+            .7;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                .96
+            );
+    }
+
+    50%
+    {
+        opacity:
+            1;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1.06
+            );
+    }
+}
+
+
+@keyframes geoplayDestinationMarkerPulse
+{
+    0%
+    {
+        opacity:
+            .65;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                .85
+            );
+    }
+
+    70%
+    {
+        opacity:
+            0;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1.55
+            );
+    }
+
+    100%
+    {
+        opacity:
+            0;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1.55
+            );
+    }
+}
