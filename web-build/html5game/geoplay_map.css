@@ -1,35 +1,23 @@
 /* ==================================================
-   GEOPLAY MAP UI
-   SHARED MAP UI STYLES
+   GEOPLAY MAP CSS
+   ==================================================
+   
+   RESPONSIBILITY:
+   - Map UI styling
+   - Dialogue
+   - Destination card
+   - Story action buttons
+   - Player marker
+   - Destination marker
+   
    ================================================== */
 
 
 /* ==================================================
-   POPPINS
+   MAP UI ROOT
    ================================================== */
-
-@import url(
-    'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap'
-);
-
 
 #geoplay-map-ui
-{
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    color:
-        #ffffff;
-}
-
-
-/* ==================================================
-   SEARCH
-   ================================================== */
-
-.geoplay-search-visual
 {
     position:
         absolute;
@@ -46,740 +34,165 @@
     height:
         100%;
 
+    pointer-events:
+        none;
+
+    overflow:
+        hidden;
+}
+
+
+/* ==================================================
+   ROBOT DIALOGUE
+   ================================================== */
+
+.geoplay-dialogue
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    bottom:
+        8%;
+
+    transform:
+        translateX(-50%);
+
+    width:
+        min(86%, 560px);
+
+    box-sizing:
+        border-box;
+
+    padding:
+        14px 18px;
+
+    border-radius:
+        18px;
+
+    background:
+        rgba(
+            12,
+            16,
+            38,
+            .92
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .16
+        );
+
+    box-shadow:
+        0 8px 30px
+        rgba(
+            0,
+            0,
+            0,
+            .35
+        );
+
+    color:
+        #ffffff;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size:
+        18px;
+
+    line-height:
+        1.35;
+
+    text-align:
+        center;
+
     opacity:
         0;
+
+    visibility:
+        hidden;
+
+    transition:
+        opacity .25s ease;
 
     pointer-events:
         none;
 
     z-index:
         20;
-
-    transition:
-        opacity .35s ease;
 }
 
 
-.geoplay-search-visual.visible
+.geoplay-dialogue.visible
 {
     opacity:
         1;
+
+    visibility:
+        visible;
 }
 
 
-.geoplay-search-robot
+/* ==================================================
+   ROBOT HEAD
+   ================================================== */
+
+.geoplay-dialogue-head
 {
     position:
         absolute;
 
     left:
-        12px;
+        50%;
 
-    bottom:
-        90px;
+    top:
+        0;
 
     width:
-        clamp(
-            78px,
-            20vw,
-            145px
-        );
+        64px;
 
     height:
-        auto;
+        64px;
 
-    opacity:
-        0;
-}
-
-
-.geoplay-search-visual.visible
-.geoplay-search-robot
-{
-    opacity:
-        1;
-}
-
-
-/* ==================================================
-   PINE RIDGE DESTINATION CARD
-   ================================================== */
-
-.geoplay-destination
-{
-    position:
-        absolute;
-
-    width:
-        min(
-            70vw,
-            285px
+    transform:
+        translate(
+            -50%,
+            -72%
         );
 
-    max-width:
-        calc(
-            100% - 20px
-        );
-
-    box-sizing:
-        border-box;
-
-    padding:
-        11px 14px;
-
-    border-radius:
-        16px;
-
-    background:
-        rgba(
-            20,
-            7,
-            31,
-            .97
-        );
-
-    border:
-        1px solid
-        rgba(
-            255,
-            173,
-            34,
-            .95
-        );
-
-    box-shadow:
-        0 0 15px
-        rgba(
-            255,
-            173,
-            34,
-            .4
-        );
-
-    opacity:
-        0;
+    object-fit:
+        contain;
 
     pointer-events:
         none;
 
     z-index:
-        110;
-
-    transition:
-        opacity .2s ease,
-        width .25s ease,
-        max-height .25s ease,
-        transform .25s ease;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    cursor:
-        pointer;
-
-    user-select:
-        none;
-
-    -webkit-user-select:
-        none;
-
-    -webkit-tap-highlight-color:
-        transparent;
-}
-
-
-.geoplay-destination.visible
-{
-    opacity:
-        1;
-
-    pointer-events:
-        auto;
+        2;
 }
 
 
 /* ==================================================
-   COLLAPSED CARD
+   DIALOGUE TEXT
    ================================================== */
 
-.geoplay-destination-collapsed
-{
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        12px;
-
-    width:
-        100%;
-}
-
-
-.geoplay-destination-collapsed-main
-{
-    min-width:
-        0;
-
-    flex:
-        1;
-}
-
-
-.geoplay-destination-title
+.geoplay-dialogue-text
 {
     display:
         block;
 
-    color:
-        #ffb52e;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    font-size:
-        clamp(
-            12px,
-            3vw,
-            15px
-        );
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        .2px;
-
-    white-space:
-        nowrap;
-
-    overflow:
-        hidden;
-
-    text-overflow:
-        ellipsis;
-}
-
-
-.geoplay-destination-info
-{
-    display:
-        block;
-
-    margin-top:
-        4px;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    font-size:
-        clamp(
-            10px,
-            2.5vw,
-            12px
-        );
-
-    font-weight:
-        700;
-
-    color:
-        #ffffff;
-
-    white-space:
-        nowrap;
-}
-
-
-.geoplay-destination-chevron
-{
-    flex:
-        0 0 auto;
-
-    width:
+    min-height:
         24px;
 
-    height:
-        24px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    color:
-        #ffb52e;
-
-    font-size:
-        20px;
-
-    font-weight:
-        800;
-
-    line-height:
-        1;
-
-    transition:
-        transform .2s ease;
-}
-
-
-.geoplay-destination:hover
-.geoplay-destination-chevron
-{
-    transform:
-        translateX(
-            2px
-        );
-}
-
-
-/* ==================================================
-   EXPANDED CARD
-   ================================================== */
-
-.geoplay-destination.expanded
-{
-    width:
-        min(
-            88vw,
-            360px
-        );
-
-    padding:
-        13px;
-
-    border-radius:
-        18px;
-
-    cursor:
-        default;
-}
-
-
-.geoplay-destination-expanded-header
-{
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        8px;
-
-    width:
-        100%;
-
-    margin-bottom:
-        10px;
-}
-
-
-.geoplay-destination-expanded-title
-{
-    min-width:
-        0;
-
-    flex:
-        1;
-
-    color:
-        #ffb52e;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    font-size:
-        clamp(
-            13px,
-            3.5vw,
-            16px
-        );
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        .2px;
-
     white-space:
-        nowrap;
-
-    overflow:
-        hidden;
-
-    text-overflow:
-        ellipsis;
-}
-
-
-.geoplay-destination-close
-{
-    flex:
-        0 0 auto;
-
-    width:
-        34px;
-
-    height:
-        34px;
-
-    padding:
-        0;
-
-    border:
-        0;
-
-    border-radius:
-        50%;
-
-    background:
-        rgba(
-            123,
-            69,
-            170,
-            .24
-        );
-
-    color:
-        #ffffff;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    font-size:
-        18px;
-
-    font-weight:
-        600;
-
-    line-height:
-        1;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    cursor:
-        pointer;
-
-    -webkit-tap-highlight-color:
-        transparent;
-}
-
-
-.geoplay-destination-close:active
-{
-    transform:
-        scale(
-            .92
-        );
-}
-
-
-/* ==================================================
-   EXPANDED IMAGE
-   ================================================== */
-
-.geoplay-destination-image
-{
-    display:
-        block;
-
-    width:
-        100%;
-
-    height:
-        clamp(
-            120px,
-            31vw,
-            155px
-        );
-
-    object-fit:
-        cover;
-
-    border-radius:
-        13px;
-
-    border:
-        1px solid
-        rgba(
-            255,
-            173,
-            34,
-            .45
-        );
-
-    box-shadow:
-        0 0 10px
-        rgba(
-            255,
-            173,
-            34,
-            .15
-        );
-
-    background:
-        #160a24;
-}
-
-
-/* ==================================================
-   EXPANDED DETAILS
-   ================================================== */
-
-.geoplay-destination-expanded-divider
-{
-    width:
-        100%;
-
-    height:
-        1px;
-
-    margin:
-        11px 0;
-
-    background:
-        rgba(
-            173,
-            78,
-            255,
-            .35
-        );
-}
-
-
-/* ==================================================
-   DISTANCE + ADDRESS TWO-COLUMN LAYOUT
-   ================================================== */
-
-.geoplay-destination-expanded-details
-{
-    display:
-        grid;
-
-    grid-template-columns:
-        minmax(
-            0,
-            1fr
-        )
-        minmax(
-            0,
-            1.35fr
-        );
-
-    column-gap:
-        12px;
-
-    align-items:
-        start;
-
-    width:
-        100%;
-
-    margin-bottom:
-        13px;
-}
-
-
-/* ==================================================
-   DISTANCE
-   ================================================== */
-
-.geoplay-destination-expanded-distance
-{
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        8px;
-
-    min-width:
-        0;
-
-    color:
-        #ffffff;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    font-size:
-        clamp(
-            11px,
-            3vw,
-            14px
-        );
-
-    font-weight:
-        700;
-
-    line-height:
-        1.35;
-}
-
-
-.geoplay-destination-distance-icon
-{
-    flex:
-        0 0 auto;
-
-    width:
-        26px;
-
-    height:
-        26px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    border-radius:
-        50%;
-
-    background:
-        rgba(
-            173,
-            78,
-            255,
-            .18
-        );
-
-    color:
-        #d6a8ff;
-
-    font-size:
-        14px;
-}
-
-
-/* ==================================================
-   ADDRESS
-   ================================================== */
-
-.geoplay-destination-expanded-address
-{
-    display:
-        flex;
-
-    align-items:
-        flex-start;
-
-    gap:
-        8px;
-
-    min-width:
-        0;
-
-    color:
-        #ffffff;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    font-size:
-        clamp(
-            10px,
-            2.7vw,
-            12px
-        );
-
-    font-weight:
-        500;
-
-    line-height:
-        1.45;
-}
-
-
-.geoplay-destination-address-icon
-{
-    flex:
-        0 0 auto;
-
-    width:
-        26px;
-
-    height:
-        26px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    border-radius:
-        50%;
-
-    background:
-        rgba(
-            173,
-            78,
-            255,
-            .18
-        );
-
-    color:
-        #d6a8ff;
-
-    font-size:
-        14px;
-}
-
-
-.geoplay-destination-address-text
-{
-    flex:
-        1;
-
-    min-width:
-        0;
-
-    overflow-wrap:
-        break-word;
+        pre-wrap;
 
     word-break:
         normal;
@@ -787,274 +200,246 @@
 
 
 /* ==================================================
-   PLAY HERE BUTTON
+   DESTINATION CARD
    ================================================== */
 
-.geoplay-destination-play
-{
-    width:
-        100%;
-
-    min-height:
-        46px;
-
-    padding:
-        10px 16px;
-
-    border:
-        0;
-
-    border-radius:
-        23px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #ff9418,
-            #ffc34d
-        );
-
-    color:
-        #281000;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    font-size:
-        clamp(
-            13px,
-            3.3vw,
-            16px
-        );
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        .2px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    gap:
-        8px;
-
-    cursor:
-        pointer;
-
-    box-shadow:
-        0 5px 14px
-        rgba(
-            255,
-            148,
-            24,
-            .24
-        );
-
-    -webkit-tap-highlight-color:
-        transparent;
-}
-
-
-.geoplay-destination-play:active
-{
-    transform:
-        scale(
-            .97
-        );
-}
-
-
-.geoplay-destination-play-arrow
-{
-    font-size:
-        18px;
-
-    line-height:
-        1;
-}
-
-
-/* ==================================================
-   OFF-SCREEN PINE RIDGE INDICATOR
-   ================================================== */
-
-.geoplay-destination-offscreen
+.geoplay-destination-card
 {
     position:
         absolute;
 
-    display:
-        flex;
+    left:
+        50%;
 
-    align-items:
-        center;
+    bottom:
+        20px;
 
-    gap:
-        6px;
+    transform:
+        translateX(-50%);
+
+    width:
+        min(
+            calc(100% - 32px),
+            460px
+        );
+
+    box-sizing:
+        border-box;
 
     padding:
-        7px 11px;
+        14px;
 
     border-radius:
-        14px;
+        20px;
 
     background:
         rgba(
-            20,
-            7,
-            31,
-            .95
+            14,
+            18,
+            42,
+            .96
         );
 
     border:
         1px solid
         rgba(
             255,
-            173,
-            34,
-            .9
+            255,
+            255,
+            .14
         );
 
     box-shadow:
-        0 0 12px
+        0 12px 36px
         rgba(
-            255,
-            173,
-            34,
-            .35
+            0,
+            0,
+            0,
+            .42
         );
 
     opacity:
         0;
 
+    visibility:
+        hidden;
+
     pointer-events:
         none;
 
-    z-index:
-        115;
-
-    transform:
-        translate(
-            -50%,
-            -50%
-        );
-
     transition:
-        opacity .25s ease,
-        box-shadow .15s ease;
+        opacity .3s ease,
+        transform .3s ease;
 
-    cursor:
-        pointer;
-
-    user-select:
-        none;
-
-    -webkit-user-select:
-        none;
-
-    -webkit-tap-highlight-color:
-        transparent;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
+    z-index:
+        30;
 }
 
 
-.geoplay-destination-offscreen.visible
+.geoplay-destination-card.visible
 {
     opacity:
         1;
 
-    pointer-events:
-        auto;
+    visibility:
+        visible;
 }
 
 
-.geoplay-destination-offscreen:hover
-{
-    box-shadow:
-        0 0 12px
-        rgba(
-            255,
-            173,
-            34,
-            .55
-        ),
+/* ==================================================
+   DESTINATION IMAGE
+   ================================================== */
 
-        0 0 22px
-        rgba(
-            255,
-            173,
-            34,
-            .2
-        );
-}
-
-
-.geoplay-destination-offscreen:active
-{
-    transform:
-        translate(
-            -50%,
-            -50%
-        )
-        scale(
-            .94
-        );
-}
-
-
-.geoplay-destination-offscreen-arrow
+.geoplay-destination-image
 {
     width:
-        20px;
+        100%;
 
     height:
-        20px;
+        150px;
 
     display:
-        inline-flex;
+        block;
 
-    align-items:
-        center;
+    object-fit:
+        cover;
 
-    justify-content:
-        center;
+    border-radius:
+        14px;
 
-    font-size:
-        16px;
-
-    transform-origin:
-        center center;
+    margin-bottom:
+        12px;
 }
 
 
-.geoplay-destination-offscreen-name
+/* ==================================================
+   DESTINATION TITLE
+   ================================================== */
+
+.geoplay-destination-title
 {
+    margin:
+        0 0 4px 0;
+
+    color:
+        #ffffff;
+
     font-family:
-        'Poppins',
         Arial,
         sans-serif;
 
     font-size:
-        11px;
+        22px;
 
     font-weight:
-        800;
+        700;
+}
 
-    letter-spacing:
-        .3px;
+
+/* ==================================================
+   DESTINATION ADDRESS
+   ================================================== */
+
+.geoplay-destination-address
+{
+    margin:
+        0 0 5px 0;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            .72
+        );
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size:
+        14px;
+}
+
+
+/* ==================================================
+   DESTINATION DISTANCE
+   ================================================== */
+
+.geoplay-destination-distance
+{
+    margin:
+        0 0 12px 0;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            .88
+        );
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size:
+        14px;
+}
+
+
+/* ==================================================
+   PLAY HERE
+   ================================================== */
+
+.geoplay-play-here
+{
+    width:
+        100%;
+
+    min-height:
+        48px;
+
+    border:
+        none;
+
+    border-radius:
+        14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7B4DFF,
+            #4B8DFF
+        );
+
+    color:
+        #ffffff;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size:
+        16px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    pointer-events:
+        auto;
+
+    box-shadow:
+        0 6px 18px
+        rgba(
+            75,
+            141,
+            255,
+            .30
+        );
 }
 
 
@@ -1071,53 +456,40 @@
         50%;
 
     bottom:
-        clamp(
-            70px,
-            9vh,
-            90px
-        );
+        20px;
 
-    width:
-        min(
-            88vw,
-            360px
-        );
+    transform:
+        translateX(-50%);
 
     display:
         flex;
 
-    flex-direction:
-        row;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
     gap:
         10px;
+
+    width:
+        min(
+            calc(100% - 32px),
+            460px
+        );
+
+    box-sizing:
+        border-box;
 
     opacity:
         0;
 
-    transform:
-        translateX(
-            -50%
-        )
-        translateY(
-            8px
-        );
+    visibility:
+        hidden;
 
     pointer-events:
         none;
 
     transition:
-        opacity .45s ease,
-        transform .45s ease;
+        opacity .3s ease;
 
     z-index:
-        120;
+        35;
 }
 
 
@@ -1126,100 +498,70 @@
     opacity:
         1;
 
-    transform:
-        translateX(
-            -50%
-        )
-        translateY(
-            0
-        );
+    visibility:
+        visible;
 
     pointer-events:
-        none;
+        auto;
 }
 
+
+/* ==================================================
+   STORY ACTION BUTTON
+   ================================================== */
 
 .geoplay-story-action
 {
     flex:
-        1 1 0;
-
-    min-width:
-        0;
+        1;
 
     min-height:
-        44px;
+        48px;
 
     padding:
-        10px 18px;
+        0 14px;
 
     border:
-        0;
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .18
+        );
 
     border-radius:
-        23px;
+        14px;
 
     background:
-        linear-gradient(
-            90deg,
-            #ff9418,
-            #ffc34d
+        rgba(
+            18,
+            23,
+            50,
+            .96
         );
 
     color:
-        #281000;
+        #ffffff;
 
     font-family:
-        'Poppins',
         Arial,
         sans-serif;
 
     font-size:
-        clamp(
-            12px,
-            3vw,
-            15px
-        );
+        14px;
 
     font-weight:
-        800;
+        700;
 
     letter-spacing:
-        .2px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
+        .4px;
 
     cursor:
-        default;
+        pointer;
 
-    box-shadow:
-        0 5px 14px
-        rgba(
-            255,
-            148,
-            24,
-            .24
-        );
-
-    -webkit-tap-highlight-color:
-        transparent;
-
-    transition:
-        none;
-}
-
-
-.geoplay-story-action:active
-{
-    transform:
-        none;
+    pointer-events:
+        auto;
 }
 
 
@@ -1227,112 +569,24 @@
 {
     background:
         linear-gradient(
-            90deg,
-            #8b42d8,
-            #b66cff
+            135deg,
+            #7B4DFF,
+            #4B8DFF
         );
 
-    color:
-        #ffffff;
-
-    box-shadow:
-        0 5px 14px
-        rgba(
-            139,
-            66,
-            216,
-            .25
-        );
+    border-color:
+        transparent;
 }
 
 
 /* ==================================================
-   ROBOT DIALOGUE
+   DESTINATION OFF-SCREEN INDICATOR
    ================================================== */
 
-.geoplay-dialogue
+.geoplay-destination-indicator
 {
     position:
         absolute;
-
-    left:
-        calc(
-            50% +
-            28px
-        );
-
-    bottom:
-        clamp(
-            112px,
-            15vh,
-            145px
-        );
-
-    width:
-        max-content;
-
-    min-width:
-        220px;
-
-    max-width:
-        min(
-            82vw,
-            430px
-        );
-
-    min-height:
-        68px;
-
-    box-sizing:
-        border-box;
-
-    padding:
-        10px 24px;
-
-    border-radius:
-        20px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(
-                18,
-                8,
-                42,
-                .97
-            ),
-            rgba(
-                11,
-                5,
-                29,
-                .97
-            )
-        );
-
-    border:
-        1px solid
-        rgba(
-            173,
-            78,
-            255,
-            .78
-        );
-
-    box-shadow:
-        0 0 14px
-        rgba(
-            155,
-            65,
-            230,
-            .32
-        ),
-        0 8px 24px
-        rgba(
-            0,
-            0,
-            0,
-            .30
-        );
 
     display:
         flex;
@@ -1343,523 +597,73 @@
     justify-content:
         center;
 
-    text-align:
-        center;
-
-    opacity:
-        0;
-
-    transform:
-        translate(
-            -50%,
-            10px
-        );
-
-    transition:
-        opacity .35s ease,
-        transform .35s ease,
-        width .18s ease,
-        min-height .12s ease;
-
-    z-index:
-        100;
-}
-
-
-.geoplay-dialogue.visible
-{
-    opacity:
-        1;
-
-    transform:
-        translate(
-            -50%,
-            0
-        );
-}
-
-
-/* ==================================================
-   DESTINATION ARRIVAL DIALOGUE
-   ================================================== */
-
-.geoplay-dialogue.destination-arrival
-{
-    bottom:
-        205px;
-}
-
-
-/* ==================================================
-   ROBOT HEAD
-   ================================================== */
-
-.geoplay-dialogue-robot
-{
-    position:
-        absolute;
-
-    left:
-        -52px;
-
-    top:
-        50%;
-
     width:
-        78px;
+        56px;
 
     height:
-        78px;
+        56px;
 
-    object-fit:
-        contain;
+    border-radius:
+        50%;
 
-    display:
-        block;
-
-    transform:
-        translateY(
-            -50%
-        )
-        scale(
-            .82
+    background:
+        rgba(
+            14,
+            18,
+            42,
+            .92
         );
 
-    transform-origin:
-        center center;
+    border:
+        2px solid
+        rgba(
+            255,
+            173,
+            34,
+            .90
+        );
+
+    box-shadow:
+        0 0 18px
+        rgba(
+            255,
+            173,
+            34,
+            .35
+        );
 
     opacity:
         0;
 
-    filter:
-        drop-shadow(
-            0 0 7px
-            rgba(
-                173,
-                78,
-                255,
-                .38
-            )
-        );
-
-    transition:
-        opacity .35s ease .08s,
-        transform .45s
-        cubic-bezier(
-            .22,
-            1.25,
-            .36,
-            1
-        );
+    visibility:
+        hidden;
 
     pointer-events:
         none;
 
-    user-select:
-        none;
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
 
-    -webkit-user-drag:
-        none;
+    transition:
+        opacity .25s ease;
 
     z-index:
-        3;
+        25;
 }
 
 
-.geoplay-dialogue.visible
-.geoplay-dialogue-robot
+.geoplay-destination-indicator.visible
 {
     opacity:
         1;
 
-    transform:
-        translateY(
-            -50%
-        )
-        scale(
-            1
-        );
+    visibility:
+        visible;
 }
 
-
-/* ==================================================
-   DIALOGUE TEXT
-   ================================================== */
-
-.geoplay-dialogue-text
-{
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    width:
-        fit-content;
-
-    max-width:
-        calc(
-            82vw -
-            48px
-        );
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    font-size:
-        clamp(
-            13px,
-            3.25vw,
-            17px
-        );
-
-    font-weight:
-        600;
-
-    line-height:
-        1.45;
-
-    letter-spacing:
-        .05px;
-
-    color:
-        #ffffff;
-
-    text-align:
-        center;
-
-    overflow-wrap:
-        break-word;
-}
-
-
-/* ==================================================
-   DIALOGUE — SMALL SCREEN
-   ================================================== */
-
-@media (max-width:430px)
-{
-    .geoplay-dialogue
-    {
-        left:
-            calc(
-                50% +
-                24px
-            );
-
-        width:
-            max-content;
-
-        min-width:
-            210px;
-
-        max-width:
-            calc(
-                100% -
-                76px
-            );
-
-        min-height:
-            68px;
-
-        bottom:
-            112px;
-
-        padding:
-            9px 16px;
-
-        border-radius:
-            18px;
-    }
-
-
-    .geoplay-dialogue.destination-arrival
-    {
-        bottom:
-            205px;
-    }
-
-
-    .geoplay-dialogue-robot
-    {
-        left:
-            -48px;
-
-        width:
-            70px;
-
-        height:
-            70px;
-    }
-
-
-    .geoplay-dialogue-text
-    {
-        width:
-            fit-content;
-
-        max-width:
-            calc(
-                100vw -
-                108px
-            );
-
-        font-size:
-            clamp(
-                12px,
-                3.35vw,
-                15px
-            );
-
-        line-height:
-            1.42;
-    }
-}
-
-
-/* ==================================================
-   DIALOGUE — LARGER VIEWPORT
-   ================================================== */
-
-@media (min-width:431px)
-{
-    .geoplay-dialogue
-    {
-        left:
-            calc(
-                50% +
-                34px
-            );
-
-        min-width:
-            240px;
-
-        min-height:
-            90px;
-
-        padding:
-            13px 24px;
-    }
-
-
-    .geoplay-dialogue.destination-arrival
-    {
-        bottom:
-            215px;
-    }
-
-
-    .geoplay-dialogue-robot
-    {
-        left:
-            -58px;
-
-        width:
-            82px;
-
-        height:
-            82px;
-    }
-
-
-    .geoplay-dialogue-text
-    {
-        max-width:
-            min(
-                72vw,
-                370px
-            );
-
-        font-size:
-            clamp(
-                15px,
-                2.25vw,
-                18px
-            );
-
-        line-height:
-            1.45;
-    }
-}
-
-
-/* ==================================================
-   SMALL SCREEN
-   ================================================== */
-
-@media (max-width:430px)
-{
-    .geoplay-destination
-    {
-        width:
-            min(
-                72vw,
-                265px
-            );
-    }
-
-
-    .geoplay-destination.expanded
-    {
-        width:
-            calc(
-                100vw -
-                24px
-            );
-
-        max-width:
-            340px;
-
-        padding:
-            12px;
-    }
-
-
-    .geoplay-destination-image
-    {
-        height:
-            125px;
-    }
-
-
-    .geoplay-destination-expanded-details
-    {
-        grid-template-columns:
-            minmax(
-                0,
-                0.9fr
-            )
-            minmax(
-                0,
-                1.3fr
-            );
-
-        column-gap:
-            9px;
-    }
-
-
-    .geoplay-destination-expanded-distance
-    {
-        gap:
-            6px;
-
-        font-size:
-            10px;
-    }
-
-
-    .geoplay-destination-expanded-address
-    {
-        gap:
-            6px;
-
-        font-size:
-            10px;
-    }
-
-
-    .geoplay-destination-distance-icon,
-    .geoplay-destination-address-icon
-    {
-        width:
-            24px;
-
-        height:
-            24px;
-
-        font-size:
-            13px;
-    }
-
-
-    .geoplay-destination-offscreen
-    {
-        padding:
-            8px 12px;
-    }
-
-
-    .geoplay-destination-offscreen-name
-    {
-        font-size:
-            11px;
-    }
-
-
-    .geoplay-story-actions
-    {
-        width:
-            calc(
-                100vw -
-                32px
-            );
-
-        max-width:
-            360px;
-
-        bottom:
-            120px;
-
-        gap:
-            8px;
-    }
-
-
-    .geoplay-story-action
-    {
-        min-height:
-            43px;
-
-        padding:
-            10px 10px;
-
-        font-size:
-            11px;
-    }
-}
-
-
-/* ==================================================
-   LARGER VIEWPORT
-   ================================================== */
-
-@media (min-width:431px)
-{
-    .geoplay-destination.expanded
-    {
-        width:
-            min(
-                88vw,
-                360px
-            );
-    }
-
-
-    .geoplay-destination-image
-    {
-        height:
-            155px;
-    }
-
-
-    .geoplay-story-actions
-    {
-        width:
-            min(
-                68vw,
-                300px
-            );
-
-        bottom:
-            95px;
-    }
-}
 
 /* ==================================================
    PLAYER MAP MARKER
