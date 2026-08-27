@@ -1861,6 +1861,7 @@
     }
 }
 
+
 /* ==================================================
    PLAYER MAP MARKER
    ================================================== */
@@ -1877,10 +1878,10 @@
         50%;
 
     width:
-        48px;
+        54px;
 
     height:
-        48px;
+        54px;
 
     border:
         2px solid
@@ -1888,7 +1889,7 @@
             173,
             78,
             255,
-            .9
+            .98
         );
 
     border-radius:
@@ -1901,12 +1902,19 @@
         );
 
     box-shadow:
-        0 0 10px
+        0 0 12px
         rgba(
             173,
             78,
             255,
-            .55
+            .7
+        ),
+        0 0 22px
+        rgba(
+            173,
+            78,
+            255,
+            .25
         );
 
     pointer-events:
@@ -1917,7 +1925,8 @@
 
     animation:
         geoplayPlayerMarkerGlow
-        2s ease-in-out
+        1.8s
+        ease-in-out
         infinite;
 }
 
@@ -1934,10 +1943,10 @@
         50%;
 
     width:
-        34px;
+        38px;
 
     height:
-        34px;
+        38px;
 
     border:
         2px solid
@@ -1945,7 +1954,7 @@
             173,
             78,
             255,
-            .45
+            .65
         );
 
     border-radius:
@@ -1965,7 +1974,8 @@
 
     animation:
         geoplayPlayerMarkerPulse
-        2s ease-out
+        2.15s
+        ease-out
         infinite;
 }
 
@@ -2036,7 +2046,7 @@
     100%
     {
         opacity:
-            .65;
+            .72;
 
         transform:
             translate(
@@ -2044,7 +2054,7 @@
                 -50%
             )
             scale(
-                .96
+                .94
             );
     }
 
@@ -2059,7 +2069,7 @@
                 -50%
             )
             scale(
-                1.06
+                1.1
             );
     }
 }
@@ -2070,7 +2080,7 @@
     0%
     {
         opacity:
-            .65;
+            .78;
 
         transform:
             translate(
@@ -2078,14 +2088,14 @@
                 -50%
             )
             scale(
-                .85
+                .72
             );
     }
 
-    70%
+    65%
     {
         opacity:
-            0;
+            .25;
 
         transform:
             translate(
@@ -2093,7 +2103,7 @@
                 -50%
             )
             scale(
-                1.55
+                1.8
             );
     }
 
@@ -2108,7 +2118,7 @@
                 -50%
             )
             scale(
-                1.55
+                2.15
             );
     }
 }
@@ -2170,10 +2180,10 @@
         50%;
 
     width:
-        48px;
+        54px;
 
     height:
-        48px;
+        54px;
 
     border:
         2px solid
@@ -2181,7 +2191,7 @@
             255,
             173,
             34,
-            .95
+            1
         );
 
     border-radius:
@@ -2194,12 +2204,19 @@
         );
 
     box-shadow:
-        0 0 12px
+        0 0 13px
         rgba(
             255,
             173,
             34,
-            .65
+            .75
+        ),
+        0 0 24px
+        rgba(
+            255,
+            173,
+            34,
+            .28
         );
 
     pointer-events:
@@ -2210,7 +2227,8 @@
 
     animation:
         geoplayDestinationMarkerGlow
-        2s ease-in-out
+        1.8s
+        ease-in-out
         infinite;
 }
 
@@ -2227,10 +2245,10 @@
         50%;
 
     width:
-        34px;
+        38px;
 
     height:
-        34px;
+        38px;
 
     border:
         2px solid
@@ -2238,7 +2256,7 @@
             255,
             173,
             34,
-            .5
+            .7
         );
 
     border-radius:
@@ -2258,7 +2276,8 @@
 
     animation:
         geoplayDestinationMarkerPulse
-        2s ease-out
+        2.15s
+        ease-out
         infinite;
 }
 
@@ -2315,7 +2334,7 @@
     100%
     {
         opacity:
-            .7;
+            .75;
 
         transform:
             translate(
@@ -2323,7 +2342,7 @@
                 -50%
             )
             scale(
-                .96
+                .94
             );
     }
 
@@ -2338,7 +2357,7 @@
                 -50%
             )
             scale(
-                1.06
+                1.1
             );
     }
 }
@@ -2349,7 +2368,7 @@
     0%
     {
         opacity:
-            .65;
+            .8;
 
         transform:
             translate(
@@ -2357,14 +2376,14 @@
                 -50%
             )
             scale(
-                .85
+                .72
             );
     }
 
-    70%
+    65%
     {
         opacity:
-            0;
+            .28;
 
         transform:
             translate(
@@ -2372,7 +2391,7 @@
                 -50%
             )
             scale(
-                1.55
+                1.8
             );
     }
 
@@ -2387,7 +2406,7 @@
                 -50%
             )
             scale(
-                1.55
+                2.15
             );
     }
 }
