@@ -202,7 +202,10 @@ function geoplayMapUIAddStyles()
         absolute;
 
     left:
-        50%;
+        calc(
+            50% +
+            28px
+        );
 
     bottom:
         clamp(
@@ -212,14 +215,14 @@ function geoplayMapUIAddStyles()
         );
 
     width:
-        fit-content;
+        max-content;
 
     min-width:
-        270px;
+        220px;
 
     max-width:
         min(
-            88vw,
+            82vw,
             430px
         );
 
@@ -230,7 +233,7 @@ function geoplayMapUIAddStyles()
         border-box;
 
     padding:
-        12px 18px 12px 92px;
+        12px 24px;
 
     border-radius:
         20px;
@@ -277,6 +280,15 @@ function geoplayMapUIAddStyles()
             .30
         );
 
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
     text-align:
         center;
 
@@ -321,16 +333,16 @@ function geoplayMapUIAddStyles()
         absolute;
 
     left:
-        10px;
+        -52px;
 
     top:
         50%;
 
     width:
-        72px;
+        78px;
 
     height:
-        72px;
+        78px;
 
     object-fit:
         contain;
@@ -409,6 +421,24 @@ function geoplayMapUIAddStyles()
 
 .geoplay-dialogue-text
 {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    width:
+        fit-content;
+
+    max-width:
+        calc(
+            82vw -
+            48px
+        );
+
     font-family:
         'Poppins',
         Arial,
@@ -946,15 +976,22 @@ function geoplayMapUIAddStyles()
 {
     .geoplay-dialogue
     {
+        left:
+            calc(
+                50% +
+                24px
+            );
+
         width:
-            fit-content;
+            max-content;
 
         min-width:
-            270px;
+            210px;
 
         max-width:
             calc(
-                100% - 24px
+                100% -
+                76px
             );
 
         min-height:
@@ -964,7 +1001,7 @@ function geoplayMapUIAddStyles()
             112px;
 
         padding:
-            11px 14px 11px 86px;
+            11px 16px;
 
         border-radius:
             18px;
@@ -974,18 +1011,27 @@ function geoplayMapUIAddStyles()
     .geoplay-dialogue-robot
     {
         left:
-            7px;
+            -48px;
 
         width:
-            68px;
+            70px;
 
         height:
-            68px;
+            70px;
     }
 
 
     .geoplay-dialogue-text
     {
+        width:
+            fit-content;
+
+        max-width:
+            calc(
+                100vw -
+                108px
+            );
+
         font-size:
             clamp(
                 12px,
@@ -1031,29 +1077,44 @@ function geoplayMapUIAddStyles()
 {
     .geoplay-dialogue
     {
+        left:
+            calc(
+                50% +
+                34px
+            );
+
+        min-width:
+            240px;
+
         min-height:
             90px;
 
         padding:
-            13px 20px 13px 98px;
+            13px 24px;
     }
 
 
     .geoplay-dialogue-robot
     {
         left:
-            10px;
+            -58px;
 
         width:
-            78px;
+            82px;
 
         height:
-            78px;
+            82px;
     }
 
 
     .geoplay-dialogue-text
     {
+        max-width:
+            min(
+                72vw,
+                370px
+            );
+
         font-size:
             clamp(
                 15px,
