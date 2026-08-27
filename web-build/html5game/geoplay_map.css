@@ -1059,6 +1059,23 @@
 
 
 /* ==================================================
+   STORY ACTIONS — HARD HIDDEN DURING STORY
+   ================================================== */
+
+.geoplay-story-actions.story-hidden
+{
+    opacity:
+        0;
+
+    visibility:
+        hidden;
+
+    pointer-events:
+        none;
+}
+
+
+/* ==================================================
    STORY ACTIONS
    ================================================== */
 

@@ -327,13 +327,19 @@ function geoplayMapUISay(
     // ==================================================
     // TYPING SETTINGS
     // ==================================================
+    //
+    // Slowed down from 32ms so the dialogue
+    // is easier to read, especially toward
+    // the end of each sentence.
+    //
+    // ==================================================
 
     var characterIndex =
         0;
 
 
     var typingSpeed =
-        32;
+        45;
 
 
     // ==================================================
@@ -402,7 +408,7 @@ function geoplayMapUISay(
                             window.geoplayDialogueHideTimer =
                                 null;
                         },
-                        2200
+                        3000
                     );
             }
 

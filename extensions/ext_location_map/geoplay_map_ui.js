@@ -292,29 +292,22 @@ function geoplayMapUICreateStoryActions()
         "geoplay-story-actions";
 
 
+    // ==================================================
+    // INITIAL STORY STATE
+    // ==================================================
+    //
+    // The buttons must remain completely hidden
+    // while the map narration/story is running.
+    //
+    // The "story-hidden" class is established
+    // immediately when the element is created.
+    //
+    // geoplay_map.css controls what this class does.
+    //
+    // ==================================================
+
     actions.className =
-        "geoplay-story-actions";
-
-
-    // ==================================================
-    // INITIAL INLINE HIDDEN STATE
-    // ==================================================
-    //
-    // Prevent browser-default buttons from flashing
-    // before the external stylesheet has loaded.
-    //
-    // ==================================================
-
-    actions.style.opacity =
-        "0";
-
-
-    actions.style.visibility =
-        "hidden";
-
-
-    actions.style.pointerEvents =
-        "none";
+        "geoplay-story-actions story-hidden";
 
 
     var findAnother =
@@ -384,9 +377,19 @@ function geoplayMapUIShowStoryActions()
 
     if (actions)
     {
-        actions.style.visibility =
-            "visible";
+        // ==================================================
+        // STORY IS COMPLETE
+        // REMOVE THE HARD HIDDEN STATE
+        // ==================================================
 
+        actions.classList.remove(
+            "story-hidden"
+        );
+
+
+        // ==================================================
+        // SHOW BUTTONS
+        // ==================================================
 
         actions.classList.add(
             "visible"
@@ -412,13 +415,18 @@ function geoplayMapUIHideStoryActions()
 
     if (actions)
     {
+        // ==================================================
+        // HIDE BUTTONS
+        // ==================================================
+
         actions.classList.remove(
             "visible"
         );
 
 
-        actions.style.visibility =
-            "hidden";
+        actions.classList.add(
+            "story-hidden"
+        );
     }
 
 

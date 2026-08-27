@@ -50,24 +50,32 @@ var geoplayDestinationLatitude =
 // ==================================================
 // TIMING
 // ==================================================
+//
+// These timings control the pacing between
+// story/dialogue moments.
+//
+// Dialogue typing speed is controlled separately
+// by geoplay_map_dialogue.js.
+//
+// ==================================================
 
 var geoplayFlowFindPlayerDuration =
-    2000;
+    3000;
 
 var geoplayFlowPlayerPause =
-    1800;
+    2800;
 
 var geoplayFlowSearchIntroPause =
-    1200;
+    2400;
 
 var geoplayFlowSearchDuration =
-    3600;
+    4500;
 
 var geoplayFlowDestinationTravelDuration =
     1800;
 
 var geoplayFlowDestinationPause =
-    1200;
+    2800;
 
 var geoplayFlowReturnDuration =
     1800;
@@ -76,10 +84,10 @@ var geoplayFlowRouteDuration =
     4500;
 
 var geoplayFlowPropertyPause =
-    1000;
+    2200;
 
 var geoplayFlowCompletePause =
-    1800;
+    3000;
 
 
 // ==================================================
@@ -181,7 +189,7 @@ function geoplayMapFlowStart()
 function geoplayMapFlowFindPlayer()
 {
     geoplayMapUISay(
-        "Okay! Let me see where you are..."
+        "Hmm, let's see where you are."
     );
 
 
@@ -270,7 +278,7 @@ function geoplayMapFlowPlayerFound()
 function geoplayMapFlowBeginSearch()
 {
     geoplayMapUISay(
-        "Now let's see what's nearby..."
+        "Let's see what's nearby"
     );
 
 
@@ -296,7 +304,7 @@ function geoplayMapFlowSearchArea()
 
 
     geoplayMapUISay(
-        "I'm looking around..."
+        "(Looking around)"
     );
 
 
@@ -352,19 +360,24 @@ function geoplayMapFlowSearchComplete()
 
 
     geoplayMapUISay(
-        "Oh! I found something!"
+        "Oh! I found a place!"
     );
 
 
     geoplayMapShowDestinationMarker();
 
 
+    // ==================================================
+    // GIVE THE PLAYER TIME TO READ THE DISCOVERY
+    // BEFORE THE CAMERA STARTS MOVING.
+    // ==================================================
+
     setTimeout(
         function()
         {
             geoplayMapFlowTravelToDestination();
         },
-        700
+        1800
     );
 }
 
@@ -466,7 +479,7 @@ function geoplayMapFlowReturnToPlayer()
 
 
     geoplayMapUISay(
-        "Let me show you how to get there..."
+        "Let's calculate the distance from your position"
     );
 
 
@@ -1811,7 +1824,7 @@ function geoplayMapFlowPropertyReveal()
         function()
         {
             geoplayMapUISay(
-                "We found a property that serves Geoplay games."
+                "You can play geoplay games here!"
             );
 
 
