@@ -20,6 +20,18 @@
 // Pine Ridge card disappears.
 // Pine Ridge edge indicator appears.
 //
+// PINE RIDGE CARD:
+//
+// COLLAPSED
+//      ↓
+// Name + distance
+//      ↓
+// Tap card
+//      ↓
+// EXPANDED
+//      ↓
+// Image + distance + address + PLAY HERE
+//
 // This remains active after the story finishes.
 // ==================================================
 
@@ -33,6 +45,8 @@ window.geoplaySearchVisible = false;
 window.geoplayDestinationVisible = false;
 
 window.geoplayDestinationOffscreen = false;
+
+window.geoplayDestinationExpanded = false;
 
 
 // ==================================================
@@ -581,7 +595,7 @@ function geoplayMapUIAddStyles()
             20,
             7,
             31,
-            .96
+            .97
         );
 
     border:
@@ -612,18 +626,69 @@ function geoplayMapUIAddStyles()
         110;
 
     transition:
-        opacity .2s ease;
+        opacity .2s ease,
+        width .25s ease,
+        max-height .25s ease,
+        transform .25s ease;
 
     font-family:
         'Poppins',
         Arial,
         sans-serif;
+
+    cursor:
+        pointer;
+
+    user-select:
+        none;
+
+    -webkit-user-select:
+        none;
+
+    -webkit-tap-highlight-color:
+        transparent;
 }
 
 
 .geoplay-destination.visible
 {
     opacity:
+        1;
+
+    pointer-events:
+        auto;
+}
+
+
+/* ==================================================
+   COLLAPSED CARD
+   ================================================== */
+
+.geoplay-destination-collapsed
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+    width:
+        100%;
+}
+
+
+.geoplay-destination-collapsed-main
+{
+    min-width:
+        0;
+
+    flex:
         1;
 }
 
@@ -656,6 +721,12 @@ function geoplayMapUIAddStyles()
 
     white-space:
         nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
 }
 
 
@@ -680,10 +751,539 @@ function geoplayMapUIAddStyles()
         );
 
     font-weight:
-        600;
+        700;
+
+    color:
+        #ffffff;
 
     white-space:
         nowrap;
+}
+
+
+.geoplay-destination-chevron
+{
+    flex:
+        0 0 auto;
+
+    width:
+        24px;
+
+    height:
+        24px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        #ffb52e;
+
+    font-size:
+        20px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1;
+
+    transition:
+        transform .2s ease;
+}
+
+
+.geoplay-destination:hover
+.geoplay-destination-chevron
+{
+    transform:
+        translateX(
+            2px
+        );
+}
+
+
+/* ==================================================
+   EXPANDED CARD
+   ================================================== */
+
+.geoplay-destination.expanded
+{
+    width:
+        min(
+            88vw,
+            360px
+        );
+
+    padding:
+        13px;
+
+    border-radius:
+        18px;
+
+    cursor:
+        default;
+}
+
+
+.geoplay-destination-expanded-header
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        8px;
+
+    width:
+        100%;
+
+    margin-bottom:
+        10px;
+}
+
+
+.geoplay-destination-expanded-title
+{
+    min-width:
+        0;
+
+    flex:
+        1;
+
+    color:
+        #ffb52e;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        clamp(
+            13px,
+            3.5vw,
+            16px
+        );
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        .2px;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+}
+
+
+.geoplay-destination-close
+{
+    flex:
+        0 0 auto;
+
+    width:
+        34px;
+
+    height:
+        34px;
+
+    padding:
+        0;
+
+    border:
+        0;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(
+            123,
+            69,
+            170,
+            .24
+        );
+
+    color:
+        #ffffff;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        18px;
+
+    font-weight:
+        600;
+
+    line-height:
+        1;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    cursor:
+        pointer;
+
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+
+.geoplay-destination-close:active
+{
+    transform:
+        scale(
+            .92
+        );
+}
+
+
+/* ==================================================
+   EXPANDED IMAGE
+   ================================================== */
+
+.geoplay-destination-image
+{
+    display:
+        block;
+
+    width:
+        100%;
+
+    height:
+        clamp(
+            120px,
+            31vw,
+            155px
+        );
+
+    object-fit:
+        cover;
+
+    border-radius:
+        13px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            173,
+            34,
+            .45
+        );
+
+    box-shadow:
+        0 0 10px
+        rgba(
+            255,
+            173,
+            34,
+            .15
+        );
+
+    background:
+        #160a24;
+}
+
+
+/* ==================================================
+   EXPANDED DETAILS
+   ================================================== */
+
+.geoplay-destination-expanded-divider
+{
+    width:
+        100%;
+
+    height:
+        1px;
+
+    margin:
+        11px 0;
+
+    background:
+        rgba(
+            173,
+            78,
+            255,
+            .35
+        );
+}
+
+
+.geoplay-destination-expanded-distance
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    margin-bottom:
+        9px;
+
+    color:
+        #ffffff;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        clamp(
+            12px,
+            3.2vw,
+            14px
+        );
+
+    font-weight:
+        700;
+}
+
+
+.geoplay-destination-distance-icon
+{
+    width:
+        26px;
+
+    height:
+        26px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(
+            173,
+            78,
+            255,
+            .18
+        );
+
+    color:
+        #d6a8ff;
+
+    font-size:
+        14px;
+}
+
+
+.geoplay-destination-expanded-address
+{
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        8px;
+
+    margin-bottom:
+        13px;
+
+    color:
+        #ffffff;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        clamp(
+            10px,
+            2.7vw,
+            12px
+        );
+
+    font-weight:
+        500;
+
+    line-height:
+        1.45;
+}
+
+
+.geoplay-destination-address-icon
+{
+    flex:
+        0 0 auto;
+
+    width:
+        26px;
+
+    height:
+        26px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(
+            173,
+            78,
+            255,
+            .18
+        );
+
+    color:
+        #d6a8ff;
+
+    font-size:
+        14px;
+}
+
+
+.geoplay-destination-address-text
+{
+    flex:
+        1;
+}
+
+
+/* ==================================================
+   PLAY HERE BUTTON
+   ================================================== */
+
+.geoplay-destination-play
+{
+    width:
+        100%;
+
+    min-height:
+        46px;
+
+    padding:
+        10px 16px;
+
+    border:
+        0;
+
+    border-radius:
+        23px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff9418,
+            #ffc34d
+        );
+
+    color:
+        #281000;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        clamp(
+            13px,
+            3.3vw,
+            16px
+        );
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        .2px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        8px;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        0 5px 14px
+        rgba(
+            255,
+            148,
+            24,
+            .24
+        );
+
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+
+.geoplay-destination-play:active
+{
+    transform:
+        scale(
+            .97
+        );
+}
+
+
+.geoplay-destination-play-arrow
+{
+    font-size:
+        18px;
+
+    line-height:
+        1;
 }
 
 
@@ -1054,6 +1654,29 @@ function geoplayMapUIAddStyles()
     }
 
 
+    .geoplay-destination.expanded
+    {
+        width:
+            calc(
+                100vw -
+                24px
+            );
+
+        max-width:
+            340px;
+
+        padding:
+            12px;
+    }
+
+
+    .geoplay-destination-image
+    {
+        height:
+            125px;
+    }
+
+
     .geoplay-destination-offscreen
     {
         padding:
@@ -1124,6 +1747,23 @@ function geoplayMapUIAddStyles()
 
         line-height:
             1.45;
+    }
+
+
+    .geoplay-destination.expanded
+    {
+        width:
+            min(
+                88vw,
+                360px
+            );
+    }
+
+
+    .geoplay-destination-image
+    {
+        height:
+            155px;
     }
 }
 
@@ -1316,19 +1956,434 @@ function geoplayMapUICreateDestinationCard()
         "geoplay-destination";
 
 
-    card.innerHTML =
-        "<span class='geoplay-destination-title'>" +
-        "📍 PINE RIDGE CASINO" +
-        "</span>" +
-
-        "<span class='geoplay-destination-info'>" +
-        "2.4 MI AWAY&nbsp;&nbsp;•&nbsp;&nbsp;~7 MIN" +
-        "</span>";
+    geoplayMapUISetDestinationCollapsed(
+        card
+    );
 
 
     window.geoplayMapUI.appendChild(
         card
     );
+
+
+    window.geoplayDestinationCard =
+        card;
+
+
+    // ==================================================
+    // CARD CLICK / TAP
+    // ==================================================
+
+    card.addEventListener(
+        "click",
+        function(event)
+        {
+            if (
+                event.target.closest(
+                    ".geoplay-destination-close"
+                )
+            )
+            {
+                return;
+            }
+
+
+            if (
+                event.target.closest(
+                    ".geoplay-destination-play"
+                )
+            )
+            {
+                return;
+            }
+
+
+            if (
+                window.geoplayMapStoryLocked
+            )
+            {
+                return;
+            }
+
+
+            if (
+                !window.geoplayDestinationExpanded
+            )
+            {
+                geoplayMapUIExpandDestination();
+            }
+        }
+    );
+
+
+    card.addEventListener(
+        "touchend",
+        function(event)
+        {
+            if (
+                event.target.closest(
+                    ".geoplay-destination-close"
+                )
+            )
+            {
+                return;
+            }
+
+
+            if (
+                event.target.closest(
+                    ".geoplay-destination-play"
+                )
+            )
+            {
+                return;
+            }
+
+
+            if (
+                window.geoplayMapStoryLocked
+            )
+            {
+                return;
+            }
+
+
+            event.preventDefault();
+
+
+            if (
+                !window.geoplayDestinationExpanded
+            )
+            {
+                geoplayMapUIExpandDestination();
+            }
+        },
+        {
+            passive:
+                false
+        }
+    );
+}
+
+
+// ==================================================
+// COLLAPSED DESTINATION CONTENT
+// ==================================================
+
+function geoplayMapUISetDestinationCollapsed(
+    card
+)
+{
+    card.classList.remove(
+        "expanded"
+    );
+
+
+    card.innerHTML =
+        "<div class='geoplay-destination-collapsed'>" +
+
+            "<div class='geoplay-destination-collapsed-main'>" +
+
+                "<span class='geoplay-destination-title'>" +
+                    "📍 PINE RIDGE CASINO" +
+                "</span>" +
+
+                "<span class='geoplay-destination-info'>" +
+                    "2.4 MI AWAY" +
+                "</span>" +
+
+            "</div>" +
+
+            "<span class='geoplay-destination-chevron'>" +
+                "›" +
+            "</span>" +
+
+        "</div>";
+
+
+    window.geoplayDestinationExpanded =
+        false;
+}
+
+
+// ==================================================
+// EXPANDED DESTINATION CONTENT
+// ==================================================
+
+function geoplayMapUISetDestinationExpanded(
+    card
+)
+{
+    card.classList.add(
+        "expanded"
+    );
+
+
+    card.innerHTML =
+        "<div class='geoplay-destination-expanded-header'>" +
+
+            "<span class='geoplay-destination-expanded-title'>" +
+                "PINE RIDGE CASINO" +
+            "</span>" +
+
+            "<button " +
+                "type='button' " +
+                "class='geoplay-destination-close' " +
+                "aria-label='Close Pine Ridge information'>" +
+                "×" +
+            "</button>" +
+
+        "</div>" +
+
+
+        "<img " +
+            "class='geoplay-destination-image' " +
+            "src='https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine_ridge_casino_image.png' " +
+            "alt='Pine Ridge Casino' " +
+            "draggable='false'>" +
+
+
+        "<div class='geoplay-destination-expanded-divider'></div>" +
+
+
+        "<div class='geoplay-destination-expanded-distance'>" +
+
+            "<span class='geoplay-destination-distance-icon'>" +
+                "➜" +
+            "</span>" +
+
+            "<span>" +
+                "2.4 MI AWAY" +
+            "</span>" +
+
+        "</div>" +
+
+
+        "<div class='geoplay-destination-expanded-address'>" +
+
+            "<span class='geoplay-destination-address-icon'>" +
+                "📍" +
+            "</span>" +
+
+            "<span class='geoplay-destination-address-text'>" +
+                "777 Pine Ridge Road<br>" +
+                "Pine Ridge, CA 95563" +
+            "</span>" +
+
+        "</div>" +
+
+
+        "<button " +
+            "type='button' " +
+            "class='geoplay-destination-play'>" +
+
+            "<span>" +
+                "PLAY HERE" +
+            "</span>" +
+
+            "<span class='geoplay-destination-play-arrow'>" +
+                "→" +
+            "</span>" +
+
+        "</button>";
+
+
+    window.geoplayDestinationExpanded =
+        true;
+
+
+    // ==================================================
+    // CLOSE BUTTON
+    // ==================================================
+
+    var closeButton =
+        card.querySelector(
+            ".geoplay-destination-close"
+        );
+
+
+    if (closeButton)
+    {
+        closeButton.addEventListener(
+            "click",
+            function(event)
+            {
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                geoplayMapUICollapseDestination();
+            }
+        );
+
+
+        closeButton.addEventListener(
+            "touchend",
+            function(event)
+            {
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                geoplayMapUICollapseDestination();
+            },
+            {
+                passive:
+                    false
+            }
+        );
+    }
+
+
+    // ==================================================
+    // PLAY HERE BUTTON
+    // ==================================================
+
+    var playButton =
+        card.querySelector(
+            ".geoplay-destination-play"
+        );
+
+
+    if (playButton)
+    {
+        playButton.addEventListener(
+            "click",
+            function(event)
+            {
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                geoplayMapUIPlayHere();
+            }
+        );
+
+
+        playButton.addEventListener(
+            "touchend",
+            function(event)
+            {
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                geoplayMapUIPlayHere();
+            },
+            {
+                passive:
+                    false
+            }
+        );
+    }
+}
+
+
+// ==================================================
+// EXPAND DESTINATION
+// ==================================================
+
+function geoplayMapUIExpandDestination()
+{
+    if (
+        !window.geoplayDestinationCard
+    )
+    {
+        return 0;
+    }
+
+
+    if (
+        window.geoplayMapStoryLocked
+    )
+    {
+        return 0;
+    }
+
+
+    geoplayMapUISetDestinationExpanded(
+        window.geoplayDestinationCard
+    );
+
+
+    geoplayMapUIPositionDestination();
+
+
+    console.log(
+        "GEOPLAY UI: Pine Ridge information card expanded."
+    );
+
+
+    return 1;
+}
+
+
+// ==================================================
+// COLLAPSE DESTINATION
+// ==================================================
+
+function geoplayMapUICollapseDestination()
+{
+    if (
+        !window.geoplayDestinationCard
+    )
+    {
+        return 0;
+    }
+
+
+    geoplayMapUISetDestinationCollapsed(
+        window.geoplayDestinationCard
+    );
+
+
+    geoplayMapUIPositionDestination();
+
+
+    console.log(
+        "GEOPLAY UI: Pine Ridge information card collapsed."
+    );
+
+
+    return 1;
+}
+
+
+// ==================================================
+// PLAY HERE
+// ==================================================
+
+function geoplayMapUIPlayHere()
+{
+    if (
+        window.geoplayMapStoryLocked
+    )
+    {
+        return 0;
+    }
+
+
+    console.log(
+        "GEOPLAY UI: PLAY HERE selected."
+    );
+
+
+    // Return the card to its compact state.
+
+    geoplayMapUICollapseDestination();
+
+
+    // Use the existing Pine Ridge destination
+    // navigation behavior.
+
+    geoplayMapUIGoToDestination();
+
+
+    return 1;
 }
 
 
@@ -1654,6 +2709,12 @@ function geoplayMapUIShowDestination()
         true;
 
 
+    // Always reveal the destination in its
+    // compact state.
+
+    geoplayMapUICollapseDestination();
+
+
     geoplayMapUIPositionDestination();
 
 
@@ -1791,9 +2852,7 @@ function geoplayMapUIPositionDestination()
             point.x;
 
 
-        var top =
-            point.y -
-            12;
+        var top;
 
 
         var halfWidth =
@@ -1827,32 +2886,83 @@ function geoplayMapUIPositionDestination()
         }
 
 
+        // ==================================================
+        // EXPANDED CARD POSITIONING
+        // ==================================================
+
         if (
-            point.y -
-            cardHeight -
-            12 <
-            10
+            window.geoplayDestinationExpanded
         )
         {
-            top =
-                point.y +
-                18;
+            // Prefer placing the expanded card
+            // above the destination marker.
+
+            if (
+                point.y -
+                cardHeight -
+                18 >=
+                10
+            )
+            {
+                top =
+                    point.y -
+                    18;
 
 
-            card.style.transform =
-                "translate(-50%,0)";
+                card.style.transform =
+                    "translate(-50%,-100%)";
+            }
+            else
+            {
+                // If there isn't enough room above,
+                // place it below the marker.
+
+                top =
+                    point.y +
+                    18;
+
+
+                card.style.transform =
+                    "translate(-50%,0)";
+            }
         }
         else
         {
-            top =
+            // ==================================================
+            // COLLAPSED CARD POSITIONING
+            // ==================================================
+
+            if (
                 point.y -
-                12;
+                cardHeight -
+                12 <
+                10
+            )
+            {
+                top =
+                    point.y +
+                    18;
 
 
-            card.style.transform =
-                "translate(-50%,-100%)";
+                card.style.transform =
+                    "translate(-50%,0)";
+            }
+            else
+            {
+                top =
+                    point.y -
+                    12;
+
+
+                card.style.transform =
+                    "translate(-50%,-100%)";
+            }
         }
 
+
+        // ==================================================
+        // KEEP CARD INSIDE VIEWPORT
+        // ==================================================
 
         if (
             top <
@@ -2079,6 +3189,10 @@ function geoplayMapUIHideDestination()
         card.classList.remove(
             "visible"
         );
+
+        card.classList.remove(
+            "expanded"
+        );
     }
 
 
@@ -2095,6 +3209,10 @@ function geoplayMapUIHideDestination()
 
 
     window.geoplayDestinationOffscreen =
+        false;
+
+
+    window.geoplayDestinationExpanded =
         false;
 
 
