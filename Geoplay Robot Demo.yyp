@@ -25,6 +25,7 @@
   ],
   "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[
+    {"$GMIncludedFile":"","%Name":"geoplay_map.css","CopyToMask":-1,"filePath":"datafiles","name":"geoplay_map.css","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"robot_searching_map.png","CopyToMask":-1,"filePath":"datafiles","name":"robot_searching_map.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
   ],
   "isEcma":false,

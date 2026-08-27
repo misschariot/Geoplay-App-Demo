@@ -4,8 +4,7 @@
 //
 // RESPONSIBILITY:
 // - General map UI initialization
-// - Stylesheet loading
-// - Searching visual
+// - External stylesheet loading
 // - Story actions
 //
 // DIALOGUE:
@@ -23,8 +22,6 @@
 window.geoplayMapUI = null;
 
 window.geoplayMapUIInitialized = false;
-
-window.geoplaySearchVisible = false;
 
 
 // ==================================================
@@ -57,6 +54,17 @@ function geoplayMapUICreate()
         return 0;
     }
 
+
+    // ==================================================
+    // LOAD MAP UI CSS
+    // ==================================================
+
+    geoplayMapUILoadStylesheet();
+
+
+    // ==================================================
+    // CREATE UI CONTAINER
+    // ==================================================
 
     var ui =
         document.createElement(
@@ -110,24 +118,10 @@ function geoplayMapUICreate()
 
 
     // ==================================================
-    // LOAD SHARED CSS
-    // ==================================================
-
-    geoplayMapUILoadStylesheet();
-
-
-    // ==================================================
     // CREATE DIALOGUE
     // ==================================================
 
     geoplayMapUICreateDialogue();
-
-
-    // ==================================================
-    // CREATE SEARCH
-    // ==================================================
-
-    geoplayMapUICreateSearchVisual();
 
 
     // ==================================================
@@ -160,15 +154,18 @@ function geoplayMapUICreate()
 
 
 // ==================================================
-// LOAD STYLESHEET
+// LOAD MAP UI STYLESHEET
 // ==================================================
 //
-// The CSS previously lived inside a giant
-// style.textContent block in this JavaScript file.
+// geoplay_map.css is an HTML5 Included File.
 //
-// It now lives in:
+// GameMaker exports the Included File into:
 //
-// geoplay_map.css
+// html5game/
+//
+// The current generated build filename is:
+//
+// zph_geoplay_map.css
 //
 // ==================================================
 
@@ -203,7 +200,25 @@ function geoplayMapUILoadStylesheet()
 
 
     link.href =
-        "geoplay_map.css";
+        "html5game/geoplay_map.css";
+
+
+    link.onload =
+        function()
+        {
+            console.log(
+                "GEOPLAY UI: CSS loaded."
+            );
+        };
+
+
+    link.onerror =
+        function()
+        {
+            console.error(
+                "GEOPLAY UI: CSS FAILED to load."
+            );
+        };
 
 
     document.head.appendChild(
@@ -211,65 +226,7 @@ function geoplayMapUILoadStylesheet()
     );
 
 
-    console.log(
-        "GEOPLAY UI: External stylesheet loaded."
-    );
-
-
     return 1;
-}
-
-
-// ==================================================
-// CREATE SEARCH VISUAL
-// ==================================================
-
-function geoplayMapUICreateSearchVisual()
-{
-    var visual =
-        document.createElement(
-            "div"
-        );
-
-
-    visual.id =
-        "geoplay-search-visual";
-
-
-    visual.className =
-        "geoplay-search-visual";
-
-
-    var robot =
-        document.createElement(
-            "img"
-        );
-
-
-    robot.className =
-        "geoplay-search-robot";
-
-
-    robot.src =
-        "datafiles/robot_searching_map.png";
-
-
-    robot.alt =
-        "Geoplay robot searching";
-
-
-    visual.appendChild(
-        robot
-    );
-
-
-    window.geoplaySearchRobot =
-        robot;
-
-
-    window.geoplayMapUI.appendChild(
-        visual
-    );
 }
 
 
@@ -347,56 +304,23 @@ function geoplayMapUICreateStoryActions()
 
 
 // ==================================================
-// SEARCH
+// SEARCH COMPATIBILITY
+// ==================================================
+//
+// The old searching robot has been removed.
+//
+// These functions remain because the map flow
+// may still call them.
 // ==================================================
 
 function geoplayMapUIStartSearchAnimation()
 {
-    var visual =
-        document.getElementById(
-            "geoplay-search-visual"
-        );
-
-
-    if (!visual)
-    {
-        return 0;
-    }
-
-
-    window.geoplaySearchVisible =
-        true;
-
-
-    visual.classList.add(
-        "visible"
-    );
-
-
     return 1;
 }
 
 
 function geoplayMapUIStopSearchAnimation()
 {
-    var visual =
-        document.getElementById(
-            "geoplay-search-visual"
-        );
-
-
-    if (visual)
-    {
-        visual.classList.remove(
-            "visible"
-        );
-    }
-
-
-    window.geoplaySearchVisible =
-        false;
-
-
     return 1;
 }
 
