@@ -1674,6 +1674,22 @@ function geoplayMapCreateDestinationMarker()
     }
 
 
+    // ==================================================
+    // DESTINATION MARKER CONTAINER
+    // ==================================================
+    //
+    // Pine Ridge uses the same visual structure as the
+    // player marker:
+    //
+    // - 76px ring
+    // - 74px avatar
+    // - continuous pulse
+    //
+    // The destination version uses yellow instead of
+    // the player's cyan so the two markers are clearly
+    // differentiated.
+    // ==================================================
+
     var markerElement =
         document.createElement(
             "div"
@@ -1681,78 +1697,414 @@ function geoplayMapCreateDestinationMarker()
 
 
     markerElement.style.width =
-        "34px";
+        "94px";
 
 
     markerElement.style.height =
-        "34px";
+        "76px";
 
 
-    markerElement.style.borderRadius =
-        "50%";
-
-
-    markerElement.style.background =
-        "rgba(255,190,70,.25)";
-
-
-    markerElement.style.border =
-        "3px solid rgba(255,190,70,1)";
-
-
-    markerElement.style.boxShadow =
-        "0 0 16px rgba(255,190,70,.95)," +
-        "0 0 34px rgba(255,190,70,.45)";
+    markerElement.style.position =
+        "relative";
 
 
     markerElement.style.display =
-        "flex";
-
-
-    markerElement.style.alignItems =
-        "center";
-
-
-    markerElement.style.justifyContent =
-        "center";
-
-
-    markerElement.style.boxSizing =
-        "border-box";
+        "block";
 
 
     markerElement.style.pointerEvents =
         "none";
 
 
-    var innerDot =
+    markerElement.style.boxSizing =
+        "border-box";
+
+
+    markerElement.style.overflow =
+        "visible";
+
+
+    if (
+        !document.getElementById(
+            "geoplay-destination-marker-styles"
+        )
+    )
+    {
+        var destinationStyle =
+            document.createElement(
+                "style"
+            );
+
+
+        destinationStyle.id =
+            "geoplay-destination-marker-styles";
+
+
+        destinationStyle.textContent = `
+
+.geoplay-destination-marker-ring
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        4px;
+
+    width:
+        76px;
+
+    height:
+        76px;
+
+    border:
+        2px solid
+        rgba(
+            255,
+            190,
+            70,
+            .95
+        );
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(
+            255,
+            190,
+            70,
+            .08
+        );
+
+    transform:
+        translateX(
+            -50%
+        );
+
+    box-shadow:
+        0 0 10px
+        rgba(
+            255,
+            190,
+            70,
+            .90
+        ),
+        0 0 24px
+        rgba(
+            255,
+            190,
+            70,
+            .45
+        );
+
+    animation:
+        geoplayDestinationMarkerGlow
+        2.8s
+        ease-in-out
+        infinite;
+
+    pointer-events:
+        none;
+}
+
+
+.geoplay-destination-marker-pulse
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        42px;
+
+    width:
+        86px;
+
+    height:
+        86px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            190,
+            70,
+            .42
+        );
+
+    border-radius:
+        50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        )
+        scale(
+            .25
+        );
+
+    opacity:
+        .72;
+
+    animation:
+        geoplayDestinationMarkerPulse
+        2.8s
+        ease-out
+        infinite;
+
+    pointer-events:
+        none;
+}
+
+
+.geoplay-destination-marker-image
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        5px;
+
+    width:
+        74px;
+
+    height:
+        74px;
+
+    min-width:
+        74px;
+
+    min-height:
+        74px;
+
+    max-width:
+        74px;
+
+    max-height:
+        74px;
+
+    flex-shrink:
+        0;
+
+    object-fit:
+        contain;
+
+    display:
+        block;
+
+    transform:
+        translateX(
+            -50%
+        );
+
+    transform-origin:
+        center center;
+
+    z-index:
+        3;
+
+    pointer-events:
+        none;
+
+    user-select:
+        none;
+
+    -webkit-user-drag:
+        none;
+}
+
+
+@keyframes geoplayDestinationMarkerGlow
+{
+    0%,
+    100%
+    {
+        opacity:
+            .72;
+
+        box-shadow:
+            0 0 10px
+            rgba(
+                255,
+                190,
+                70,
+                .82
+            ),
+            0 0 22px
+            rgba(
+                255,
+                190,
+                70,
+                .34
+            );
+    }
+
+
+    50%
+    {
+        opacity:
+            1;
+
+        box-shadow:
+            0 0 14px
+            rgba(
+                255,
+                190,
+                70,
+                1
+            ),
+            0 0 32px
+            rgba(
+                255,
+                190,
+                70,
+                .58
+            );
+    }
+}
+
+
+@keyframes geoplayDestinationMarkerPulse
+{
+    0%
+    {
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                .25
+            );
+
+        opacity:
+            .72;
+    }
+
+
+    65%
+    {
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1.05
+            );
+
+        opacity:
+            .30;
+    }
+
+
+    100%
+    {
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1.55
+            );
+
+        opacity:
+            0;
+    }
+}
+
+`;
+
+
+        document.head.appendChild(
+            destinationStyle
+        );
+    }
+
+
+    var pulse =
         document.createElement(
             "div"
         );
 
 
-    innerDot.style.width =
-        "12px";
-
-
-    innerDot.style.height =
-        "12px";
-
-
-    innerDot.style.borderRadius =
-        "50%";
-
-
-    innerDot.style.background =
-        "#ffffff";
-
-
-    innerDot.style.boxShadow =
-        "0 0 9px rgba(255,255,255,1)";
+    pulse.className =
+        "geoplay-destination-marker-pulse";
 
 
     markerElement.appendChild(
-        innerDot
+        pulse
+    );
+
+
+    var ring =
+        document.createElement(
+            "div"
+        );
+
+
+    ring.className =
+        "geoplay-destination-marker-ring";
+
+
+    markerElement.appendChild(
+        ring
+    );
+
+
+    var destinationImage =
+        document.createElement(
+            "img"
+        );
+
+
+    destinationImage.src =
+        "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine-ridge.png";
+
+
+    destinationImage.alt =
+        "Pine Ridge";
+
+
+    destinationImage.className =
+        "geoplay-destination-marker-image";
+
+
+    destinationImage.draggable =
+        false;
+
+
+    destinationImage.onload =
+        function()
+        {
+            console.log(
+                "GEOPLAY MAP: Pine Ridge image loaded from Cloudflare R2."
+            );
+        };
+
+
+    destinationImage.onerror =
+        function(error)
+        {
+            console.error(
+                "GEOPLAY MAP: Pine Ridge image FAILED to load from Cloudflare R2.",
+                error
+            );
+        };
+
+
+    markerElement.appendChild(
+        destinationImage
     );
 
 
@@ -1763,7 +2115,7 @@ function geoplayMapCreateDestinationMarker()
                 markerElement,
 
             anchor:
-                "center"
+                "bottom"
         })
         .setLngLat(
         [
@@ -1776,7 +2128,7 @@ function geoplayMapCreateDestinationMarker()
 
 
     console.log(
-        "GEOPLAY MAP: Destination marker created."
+        "GEOPLAY MAP: Pine Ridge destination marker created."
     );
 
 
