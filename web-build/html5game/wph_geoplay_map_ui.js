@@ -56,13 +56,6 @@ function geoplayMapUICreate()
 
 
     // ==================================================
-    // LOAD MAP UI CSS
-    // ==================================================
-
-    geoplayMapUILoadStylesheet();
-
-
-    // ==================================================
     // CREATE UI CONTAINER
     // ==================================================
 
@@ -108,6 +101,14 @@ function geoplayMapUICreate()
         "hidden";
 
 
+    // ==================================================
+    // HIDE UI UNTIL CSS IS READY
+    // ==================================================
+
+    ui.style.visibility =
+        "hidden";
+
+
     mapContainer.appendChild(
         ui
     );
@@ -115,6 +116,13 @@ function geoplayMapUICreate()
 
     window.geoplayMapUI =
         ui;
+
+
+    // ==================================================
+    // LOAD MAP UI CSS
+    // ==================================================
+
+    geoplayMapUILoadStylesheet();
 
 
     // ==================================================
@@ -173,6 +181,26 @@ function geoplayMapUILoadStylesheet()
         )
     )
     {
+        var existingStylesheet =
+            document.getElementById(
+                "geoplay-map-ui-stylesheet"
+            );
+
+
+        if (
+            existingStylesheet.sheet
+        )
+        {
+            if (
+                window.geoplayMapUI
+            )
+            {
+                window.geoplayMapUI.style.visibility =
+                    "visible";
+            }
+        }
+
+
         return 1;
     }
 
@@ -205,6 +233,15 @@ function geoplayMapUILoadStylesheet()
             console.log(
                 "GEOPLAY UI: CSS loaded."
             );
+
+
+            if (
+                window.geoplayMapUI
+            )
+            {
+                window.geoplayMapUI.style.visibility =
+                    "visible";
+            }
         };
 
 
@@ -214,6 +251,24 @@ function geoplayMapUILoadStylesheet()
             console.error(
                 "GEOPLAY UI: CSS FAILED to load."
             );
+
+
+            // ==================================================
+            // FAIL SAFE
+            // ==================================================
+            //
+            // Keep the UI usable even if the stylesheet
+            // cannot be loaded.
+            //
+            // ==================================================
+
+            if (
+                window.geoplayMapUI
+            )
+            {
+                window.geoplayMapUI.style.visibility =
+                    "visible";
+            }
         };
 
 
