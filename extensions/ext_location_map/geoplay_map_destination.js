@@ -456,6 +456,14 @@ function geoplayMapUICollapseDestination()
 // ==================================================
 // PLAY HERE
 // ==================================================
+//
+// FUTURE FUNCTIONALITY:
+// - PLAY HERE behavior will be added later.
+//
+// For now, the expanded Pine Ridge popup
+// remains open when this button is tapped.
+//
+// ==================================================
 
 function geoplayMapUIPlayHere()
 {
@@ -472,10 +480,15 @@ function geoplayMapUIPlayHere()
     );
 
 
-    geoplayMapUICollapseDestination();
-
-
-    geoplayMapUIGoToDestination();
+    // ==================================================
+    // FUTURE PLAY HERE FUNCTIONALITY
+    // ==================================================
+    //
+    // Intentionally left inactive for now.
+    //
+    // The popup stays open.
+    //
+    // ==================================================
 
 
     return 1;
@@ -690,6 +703,75 @@ function geoplayMapUIPositionDestination()
     }
 
 
+    // ==================================================
+    // EXPANDED DESTINATION = VIEWPORT-CENTERED MODAL
+    // ==================================================
+    //
+    // Once the Pine Ridge card is expanded, it is no
+    // longer treated as map-attached UI.
+    //
+    // It is centered relative to the visible map/browser
+    // viewport instead.
+    //
+    // This also means the expanded card remains centered
+    // if the map moves underneath it.
+    //
+    // ==================================================
+
+    if (
+        window.geoplayDestinationExpanded
+    )
+    {
+        card.classList.add(
+            "visible"
+        );
+
+
+        indicator.classList.remove(
+            "visible"
+        );
+
+
+        window.geoplayDestinationOffscreen =
+            false;
+
+
+        var expandedWidth =
+            mapContainer.clientWidth;
+
+
+        var expandedHeight =
+            mapContainer.clientHeight;
+
+
+        card.style.left =
+            (
+                expandedWidth /
+                2
+            ) +
+            "px";
+
+
+        card.style.top =
+            (
+                expandedHeight /
+                2
+            ) +
+            "px";
+
+
+        card.style.transform =
+            "translate(-50%,-50%)";
+
+
+        return;
+    }
+
+
+    // ==================================================
+    // DESTINATION COORDINATES
+    // ==================================================
+
     if (
         typeof geoplayDestinationLongitude ===
         "undefined" ||
@@ -803,62 +885,29 @@ function geoplayMapUIPositionDestination()
 
 
         if (
-            window.geoplayDestinationExpanded
+            point.y -
+            cardHeight -
+            12 <
+            10
         )
         {
-            if (
-                point.y -
-                cardHeight -
-                18 >=
-                10
-            )
-            {
-                top =
-                    point.y -
-                    18;
+            top =
+                point.y +
+                18;
 
 
-                card.style.transform =
-                    "translate(-50%,-100%)";
-            }
-            else
-            {
-                top =
-                    point.y +
-                    18;
-
-
-                card.style.transform =
-                    "translate(-50%,0)";
-            }
+            card.style.transform =
+                "translate(-50%,0)";
         }
         else
         {
-            if (
+            top =
                 point.y -
-                cardHeight -
-                12 <
-                10
-            )
-            {
-                top =
-                    point.y +
-                    18;
+                12;
 
 
-                card.style.transform =
-                    "translate(-50%,0)";
-            }
-            else
-            {
-                top =
-                    point.y -
-                    12;
-
-
-                card.style.transform =
-                    "translate(-50%,-100%)";
-            }
+            card.style.transform =
+                "translate(-50%,-100%)";
         }
 
 
@@ -899,6 +948,10 @@ function geoplayMapUIPositionDestination()
         return;
     }
 
+
+    // ==================================================
+    // DESTINATION IS OFF-SCREEN
+    // ==================================================
 
     card.classList.remove(
         "visible"

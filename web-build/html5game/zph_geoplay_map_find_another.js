@@ -72,17 +72,52 @@ function geoplayMapUICreateFindAnother()
 
 
     overlay.id =
-        "geoplay-find-another";
+        "geoplay-find-another-overlay";
 
 
     overlay.className =
-        "geoplay-find-another";
+        "geoplay-find-another-overlay";
 
 
     // ==================================================
-    // IMPORTANT:
-    // HIDDEN BY DEFAULT
+    // INITIAL HIDDEN STATE
     // ==================================================
+
+    overlay.style.position =
+        "absolute";
+
+
+    overlay.style.left =
+        "0";
+
+
+    overlay.style.top =
+        "0";
+
+
+    overlay.style.width =
+        "100%";
+
+
+    overlay.style.height =
+        "100%";
+
+
+    overlay.style.display =
+        "flex";
+
+
+    overlay.style.alignItems =
+        "center";
+
+
+    overlay.style.justifyContent =
+        "center";
+
+
+    overlay.style.boxSizing =
+        "border-box";
+
 
     overlay.style.opacity =
         "0";
@@ -96,8 +131,91 @@ function geoplayMapUICreateFindAnother()
         "none";
 
 
+    overlay.style.zIndex =
+        "2000";
+
+
     // ==================================================
-    // CREATE PANEL
+    // BLOCK MAP INTERACTION
+    // ==================================================
+
+    overlay.addEventListener(
+        "click",
+        function(event)
+        {
+            event.stopPropagation();
+        }
+    );
+
+
+    overlay.addEventListener(
+        "mousedown",
+        function(event)
+        {
+            event.stopPropagation();
+        }
+    );
+
+
+    overlay.addEventListener(
+        "mouseup",
+        function(event)
+        {
+            event.stopPropagation();
+        }
+    );
+
+
+    overlay.addEventListener(
+        "touchstart",
+        function(event)
+        {
+            event.stopPropagation();
+        },
+        {
+            passive:
+                true
+        }
+    );
+
+
+    overlay.addEventListener(
+        "touchmove",
+        function(event)
+        {
+            event.stopPropagation();
+        },
+        {
+            passive:
+                true
+        }
+    );
+
+
+    overlay.addEventListener(
+        "touchend",
+        function(event)
+        {
+            event.stopPropagation();
+        },
+        {
+            passive:
+                true
+        }
+    );
+
+
+    // ==================================================
+    // CREATE POPUP PANEL
+    // ==================================================
+    //
+    // IMPORTANT:
+    // The CSS uses .geoplay-find-another for the
+    // actual popup panel.
+    //
+    // The full-screen layer above uses:
+    // .geoplay-find-another-overlay
+    //
     // ==================================================
 
     var panel =
@@ -107,7 +225,54 @@ function geoplayMapUICreateFindAnother()
 
 
     panel.className =
-        "geoplay-find-another-panel";
+        "geoplay-find-another";
+
+
+    panel.style.position =
+        "relative";
+
+
+    panel.style.zIndex =
+        "2001";
+
+
+    panel.style.pointerEvents =
+        "auto";
+
+
+    // ==================================================
+    // BLOCK PANEL INTERACTION FROM MAP
+    // ==================================================
+
+    panel.addEventListener(
+        "click",
+        function(event)
+        {
+            event.stopPropagation();
+        }
+    );
+
+
+    panel.addEventListener(
+        "mousedown",
+        function(event)
+        {
+            event.stopPropagation();
+        }
+    );
+
+
+    panel.addEventListener(
+        "touchstart",
+        function(event)
+        {
+            event.stopPropagation();
+        },
+        {
+            passive:
+                true
+        }
+    );
 
 
     // ==================================================
@@ -175,6 +340,23 @@ function geoplayMapUICreateFindAnother()
             event.stopPropagation();
 
             geoplayMapUICloseFindAnother();
+        }
+    );
+
+
+    close.addEventListener(
+        "touchend",
+        function(event)
+        {
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            geoplayMapUICloseFindAnother();
+        },
+        {
+            passive:
+                false
         }
     );
 
@@ -318,6 +500,27 @@ function geoplayMapUICreateFindAnother()
                 "GEOPLAY FIND ANOTHER: Manual search selected.",
                 input.value
             );
+        }
+    );
+
+
+    searchButton.addEventListener(
+        "touchend",
+        function(event)
+        {
+            event.preventDefault();
+
+            event.stopPropagation();
+
+
+            console.log(
+                "GEOPLAY FIND ANOTHER: Manual search selected.",
+                input.value
+            );
+        },
+        {
+            passive:
+                false
         }
     );
 
@@ -498,6 +701,46 @@ function geoplayMapUICreateFindAnother()
         );
 
 
+        radiusButton.addEventListener(
+            "touchend",
+            function(event)
+            {
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                for (
+                    var j = 0;
+                    j < radiusButtons.length;
+                    j++
+                )
+                {
+                    radiusButtons[j]
+                        .classList.remove(
+                            "selected"
+                        );
+                }
+
+
+                this.classList.add(
+                    "selected"
+                );
+
+
+                console.log(
+                    "GEOPLAY FIND ANOTHER: Nearby radius selected:",
+                    this.dataset.radius,
+                    "miles"
+                );
+            },
+            {
+                passive:
+                    false
+            }
+        );
+
+
         radiusButtons.push(
             radiusButton
         );
@@ -578,6 +821,23 @@ function geoplayMapUICreateFindAnother()
             event.stopPropagation();
 
             geoplayMapUICloseFindAnother();
+        }
+    );
+
+
+    cancel.addEventListener(
+        "touchend",
+        function(event)
+        {
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            geoplayMapUICloseFindAnother();
+        },
+        {
+            passive:
+                false
         }
     );
 
