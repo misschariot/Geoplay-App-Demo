@@ -212,19 +212,25 @@ function geoplayMapUIAddStyles()
         );
 
     width:
+        fit-content;
+
+    min-width:
+        270px;
+
+    max-width:
         min(
-            92vw,
-            470px
+            88vw,
+            430px
         );
 
     min-height:
-        76px;
+        84px;
 
     box-sizing:
         border-box;
 
     padding:
-        12px 18px 12px 76px;
+        12px 18px 12px 92px;
 
     border-radius:
         20px;
@@ -272,7 +278,7 @@ function geoplayMapUIAddStyles()
         );
 
     text-align:
-        left;
+        center;
 
     opacity:
         0;
@@ -321,10 +327,10 @@ function geoplayMapUIAddStyles()
         50%;
 
     width:
-        58px;
+        72px;
 
     height:
-        58px;
+        72px;
 
     object-fit:
         contain;
@@ -428,7 +434,7 @@ function geoplayMapUIAddStyles()
         #ffffff;
 
     text-align:
-        left;
+        center;
 
     overflow-wrap:
         break-word;
@@ -941,18 +947,24 @@ function geoplayMapUIAddStyles()
     .geoplay-dialogue
     {
         width:
+            fit-content;
+
+        min-width:
+            270px;
+
+        max-width:
             calc(
                 100% - 24px
             );
 
         min-height:
-            70px;
+            78px;
 
         bottom:
             112px;
 
         padding:
-            11px 14px 11px 68px;
+            11px 14px 11px 86px;
 
         border-radius:
             18px;
@@ -962,13 +974,13 @@ function geoplayMapUIAddStyles()
     .geoplay-dialogue-robot
     {
         left:
-            8px;
+            7px;
 
         width:
-            52px;
+            68px;
 
         height:
-            52px;
+            68px;
     }
 
 
@@ -1020,23 +1032,23 @@ function geoplayMapUIAddStyles()
     .geoplay-dialogue
     {
         min-height:
-            82px;
+            90px;
 
         padding:
-            13px 20px 13px 82px;
+            13px 20px 13px 98px;
     }
 
 
     .geoplay-dialogue-robot
     {
         left:
-            12px;
+            10px;
 
         width:
-            64px;
+            78px;
 
         height:
-            64px;
+            78px;
     }
 
 
