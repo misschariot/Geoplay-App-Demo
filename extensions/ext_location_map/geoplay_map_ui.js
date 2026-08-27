@@ -71,6 +71,21 @@ window.geoplayDialogueHideTimer = null;
 
 
 // ==================================================
+// DIALOGUE TYPING STATE
+// ==================================================
+//
+// The dialogue text is revealed one character at a time.
+// The text element uses its natural content width so the
+// dialogue box can grow with the message, up to its
+// existing responsive maximum width.
+// ==================================================
+
+window.geoplayDialogueTypingTimer = null;
+
+window.geoplayDialogueTypingToken = 0;
+
+
+// ==================================================
 // NEW:
 // OFF-SCREEN INDICATOR STATE
 // ==================================================
@@ -276,13 +291,13 @@ function geoplayMapUIAddStyles()
         );
 
     min-height:
-        84px;
+        68px;
 
     box-sizing:
         border-box;
 
     padding:
-        12px 24px;
+        10px 24px;
 
     border-radius:
         20px;
@@ -352,7 +367,9 @@ function geoplayMapUIAddStyles()
 
     transition:
         opacity .35s ease,
-        transform .35s ease;
+        transform .35s ease,
+        width .18s ease,
+        min-height .12s ease;
 
     z-index:
         100;
@@ -1782,13 +1799,13 @@ function geoplayMapUIAddStyles()
             );
 
         min-height:
-            78px;
+            68px;
 
         bottom:
             112px;
 
         padding:
-            11px 16px;
+            9px 16px;
 
         border-radius:
             18px;
@@ -2683,7 +2700,6 @@ function geoplayMapUIPlayHere()
     return 1;
 }
 
-
 // ==================================================
 // CREATE OFF-SCREEN INDICATOR
 // ==================================================
@@ -2942,7 +2958,24 @@ function geoplayMapUISay(
 
 
     // ==================================================
-    // CLEAR ANY PREVIOUS AUTO-HIDE TIMER
+    // CANCEL PREVIOUS TYPING
+    // ==================================================
+
+    if (
+        window.geoplayDialogueTypingTimer
+    )
+    {
+        clearTimeout(
+            window.geoplayDialogueTypingTimer
+        );
+
+        window.geoplayDialogueTypingTimer =
+            null;
+    }
+
+
+    // ==================================================
+    // CANCEL PREVIOUS AUTO-HIDE
     // ==================================================
 
     if (
@@ -2959,7 +2992,24 @@ function geoplayMapUISay(
 
 
     // ==================================================
-    // RESET SPECIAL ARRIVAL POSITION
+    // NEW TYPING TOKEN
+    // ==================================================
+    //
+    // Every new message gets a unique token.
+    // If an older timer fires later, it will be ignored.
+    // ==================================================
+
+    window.geoplayDialogueTypingToken =
+        window.geoplayDialogueTypingToken +
+        1;
+
+
+    var typingToken =
+        window.geoplayDialogueTypingToken;
+
+
+    // ==================================================
+    // RESET ARRIVAL POSITION
     // ==================================================
 
     dialogue.classList.remove(
@@ -2967,69 +3017,185 @@ function geoplayMapUISay(
     );
 
 
+    // ==================================================
+    // CLEAR CURRENT TEXT
+    // ==================================================
+
     text.textContent =
-        message ||
         "";
 
 
-    if (message)
-    {
-        // ==================================================
-        // DESTINATION ARRIVAL MESSAGE
-        // ==================================================
-        //
-        // This short message is positioned above the story
-        // action buttons and automatically disappears.
-        // ==================================================
+    // ==================================================
+    // NO MESSAGE
+    // ==================================================
 
-        if (
-            String(message).trim().toLowerCase() ===
-            "there it is!"
-        )
-        {
-            dialogue.classList.add(
-                "destination-arrival"
-            );
-
-
-            dialogue.classList.add(
-                "visible"
-            );
-
-
-            window.geoplayDialogueHideTimer =
-                setTimeout(
-                    function()
-                    {
-                        dialogue.classList.remove(
-                            "visible"
-                        );
-
-
-                        dialogue.classList.remove(
-                            "destination-arrival"
-                        );
-
-
-                        window.geoplayDialogueHideTimer =
-                            null;
-                    },
-                    2200
-                );
-        }
-        else
-        {
-            dialogue.classList.add(
-                "visible"
-            );
-        }
-    }
-    else
+    if (
+        !message
+    )
     {
         dialogue.classList.remove(
             "visible"
         );
+
+        return 1;
     }
+
+
+    // ==================================================
+    // DETERMINE SPECIAL ARRIVAL MESSAGE
+    // ==================================================
+
+    var isArrivalMessage =
+        String(message)
+            .trim()
+            .toLowerCase() ===
+        "there it is!";
+
+
+    if (
+        isArrivalMessage
+    )
+    {
+        dialogue.classList.add(
+            "destination-arrival"
+        );
+    }
+
+
+    // ==================================================
+    // SHOW DIALOGUE
+    // ==================================================
+
+    dialogue.classList.add(
+        "visible"
+    );
+
+
+    // ==================================================
+    // TYPING SETTINGS
+    // ==================================================
+
+    var fullMessage =
+        String(message);
+
+
+    var characterIndex =
+        0;
+
+
+    var typingSpeed =
+        32;
+
+
+    // ==================================================
+    // TYPE NEXT CHARACTER
+    // ==================================================
+
+    function typeNextCharacter()
+    {
+        // ==================================================
+        // IGNORE OLD TYPING SEQUENCE
+        // ==================================================
+
+        if (
+            typingToken !==
+            window.geoplayDialogueTypingToken
+        )
+        {
+            return;
+        }
+
+
+        // ==================================================
+        // FINISHED
+        // ==================================================
+
+        if (
+            characterIndex >=
+            fullMessage.length
+        )
+        {
+            window.geoplayDialogueTypingTimer =
+                null;
+
+
+            // ==================================================
+            // AUTO-HIDE "THERE IT IS!"
+            // ==================================================
+
+            if (
+                isArrivalMessage
+            )
+            {
+                window.geoplayDialogueHideTimer =
+                    setTimeout(
+                        function()
+                        {
+                            if (
+                                typingToken !==
+                                window.geoplayDialogueTypingToken
+                            )
+                            {
+                                return;
+                            }
+
+
+                            dialogue.classList.remove(
+                                "visible"
+                            );
+
+
+                            dialogue.classList.remove(
+                                "destination-arrival"
+                            );
+
+
+                            window.geoplayDialogueHideTimer =
+                                null;
+                        },
+                        2200
+                    );
+            }
+
+
+            return;
+        }
+
+
+        // ==================================================
+        // ADD NEXT CHARACTER
+        // ==================================================
+
+        text.textContent =
+            fullMessage.substring(
+                0,
+                characterIndex +
+                1
+            );
+
+
+        characterIndex =
+            characterIndex +
+            1;
+
+
+        // ==================================================
+        // CONTINUE TYPING
+        // ==================================================
+
+        window.geoplayDialogueTypingTimer =
+            setTimeout(
+                typeNextCharacter,
+                typingSpeed
+            );
+    }
+
+
+    // ==================================================
+    // START TYPING
+    // ==================================================
+
+    typeNextCharacter();
 
 
     return 1;
@@ -3616,6 +3782,24 @@ function geoplayMapUIHideDestination()
     }
 
 
+    if (
+        window.geoplayDialogueTypingTimer
+    )
+    {
+        clearTimeout(
+            window.geoplayDialogueTypingTimer
+        );
+
+        window.geoplayDialogueTypingTimer =
+            null;
+    }
+
+
+    window.geoplayDialogueTypingToken =
+        window.geoplayDialogueTypingToken +
+        1;
+
+
     var dialogue =
         document.getElementById(
             "geoplay-dialogue"
@@ -3627,6 +3811,23 @@ function geoplayMapUIHideDestination()
         dialogue.classList.remove(
             "destination-arrival"
         );
+
+        dialogue.classList.remove(
+            "visible"
+        );
+    }
+
+
+    var text =
+        document.getElementById(
+            "geoplay-dialogue-text"
+        );
+
+
+    if (text)
+    {
+        text.textContent =
+            "";
     }
 
 
