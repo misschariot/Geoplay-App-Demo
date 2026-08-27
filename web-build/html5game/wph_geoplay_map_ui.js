@@ -6,12 +6,16 @@
 // - General map UI initialization
 // - External stylesheet loading
 // - Story actions
+// - FIND ANOTHER initialization
 //
 // DIALOGUE:
 // geoplay_map_dialogue.js
 //
 // DESTINATION:
 // geoplay_map_destination.js
+//
+// FIND ANOTHER:
+// geoplay_map_find_another.js
 //
 // CSS:
 // geoplay_map.css
@@ -89,6 +93,15 @@ function geoplayMapUICreate()
         "100%";
 
 
+    // ==================================================
+    // IMPORTANT:
+    // THE MAP UI CONTAINER ITSELF DOES NOT
+    // BLOCK MAP INTERACTION.
+    //
+    // INDIVIDUAL INTERACTIVE UI ELEMENTS
+    // TURN POINTER EVENTS BACK ON.
+    // ==================================================
+
     ui.style.pointerEvents =
         "none";
 
@@ -146,6 +159,25 @@ function geoplayMapUICreate()
     // ==================================================
 
     geoplayMapUICreateStoryActions();
+
+
+    // ==================================================
+    // CREATE FIND ANOTHER
+    // ==================================================
+    //
+    // The popup is created immediately but remains
+    // completely hidden until the user presses
+    // FIND ANOTHER.
+    //
+    // ==================================================
+
+    if (
+        typeof geoplayMapUICreateFindAnother ===
+        "function"
+    )
+    {
+        geoplayMapUICreateFindAnother();
+    }
 
 
     window.geoplayMapUIInitialized =
@@ -296,18 +328,17 @@ function geoplayMapUICreateStoryActions()
     // INITIAL STORY STATE
     // ==================================================
     //
-    // The buttons must remain completely hidden
-    // while the map narration/story is running.
-    //
-    // The "story-hidden" class is established
-    // immediately when the element is created.
-    //
-    // geoplay_map.css controls what this class does.
+    // The buttons are completely non-interactive
+    // while the narration/story is running.
     //
     // ==================================================
 
     actions.className =
         "geoplay-story-actions story-hidden";
+
+
+    actions.style.pointerEvents =
+        "none";
 
 
     var findAnother =
@@ -328,6 +359,36 @@ function geoplayMapUICreateStoryActions()
         "FIND ANOTHER";
 
 
+    // ==================================================
+    // FIND ANOTHER CLICK
+    // ==================================================
+
+    findAnother.addEventListener(
+        "click",
+        function(event)
+        {
+            event.preventDefault();
+
+            event.stopPropagation();
+
+
+            if (
+                typeof geoplayMapUIOpenFindAnother ===
+                "function"
+            )
+            {
+                geoplayMapUIOpenFindAnother();
+            }
+            else
+            {
+                console.error(
+                    "GEOPLAY FIND ANOTHER: Open function not available."
+                );
+            }
+        }
+    );
+
+
     var browse =
         document.createElement(
             "button"
@@ -345,6 +406,21 @@ function geoplayMapUICreateStoryActions()
 
     browse.textContent =
         "BROWSE";
+
+
+    // ==================================================
+    // BROWSE IS CURRENTLY VISUAL ONLY
+    // ==================================================
+
+    browse.addEventListener(
+        "click",
+        function(event)
+        {
+            event.preventDefault();
+
+            event.stopPropagation();
+        }
+    );
 
 
     actions.appendChild(
@@ -379,7 +455,6 @@ function geoplayMapUIShowStoryActions()
     {
         // ==================================================
         // STORY IS COMPLETE
-        // REMOVE THE HARD HIDDEN STATE
         // ==================================================
 
         actions.classList.remove(
@@ -387,13 +462,17 @@ function geoplayMapUIShowStoryActions()
         );
 
 
-        // ==================================================
-        // SHOW BUTTONS
-        // ==================================================
-
         actions.classList.add(
             "visible"
         );
+
+
+        // ==================================================
+        // ENABLE BUTTON INTERACTION
+        // ==================================================
+
+        actions.style.pointerEvents =
+            "auto";
     }
 
 
@@ -415,6 +494,14 @@ function geoplayMapUIHideStoryActions()
 
     if (actions)
     {
+        // ==================================================
+        // DISABLE BUTTON INTERACTION
+        // ==================================================
+
+        actions.style.pointerEvents =
+            "none";
+
+
         // ==================================================
         // HIDE BUTTONS
         // ==================================================
