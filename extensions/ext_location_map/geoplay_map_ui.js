@@ -171,12 +171,30 @@ function geoplayMapUIAddStyles()
 
     style.textContent = `
 
+/* ==================================================
+   POPPINS
+   ================================================== */
+
+@import url(
+    'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap'
+);
+
+
 #geoplay-map-ui
 {
-    font-family: Arial, sans-serif;
-    color: #ffffff;
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    color:
+        #ffffff;
 }
 
+
+/* ==================================================
+   ROBOT DIALOGUE
+   ================================================== */
 
 .geoplay-dialogue
 {
@@ -195,25 +213,37 @@ function geoplayMapUIAddStyles()
 
     width:
         min(
-            86vw,
-            420px
+            92vw,
+            470px
         );
+
+    min-height:
+        76px;
 
     box-sizing:
         border-box;
 
     padding:
-        11px 18px;
+        12px 18px 12px 76px;
 
     border-radius:
-        18px;
+        20px;
 
     background:
-        rgba(
-            12,
-            5,
-            32,
-            .94
+        linear-gradient(
+            135deg,
+            rgba(
+                18,
+                8,
+                42,
+                .97
+            ),
+            rgba(
+                11,
+                5,
+                29,
+                .97
+            )
         );
 
     border:
@@ -222,7 +252,7 @@ function geoplayMapUIAddStyles()
             173,
             78,
             255,
-            .82
+            .78
         );
 
     box-shadow:
@@ -231,11 +261,18 @@ function geoplayMapUIAddStyles()
             155,
             65,
             230,
-            .35
+            .32
+        ),
+        0 8px 24px
+        rgba(
+            0,
+            0,
+            0,
+            .30
         );
 
     text-align:
-        center;
+        left;
 
     opacity:
         0;
@@ -243,7 +280,7 @@ function geoplayMapUIAddStyles()
     transform:
         translate(
             -50%,
-            8px
+            10px
         );
 
     transition:
@@ -268,20 +305,133 @@ function geoplayMapUIAddStyles()
 }
 
 
+/* ==================================================
+   ROBOT HEAD
+   ================================================== */
+
+.geoplay-dialogue-robot
+{
+    position:
+        absolute;
+
+    left:
+        10px;
+
+    top:
+        50%;
+
+    width:
+        58px;
+
+    height:
+        58px;
+
+    object-fit:
+        contain;
+
+    display:
+        block;
+
+    transform:
+        translateY(
+            -50%
+        )
+        scale(
+            .82
+        );
+
+    transform-origin:
+        center center;
+
+    opacity:
+        0;
+
+    filter:
+        drop-shadow(
+            0 0 7px
+            rgba(
+                173,
+                78,
+                255,
+                .38
+            )
+        );
+
+    transition:
+        opacity .35s ease .08s,
+        transform .45s
+        cubic-bezier(
+            .22,
+            1.25,
+            .36,
+            1
+        );
+
+    pointer-events:
+        none;
+
+    user-select:
+        none;
+
+    -webkit-user-drag:
+        none;
+
+    z-index:
+        3;
+}
+
+
+.geoplay-dialogue.visible
+.geoplay-dialogue-robot
+{
+    opacity:
+        1;
+
+    transform:
+        translateY(
+            -50%
+        )
+        scale(
+            1
+        );
+}
+
+
+/* ==================================================
+   DIALOGUE TEXT
+   ================================================== */
+
 .geoplay-dialogue-text
 {
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
     font-size:
         clamp(
-            14px,
-            3.5vw,
-            18px
+            13px,
+            3.25vw,
+            17px
         );
 
     font-weight:
-        800;
+        600;
 
     line-height:
-        1.25;
+        1.45;
+
+    letter-spacing:
+        .05px;
+
+    color:
+        #ffffff;
+
+    text-align:
+        left;
+
+    overflow-wrap:
+        break-word;
 }
 
 
@@ -427,6 +577,11 @@ function geoplayMapUIAddStyles()
 
     transition:
         opacity .2s ease;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
 }
 
 
@@ -445,6 +600,11 @@ function geoplayMapUIAddStyles()
     color:
         #ffb52e;
 
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
     font-size:
         clamp(
             12px,
@@ -453,7 +613,10 @@ function geoplayMapUIAddStyles()
         );
 
     font-weight:
-        900;
+        800;
+
+    letter-spacing:
+        .2px;
 
     white-space:
         nowrap;
@@ -468,6 +631,11 @@ function geoplayMapUIAddStyles()
     margin-top:
         4px;
 
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
     font-size:
         clamp(
             10px,
@@ -476,7 +644,7 @@ function geoplayMapUIAddStyles()
         );
 
     font-weight:
-        700;
+        600;
 
     white-space:
         nowrap;
@@ -563,6 +731,11 @@ function geoplayMapUIAddStyles()
 
     -webkit-tap-highlight-color:
         transparent;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
 }
 
 
@@ -637,11 +810,16 @@ function geoplayMapUIAddStyles()
 
 .geoplay-destination-offscreen-name
 {
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
     font-size:
         11px;
 
     font-weight:
-        900;
+        800;
 
     letter-spacing:
         .3px;
@@ -695,6 +873,11 @@ function geoplayMapUIAddStyles()
     color:
         #281000;
 
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
     font-size:
         clamp(
             13px,
@@ -703,7 +886,10 @@ function geoplayMapUIAddStyles()
         );
 
     font-weight:
-        900;
+        800;
+
+    letter-spacing:
+        .2px;
 
     opacity:
         0;
@@ -756,11 +942,47 @@ function geoplayMapUIAddStyles()
     {
         width:
             calc(
-                100% - 28px
+                100% - 24px
             );
+
+        min-height:
+            70px;
 
         bottom:
             112px;
+
+        padding:
+            11px 14px 11px 68px;
+
+        border-radius:
+            18px;
+    }
+
+
+    .geoplay-dialogue-robot
+    {
+        left:
+            8px;
+
+        width:
+            52px;
+
+        height:
+            52px;
+    }
+
+
+    .geoplay-dialogue-text
+    {
+        font-size:
+            clamp(
+                12px,
+                3.35vw,
+                15px
+            );
+
+        line-height:
+            1.42;
     }
 
 
@@ -785,6 +1007,50 @@ function geoplayMapUIAddStyles()
     {
         font-size:
             11px;
+    }
+}
+
+
+/* ==================================================
+   LARGER VIEWPORT
+   ================================================== */
+
+@media (min-width:431px)
+{
+    .geoplay-dialogue
+    {
+        min-height:
+            82px;
+
+        padding:
+            13px 20px 13px 82px;
+    }
+
+
+    .geoplay-dialogue-robot
+    {
+        left:
+            12px;
+
+        width:
+            64px;
+
+        height:
+            64px;
+    }
+
+
+    .geoplay-dialogue-text
+    {
+        font-size:
+            clamp(
+                15px,
+                2.25vw,
+                18px
+            );
+
+        line-height:
+            1.45;
     }
 }
 
@@ -816,6 +1082,68 @@ function geoplayMapUICreateDialogue()
     dialogue.className =
         "geoplay-dialogue";
 
+
+    // ==================================================
+    // ROBOT HEAD
+    // ==================================================
+
+    var robot =
+        document.createElement(
+            "img"
+        );
+
+
+    robot.id =
+        "geoplay-dialogue-robot";
+
+
+    robot.className =
+        "geoplay-dialogue-robot";
+
+
+    robot.src =
+        "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/geoplay_robot_head.png";
+
+
+    robot.alt =
+        "Geoplay robot";
+
+
+    robot.draggable =
+        false;
+
+
+    robot.onload =
+        function()
+        {
+            console.log(
+                "GEOPLAY UI: Robot dialogue head loaded from Cloudflare R2."
+            );
+        };
+
+
+    robot.onerror =
+        function(error)
+        {
+            console.error(
+                "GEOPLAY UI: Robot dialogue head FAILED to load from Cloudflare R2.",
+                error
+            );
+        };
+
+
+    dialogue.appendChild(
+        robot
+    );
+
+
+    window.geoplayDialogueRobot =
+        robot;
+
+
+    // ==================================================
+    // TEXT
+    // ==================================================
 
     var text =
         document.createElement(
