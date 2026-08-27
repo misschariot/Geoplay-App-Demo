@@ -256,11 +256,6 @@ function geoplayMapUILoadStylesheet()
             // ==================================================
             // FAIL SAFE
             // ==================================================
-            //
-            // Keep the UI usable even if the stylesheet
-            // cannot be loaded.
-            //
-            // ==================================================
 
             if (
                 window.geoplayMapUI
@@ -299,6 +294,27 @@ function geoplayMapUICreateStoryActions()
 
     actions.className =
         "geoplay-story-actions";
+
+
+    // ==================================================
+    // INITIAL INLINE HIDDEN STATE
+    // ==================================================
+    //
+    // Prevent browser-default buttons from flashing
+    // before the external stylesheet has loaded.
+    //
+    // ==================================================
+
+    actions.style.opacity =
+        "0";
+
+
+    actions.style.visibility =
+        "hidden";
+
+
+    actions.style.pointerEvents =
+        "none";
 
 
     var findAnother =
@@ -368,6 +384,10 @@ function geoplayMapUIShowStoryActions()
 
     if (actions)
     {
+        actions.style.visibility =
+            "visible";
+
+
         actions.classList.add(
             "visible"
         );
@@ -395,6 +415,10 @@ function geoplayMapUIHideStoryActions()
         actions.classList.remove(
             "visible"
         );
+
+
+        actions.style.visibility =
+            "hidden";
     }
 
 
