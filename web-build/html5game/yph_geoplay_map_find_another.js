@@ -31,6 +31,10 @@
 // ==================================================
 
 
+// ==================================================
+// SEARCH STATE
+// ==================================================
+
 window.geoplayFindAnotherUI =
     null;
 
@@ -91,6 +95,128 @@ function geoplayMapUICreateFindAnother()
     // INITIAL HIDDEN STATE
     // ==================================================
 
+    geoplayMapUISearchConfigureOverlay(
+        overlay
+    );
+
+
+    // ==================================================
+    // BLOCK MAP INTERACTION
+    // ==================================================
+
+    geoplayMapUISearchProtectOverlay(
+        overlay
+    );
+
+
+    // ==================================================
+    // CREATE POPUP PANEL
+    // ==================================================
+
+    var panel =
+        document.createElement(
+            "div"
+        );
+
+
+    panel.className =
+        "geoplay-find-another";
+
+
+    panel.style.position =
+        "relative";
+
+
+    panel.style.zIndex =
+        "501";
+
+
+    panel.style.pointerEvents =
+        "auto";
+
+
+    // ==================================================
+    // BLOCK PANEL INTERACTION FROM MAP
+    // ==================================================
+
+    geoplayMapUISearchProtectPanel(
+        panel
+    );
+
+
+    // ==================================================
+    // BUILD SEARCH CONTENT
+    // ==================================================
+
+    geoplayMapUISearchBuildHeader(
+        panel
+    );
+
+
+    geoplayMapUISearchBuildSubtitle(
+        panel
+    );
+
+
+    geoplayMapUISearchBuildSearchSection(
+        panel
+    );
+
+
+    geoplayMapUISearchBuildDivider(
+        panel
+    );
+
+
+    geoplayMapUISearchBuildLocationButton(
+        panel
+    );
+
+
+    geoplayMapUISearchBuildFooter(
+        panel
+    );
+
+
+    // ==================================================
+    // ADD PANEL TO OVERLAY
+    // ==================================================
+
+    overlay.appendChild(
+        panel
+    );
+
+
+    // ==================================================
+    // ADD OVERLAY TO MAP UI
+    // ==================================================
+
+    window.geoplayMapUI.appendChild(
+        overlay
+    );
+
+
+    window.geoplayFindAnotherUI =
+        overlay;
+
+
+    console.log(
+        "GEOPLAY SEARCH: UI created."
+    );
+
+
+    return 1;
+}
+
+
+// ==================================================
+// CONFIGURE SEARCH OVERLAY
+// ==================================================
+
+function geoplayMapUISearchConfigureOverlay(
+    overlay
+)
+{
     overlay.style.position =
         "absolute";
 
@@ -141,12 +267,17 @@ function geoplayMapUICreateFindAnother()
 
     overlay.style.zIndex =
         "500";
+}
 
 
-    // ==================================================
-    // BLOCK MAP INTERACTION
-    // ==================================================
+// ==================================================
+// PROTECT SEARCH OVERLAY
+// ==================================================
 
+function geoplayMapUISearchProtectOverlay(
+    overlay
+)
+{
     overlay.addEventListener(
         "click",
         function(event)
@@ -211,38 +342,17 @@ function geoplayMapUICreateFindAnother()
                 true
         }
     );
+}
 
 
-    // ==================================================
-    // CREATE POPUP PANEL
-    // ==================================================
+// ==================================================
+// PROTECT SEARCH PANEL
+// ==================================================
 
-    var panel =
-        document.createElement(
-            "div"
-        );
-
-
-    panel.className =
-        "geoplay-find-another";
-
-
-    panel.style.position =
-        "relative";
-
-
-    panel.style.zIndex =
-        "501";
-
-
-    panel.style.pointerEvents =
-        "auto";
-
-
-    // ==================================================
-    // BLOCK PANEL INTERACTION FROM MAP
-    // ==================================================
-
+function geoplayMapUISearchProtectPanel(
+    panel
+)
+{
     panel.addEventListener(
         "click",
         function(event)
@@ -272,12 +382,17 @@ function geoplayMapUICreateFindAnother()
                 true
         }
     );
+}
 
 
-    // ==================================================
-    // HEADER
-    // ==================================================
+// ==================================================
+// BUILD SEARCH HEADER
+// ==================================================
 
+function geoplayMapUISearchBuildHeader(
+    panel
+)
+{
     var header =
         document.createElement(
             "div"
@@ -330,6 +445,10 @@ function geoplayMapUICreateFindAnother()
         "auto";
 
 
+    // ==================================================
+    // CLOSE EVENTS
+    // ==================================================
+
     close.addEventListener(
         "click",
         function(event)
@@ -337,6 +456,7 @@ function geoplayMapUICreateFindAnother()
             event.preventDefault();
 
             event.stopPropagation();
+
 
             geoplayMapUICloseFindAnother();
         }
@@ -350,6 +470,7 @@ function geoplayMapUICreateFindAnother()
             event.preventDefault();
 
             event.stopPropagation();
+
 
             geoplayMapUICloseFindAnother();
         },
@@ -373,12 +494,17 @@ function geoplayMapUICreateFindAnother()
     panel.appendChild(
         header
     );
+}
 
 
-    // ==================================================
-    // SUBTITLE
-    // ==================================================
+// ==================================================
+// BUILD SEARCH SUBTITLE
+// ==================================================
 
+function geoplayMapUISearchBuildSubtitle(
+    panel
+)
+{
     var subtitle =
         document.createElement(
             "div"
@@ -396,12 +522,17 @@ function geoplayMapUICreateFindAnother()
     panel.appendChild(
         subtitle
     );
+}
 
 
-    // ==================================================
-    // CASINO OR LOCATION
-    // ==================================================
+// ==================================================
+// BUILD SEARCH SECTION
+// ==================================================
 
+function geoplayMapUISearchBuildSearchSection(
+    panel
+)
+{
     var searchSection =
         document.createElement(
             "div"
@@ -411,6 +542,10 @@ function geoplayMapUICreateFindAnother()
     searchSection.className =
         "geoplay-find-another-section";
 
+
+    // ==================================================
+    // LABEL
+    // ==================================================
 
     var searchLabel =
         document.createElement(
@@ -446,9 +581,44 @@ function geoplayMapUICreateFindAnother()
 
 
     // ==================================================
-    // SEARCH INPUT WRAPPER
+    // INPUT
     // ==================================================
 
+    var inputWrapper =
+        geoplayMapUISearchCreateInput(
+            searchRow
+        );
+
+
+    // ==================================================
+    // SEARCH BUTTON
+    // ==================================================
+
+    geoplayMapUISearchCreateSearchButton(
+        searchRow,
+        inputWrapper
+    );
+
+
+    searchSection.appendChild(
+        searchRow
+    );
+
+
+    panel.appendChild(
+        searchSection
+    );
+}
+
+
+// ==================================================
+// CREATE SEARCH INPUT
+// ==================================================
+
+function geoplayMapUISearchCreateInput(
+    searchRow
+)
+{
     var inputWrapper =
         document.createElement(
             "div"
@@ -480,17 +650,20 @@ function geoplayMapUICreateFindAnother()
         "viewBox='0 0 24 24' " +
         "fill='none' " +
         "xmlns='http://www.w3.org/2000/svg'>" +
+
         "<circle " +
         "cx='11' " +
         "cy='11' " +
         "r='6.5' " +
         "stroke='currentColor' " +
         "stroke-width='2'/>" +
+
         "<path " +
         "d='M16 16L21 21' " +
         "stroke='currentColor' " +
         "stroke-width='2' " +
         "stroke-linecap='round'/>" +
+
         "</svg>";
 
 
@@ -536,9 +709,6 @@ function geoplayMapUICreateFindAnother()
     // DO NOT AUTO-FOCUS INPUT
     // ==================================================
     //
-    // The input is intentionally NOT focused when
-    // SEARCH opens.
-    //
     // The mobile keyboard should only appear when
     // the player deliberately taps the input.
     //
@@ -554,10 +724,19 @@ function geoplayMapUICreateFindAnother()
     );
 
 
-    // ==================================================
-    // SEARCH BUTTON
-    // ==================================================
+    return inputWrapper;
+}
 
+
+// ==================================================
+// CREATE SEARCH BUTTON
+// ==================================================
+
+function geoplayMapUISearchCreateSearchButton(
+    searchRow,
+    inputWrapper
+)
+{
     var searchButton =
         document.createElement(
             "button"
@@ -580,6 +759,16 @@ function geoplayMapUICreateFindAnother()
         "auto";
 
 
+    // ==================================================
+    // SEARCH BUTTON EVENTS
+    // ==================================================
+
+    var input =
+        inputWrapper.querySelector(
+            ".geoplay-find-another-input"
+        );
+
+
     searchButton.addEventListener(
         "click",
         function(event)
@@ -589,9 +778,8 @@ function geoplayMapUICreateFindAnother()
             event.stopPropagation();
 
 
-            console.log(
-                "GEOPLAY SEARCH: Manual search selected.",
-                input.value
+            geoplayMapUISearchSubmit(
+                input
             );
         }
     );
@@ -606,9 +794,8 @@ function geoplayMapUICreateFindAnother()
             event.stopPropagation();
 
 
-            console.log(
-                "GEOPLAY SEARCH: Manual search selected.",
-                input.value
+            geoplayMapUISearchSubmit(
+                input
             );
         },
         {
@@ -621,22 +808,51 @@ function geoplayMapUICreateFindAnother()
     searchRow.appendChild(
         searchButton
     );
+}
 
 
-    searchSection.appendChild(
-        searchRow
+// ==================================================
+// SEARCH SUBMISSION
+// ==================================================
+//
+// UI ONLY FOR NOW.
+//
+// Future search implementation will connect here:
+// - Geocoding
+// - Results
+// - Property selection
+// - Map movement
+// - Destination card
+//
+// ==================================================
+
+function geoplayMapUISearchSubmit(
+    input
+)
+{
+    var value =
+        input
+            ?
+        input.value
+            :
+        "";
+
+
+    console.log(
+        "GEOPLAY SEARCH: Manual search selected.",
+        value
     );
+}
 
 
-    panel.appendChild(
-        searchSection
-    );
+// ==================================================
+// BUILD OR DIVIDER
+// ==================================================
 
-
-    // ==================================================
-    // OR DIVIDER
-    // ==================================================
-
+function geoplayMapUISearchBuildDivider(
+    panel
+)
+{
     var orDivider =
         document.createElement(
             "div"
@@ -691,18 +907,21 @@ function geoplayMapUICreateFindAnother()
     panel.appendChild(
         orDivider
     );
+}
 
 
-    // ==================================================
-    // USE MY LOCATION
-    // ==================================================
-    //
-    // Display-only for now.
-    // This is intentionally compact so it reads as a
-    // secondary search method rather than a large CTA.
-    //
-    // ==================================================
+// ==================================================
+// BUILD USE MY LOCATION BUTTON
+// ==================================================
+//
+// Display-only for now.
+//
+// ==================================================
 
+function geoplayMapUISearchBuildLocationButton(
+    panel
+)
+{
     var locationButton =
         document.createElement(
             "button"
@@ -863,7 +1082,7 @@ function geoplayMapUICreateFindAnother()
 
 
     // ==================================================
-    // LOCATION BUTTON CLICK
+    // LOCATION BUTTON EVENTS
     // ==================================================
 
     locationButton.addEventListener(
@@ -875,9 +1094,7 @@ function geoplayMapUICreateFindAnother()
             event.stopPropagation();
 
 
-            console.log(
-                "GEOPLAY SEARCH: Use My Location selected."
-            );
+            geoplayMapUISearchUseMyLocation();
         }
     );
 
@@ -891,9 +1108,7 @@ function geoplayMapUICreateFindAnother()
             event.stopPropagation();
 
 
-            console.log(
-                "GEOPLAY SEARCH: Use My Location selected."
-            );
+            geoplayMapUISearchUseMyLocation();
         },
         {
             passive:
@@ -905,12 +1120,33 @@ function geoplayMapUICreateFindAnother()
     panel.appendChild(
         locationButton
     );
+}
 
 
-    // ==================================================
-    // SEARCH FOOTER
-    // ==================================================
+// ==================================================
+// USE MY LOCATION
+// ==================================================
+//
+// UI ONLY FOR NOW.
+//
+// ==================================================
 
+function geoplayMapUISearchUseMyLocation()
+{
+    console.log(
+        "GEOPLAY SEARCH: Use My Location selected."
+    );
+}
+
+
+// ==================================================
+// BUILD SEARCH FOOTER
+// ==================================================
+
+function geoplayMapUISearchBuildFooter(
+    panel
+)
+{
     var footer =
         document.createElement(
             "div"
@@ -943,36 +1179,6 @@ function geoplayMapUICreateFindAnother()
     panel.appendChild(
         footer
     );
-
-
-    // ==================================================
-    // ADD PANEL TO OVERLAY
-    // ==================================================
-
-    overlay.appendChild(
-        panel
-    );
-
-
-    // ==================================================
-    // ADD OVERLAY TO MAP UI
-    // ==================================================
-
-    window.geoplayMapUI.appendChild(
-        overlay
-    );
-
-
-    window.geoplayFindAnotherUI =
-        overlay;
-
-
-    console.log(
-        "GEOPLAY SEARCH: UI created."
-    );
-
-
-    return 1;
 }
 
 
@@ -1033,18 +1239,7 @@ function geoplayMapUIOpenFindAnother()
 
 
     // ==================================================
-    // OPEN USING SHARED GEOPLAY MODAL SYSTEM
-    // ==================================================
-    //
-    // SEARCH and Pine Ridge now use the same:
-    //
-    // - backdrop behavior
-    // - centering
-    // - opening animation
-    // - timing
-    // - easing
-    // - modal state
-    //
+    // USE SHARED GEOPLAY MODAL SYSTEM
     // ==================================================
 
     if (
@@ -1072,17 +1267,12 @@ function geoplayMapUIOpenFindAnother()
     //
     // FIND ANOTHER / BROWSE remain visible underneath
     // the transparent modal backdrop.
-    //
     // ==================================================
 
 
     // ==================================================
     // IMPORTANT:
     // DO NOT AUTO-FOCUS SEARCH INPUT.
-    //
-    // The player must deliberately tap the search field
-    // before the mobile keyboard opens.
-    //
     // ==================================================
 
 
@@ -1128,7 +1318,7 @@ function geoplayMapUICloseFindAnother()
 
 
     // ==================================================
-    // CLOSE USING SHARED GEOPLAY MODAL SYSTEM
+    // USE SHARED GEOPLAY MODAL SYSTEM
     // ==================================================
 
     if (
@@ -1161,11 +1351,14 @@ function geoplayMapUICloseFindAnother()
     // DO NOT SHOW/HIDE STORY ACTIONS HERE.
     //
     // FIND ANOTHER / BROWSE were never hidden when
-    // SEARCH opened, so they remain underneath the
-    // backdrop for the entire modal lifecycle.
-    //
+    // SEARCH opened.
     // ==================================================
 
 
     return 1;
 }
+
+
+// ==================================================
+// END GEOPLAY SEARCH
+// ==================================================

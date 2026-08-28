@@ -11,32 +11,41 @@
 // - Story completion
 // - GameMaker story callbacks
 //
-// ROUTING is handled by:
+// ROUTING:
 // - geoplay_map_route.js
 //
 // STORY INTERACTION:
-// - Player interaction is LOCKED when story begins.
+// - Player interaction is locked when the story begins.
 // - Scripted camera movement continues normally.
-// - Player interaction remains locked during the
-//   entire story.
-// - Player interaction is UNLOCKED only when the
-//   story has finished.
+// - Player interaction remains locked during the story.
+// - Player interaction is unlocked when the story finishes.
+//
+// IMPORTANT:
+// - This file does NOT calculate route geometry.
+// - This file does NOT animate the route.
+// - This file does NOT control route camera movement.
+// - Those responsibilities belong to geoplay_map_route.js.
 // ==================================================
 
 
+// ==================================================
+// STORY STATE
+// ==================================================
+
 window.geoplayMapFlowStarted =
     false;
+
 
 window.geoplayMapFlowFinished =
     false;
 
 
 // ==================================================
-// TIMING
+// STORY TIMING
 // ==================================================
 //
-// These timings control the pacing between
-// story/dialogue moments.
+// These values control the pacing between
+// story and dialogue moments.
 //
 // Dialogue typing speed is controlled separately
 // by geoplay_map_dialogue.js.
@@ -46,33 +55,41 @@ window.geoplayMapFlowFinished =
 var geoplayFlowFindPlayerDuration =
     3000;
 
+
 var geoplayFlowPlayerPause =
     2800;
+
 
 var geoplayFlowSearchIntroPause =
     2400;
 
+
 var geoplayFlowSearchDuration =
     4500;
+
 
 var geoplayFlowDestinationTravelDuration =
     1800;
 
+
 var geoplayFlowDestinationPause =
     2800;
+
 
 var geoplayFlowReturnDuration =
     1800;
 
+
 var geoplayFlowPropertyPause =
     2200;
+
 
 var geoplayFlowCompletePause =
     3000;
 
 
 // ==================================================
-// START
+// START STORY
 // ==================================================
 
 function geoplayMapFlowStart()
@@ -87,6 +104,7 @@ function geoplayMapFlowStart()
 
     window.geoplayMapFlowStarted =
         true;
+
 
     window.geoplayMapFlowFinished =
         false;
@@ -119,8 +137,16 @@ function geoplayMapFlowStart()
     }
 
 
+    // ==================================================
+    // CREATE MAP UI
+    // ==================================================
+
     geoplayMapUICreate();
 
+
+    // ==================================================
+    // BEGIN STORY
+    // ==================================================
 
     geoplayMapFlowFindPlayer();
 }
@@ -158,6 +184,10 @@ function geoplayMapFlowPlayerFound()
     );
 
 
+    // ==================================================
+    // SHOW PLAYER MARKER
+    // ==================================================
+
     geoplayMapShowPlayerMarker();
 
 
@@ -170,10 +200,18 @@ function geoplayMapFlowPlayerFound()
     }
 
 
+    // ==================================================
+    // PLAYER DIALOGUE
+    // ==================================================
+
     geoplayMapUISay(
         "There you are!"
     );
 
+
+    // ==================================================
+    // CENTER CAMERA ON PLAYER
+    // ==================================================
 
     if (
         window.geoplayMap
@@ -204,6 +242,10 @@ function geoplayMapFlowPlayerFound()
         });
     }
 
+
+    // ==================================================
+    // CONTINUE STORY
+    // ==================================================
 
     setTimeout(
         function()
@@ -252,6 +294,10 @@ function geoplayMapFlowSearchArea()
     );
 
 
+    // ==================================================
+    // PULL CAMERA BACK TO SHOW SEARCH AREA
+    // ==================================================
+
     if (
         window.geoplayMap
     )
@@ -282,6 +328,10 @@ function geoplayMapFlowSearchArea()
     }
 
 
+    // ==================================================
+    // COMPLETE SEARCH
+    // ==================================================
+
     setTimeout(
         function()
         {
@@ -308,12 +358,16 @@ function geoplayMapFlowSearchComplete()
     );
 
 
+    // ==================================================
+    // SHOW PINE RIDGE DESTINATION MARKER
+    // ==================================================
+
     geoplayMapShowDestinationMarker();
 
 
     // ==================================================
-    // GIVE THE PLAYER TIME TO READ THE DISCOVERY
-    // BEFORE THE CAMERA STARTS MOVING.
+    // GIVE PLAYER TIME TO READ DISCOVERY
+    // BEFORE CAMERA MOVES.
     // ==================================================
 
     setTimeout(
@@ -327,7 +381,7 @@ function geoplayMapFlowSearchComplete()
 
 
 // ==================================================
-// 6. CAMERA GOES TO DESTINATION
+// 6. TRAVEL TO DESTINATION
 // ==================================================
 
 function geoplayMapFlowTravelToDestination()
@@ -336,6 +390,10 @@ function geoplayMapFlowTravelToDestination()
         "GEOPLAY FLOW: Moving camera to destination."
     );
 
+
+    // ==================================================
+    // FAIL SAFE
+    // ==================================================
 
     if (
         !window.geoplayMap
@@ -346,6 +404,10 @@ function geoplayMapFlowTravelToDestination()
         return;
     }
 
+
+    // ==================================================
+    // MOVE CAMERA TO PINE RIDGE
+    // ==================================================
 
     window.geoplayMap.easeTo(
     {
@@ -372,6 +434,10 @@ function geoplayMapFlowTravelToDestination()
     });
 
 
+    // ==================================================
+    // CONTINUE WHEN CAMERA ARRIVES
+    // ==================================================
+
     setTimeout(
         function()
         {
@@ -393,13 +459,25 @@ function geoplayMapFlowDestinationArrived()
     );
 
 
+    // ==================================================
+    // SHOW PINE RIDGE CARD
+    // ==================================================
+
     geoplayMapUIShowDestination();
 
+
+    // ==================================================
+    // DESTINATION DIALOGUE
+    // ==================================================
 
     geoplayMapUISay(
         "There it is!"
     );
 
+
+    // ==================================================
+    // HOLD ON DESTINATION
+    // ==================================================
 
     setTimeout(
         function()
@@ -427,6 +505,10 @@ function geoplayMapFlowReturnToPlayer()
     );
 
 
+    // ==================================================
+    // FAIL SAFE
+    // ==================================================
+
     if (
         !window.geoplayMap
     )
@@ -436,6 +518,10 @@ function geoplayMapFlowReturnToPlayer()
         return;
     }
 
+
+    // ==================================================
+    // RETURN CAMERA TO PLAYER
+    // ==================================================
 
     window.geoplayMap.easeTo(
     {
@@ -462,6 +548,10 @@ function geoplayMapFlowReturnToPlayer()
     });
 
 
+    // ==================================================
+    // REQUEST ROAD ROUTE AFTER CAMERA RETURNS
+    // ==================================================
+
     setTimeout(
         function()
         {
@@ -477,11 +567,13 @@ function geoplayMapFlowReturnToPlayer()
 // ==================================================
 //
 // The route engine owns:
-// - OSRM requests
+//
+// - OSRM request
 // - Route validation
 // - Route geometry
 // - Route animation
 // - Route camera behavior
+// - Route fallback
 //
 // Story flow only tells the route engine when to start
 // and what should happen when routing is complete.
@@ -493,6 +585,10 @@ function geoplayMapFlowRequestRoute()
         "GEOPLAY ROUTING: Requesting road route."
     );
 
+
+    // ==================================================
+    // VERIFY ROUTE MODULE
+    // ==================================================
 
     if (
         typeof geoplayMapRouteRequest !==
@@ -510,11 +606,20 @@ function geoplayMapFlowRequestRoute()
     }
 
 
+    // ==================================================
+    // REQUEST ROUTE
+    // ==================================================
+
     geoplayMapRouteRequest(
         geoplayMapLongitude,
         geoplayMapLatitude,
+
         geoplayDestinationLongitude,
         geoplayDestinationLatitude,
+
+        // ==================================================
+        // SUCCESS
+        // ==================================================
 
         function(
             geometry,
@@ -529,6 +634,10 @@ function geoplayMapFlowRequestRoute()
             );
         },
 
+        // ==================================================
+        // FAILURE
+        // ==================================================
+
         function()
         {
             geoplayMapFlowStartFallbackRoute();
@@ -538,7 +647,7 @@ function geoplayMapFlowRequestRoute()
 
 
 // ==================================================
-// HANDLE ROUTE
+// 10. HANDLE ROUTE
 // ==================================================
 
 function geoplayMapFlowHandleRoute(
@@ -547,6 +656,10 @@ function geoplayMapFlowHandleRoute(
     duration
 )
 {
+    // ==================================================
+    // VALIDATE ROUTE
+    // ==================================================
+
     if (
         !geometry ||
         !geometry.coordinates ||
@@ -564,6 +677,10 @@ function geoplayMapFlowHandleRoute(
     );
 
 
+    // ==================================================
+    // LOG ROUTE DISTANCE
+    // ==================================================
+
     if (
         typeof distance ===
         "number"
@@ -577,6 +694,10 @@ function geoplayMapFlowHandleRoute(
     }
 
 
+    // ==================================================
+    // LOG ROUTE DURATION
+    // ==================================================
+
     if (
         typeof duration ===
         "number"
@@ -589,6 +710,10 @@ function geoplayMapFlowHandleRoute(
         );
     }
 
+
+    // ==================================================
+    // VERIFY ROUTE ANIMATION MODULE
+    // ==================================================
 
     if (
         typeof geoplayMapRouteAnimate !==
@@ -606,8 +731,13 @@ function geoplayMapFlowHandleRoute(
     }
 
 
+    // ==================================================
+    // SEND ROUTE TO ROUTE ENGINE
+    // ==================================================
+
     geoplayMapRouteAnimate(
         geometry,
+
         geoplayDestinationLongitude,
         geoplayDestinationLatitude,
 
@@ -622,9 +752,18 @@ function geoplayMapFlowHandleRoute(
 // ==================================================
 // START FALLBACK ROUTE
 // ==================================================
+//
+// Used only when the real road route cannot be
+// requested or animated.
+//
+// ==================================================
 
 function geoplayMapFlowStartFallbackRoute()
 {
+    // ==================================================
+    // VERIFY FALLBACK MODULE
+    // ==================================================
+
     if (
         typeof geoplayMapRouteFallback !==
         "function"
@@ -635,15 +774,23 @@ function geoplayMapFlowStartFallbackRoute()
         );
 
 
+        // Continue the story rather than leaving
+        // the player stuck.
         geoplayMapFlowRouteArrived();
 
         return;
     }
 
 
+    console.warn(
+        "GEOPLAY ROUTING: Using fallback route."
+    );
+
+
     geoplayMapRouteFallback(
         geoplayMapLongitude,
         geoplayMapLatitude,
+
         geoplayDestinationLongitude,
         geoplayDestinationLatitude,
 
@@ -709,7 +856,7 @@ function geoplayMapFlowPropertyReveal()
 
 
 // ==================================================
-// COMPLETE
+// COMPLETE STORY
 // ==================================================
 
 function geoplayMapFlowFinish()
@@ -727,8 +874,7 @@ function geoplayMapFlowFinish()
 
 
     // ==================================================
-    // STORY IS NOW COMPLETE.
-    // ENABLE THE PINE RIDGE OFF-SCREEN INDICATOR.
+    // ENABLE PINE RIDGE OFF-SCREEN INDICATOR
     // ==================================================
 
     window.geoplayDestinationIndicatorEnabled =
@@ -754,8 +900,7 @@ function geoplayMapFlowFinish()
 
 
     // ==================================================
-    // STORY IS OVER
-    // PLAYER CAN CONTROL THE MAP AGAIN.
+    // UNLOCK PLAYER MAP INTERACTION
     // ==================================================
 
     if (
@@ -768,7 +913,7 @@ function geoplayMapFlowFinish()
 
 
     // ==================================================
-    // CLOSE ROBOT DIALOGUE
+    // CLEAR ROBOT DIALOGUE
     // ==================================================
 
     geoplayMapUISay(
@@ -793,6 +938,12 @@ function geoplayMapFlowFinish()
 // ==================================================
 // FIND ANOTHER
 // ==================================================
+//
+// GameMaker callback placeholder.
+// The actual SEARCH UI is handled by:
+// geoplay_map_find_another.js
+//
+// ==================================================
 
 function gmcallback_geoplay_location_find_another()
 {
@@ -808,6 +959,9 @@ function gmcallback_geoplay_location_find_another()
 // ==================================================
 // BROWSE
 // ==================================================
+//
+// GameMaker callback placeholder.
+// ==================================================
 
 function gmcallback_geoplay_location_browse()
 {
@@ -821,11 +975,14 @@ function gmcallback_geoplay_location_browse()
 
 
 // ==================================================
-// LEGACY CONTINUE
+// LEGACY CONTINUE COMPATIBILITY
 // ==================================================
 //
-// Kept temporarily so existing GameMaker
-// references do not break.
+// Kept temporarily so existing GameMaker references
+// do not break while the project is being cleaned up.
+//
+// This can be removed later after we verify that
+// GameMaker no longer references it.
 // ==================================================
 
 function gmcallback_geoplay_location_continue()
@@ -843,3 +1000,8 @@ function gmcallback_geoplay_location_continue()
         geoplayMapUIShowStoryActions();
     }
 }
+
+
+// ==================================================
+// END GEOPLAY MAP FLOW
+// ==================================================

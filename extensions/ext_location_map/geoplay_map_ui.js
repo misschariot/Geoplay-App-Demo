@@ -8,6 +8,12 @@
 // - Story actions
 // - FIND ANOTHER initialization
 //
+// MODULES CREATED HERE:
+// - Dialogue
+// - Destination
+// - Story Actions
+// - FIND ANOTHER
+//
 // DIALOGUE:
 // geoplay_map_dialogue.js
 //
@@ -17,23 +23,43 @@
 // FIND ANOTHER:
 // geoplay_map_find_another.js
 //
+// MODAL:
+// geoplay_map_modal.js
+//
+// ROUTING:
+// geoplay_map_route.js
+//
+// STORY:
+// geoplay_map_flow.js
+//
 // CSS:
 // geoplay_map.css
 //
 // ==================================================
 
 
-window.geoplayMapUI = null;
+// ==================================================
+// UI STATE
+// ==================================================
 
-window.geoplayMapUIInitialized = false;
+window.geoplayMapUI =
+    null;
+
+
+window.geoplayMapUIInitialized =
+    false;
 
 
 // ==================================================
-// CREATE UI
+// CREATE MAP UI
 // ==================================================
 
 function geoplayMapUICreate()
 {
+    // ==================================================
+    // PREVENT DUPLICATE INITIALIZATION
+    // ==================================================
+
     if (
         window.geoplayMapUIInitialized &&
         window.geoplayMapUI
@@ -43,13 +69,19 @@ function geoplayMapUICreate()
     }
 
 
+    // ==================================================
+    // FIND MAP CONTAINER
+    // ==================================================
+
     var mapContainer =
         document.getElementById(
             "geoplay-map"
         );
 
 
-    if (!mapContainer)
+    if (
+        !mapContainer
+    )
     {
         console.error(
             "GEOPLAY UI: Map container not found."
@@ -94,12 +126,12 @@ function geoplayMapUICreate()
 
 
     // ==================================================
-    // IMPORTANT:
-    // THE MAP UI CONTAINER ITSELF DOES NOT
-    // BLOCK MAP INTERACTION.
+    // UI CONTAINER DOES NOT BLOCK THE MAP
+    // ==================================================
     //
-    // INDIVIDUAL INTERACTIVE UI ELEMENTS
-    // TURN POINTER EVENTS BACK ON.
+    // Individual interactive components enable
+    // pointer events when necessary.
+    //
     // ==================================================
 
     ui.style.pointerEvents =
@@ -115,7 +147,7 @@ function geoplayMapUICreate()
 
 
     // ==================================================
-    // HIDE UI UNTIL CSS IS READY
+    // HIDE UNTIL CSS IS READY
     // ==================================================
 
     ui.style.visibility =
@@ -132,7 +164,7 @@ function geoplayMapUICreate()
 
 
     // ==================================================
-    // LOAD MAP UI CSS
+    // LOAD UI STYLES
     // ==================================================
 
     geoplayMapUILoadStylesheet();
@@ -142,16 +174,53 @@ function geoplayMapUICreate()
     // CREATE DIALOGUE
     // ==================================================
 
-    geoplayMapUICreateDialogue();
+    if (
+        typeof geoplayMapUICreateDialogue ===
+        "function"
+    )
+    {
+        geoplayMapUICreateDialogue();
+    }
+    else
+    {
+        console.error(
+            "GEOPLAY UI: Dialogue module is not available."
+        );
+    }
 
 
     // ==================================================
     // CREATE DESTINATION
     // ==================================================
 
-    geoplayMapUICreateDestinationCard();
+    if (
+        typeof geoplayMapUICreateDestinationCard ===
+        "function"
+    )
+    {
+        geoplayMapUICreateDestinationCard();
+    }
+    else
+    {
+        console.error(
+            "GEOPLAY UI: Destination module is not available."
+        );
+    }
 
-    geoplayMapUICreateOffscreenIndicator();
+
+    if (
+        typeof geoplayMapUICreateOffscreenIndicator ===
+        "function"
+    )
+    {
+        geoplayMapUICreateOffscreenIndicator();
+    }
+    else
+    {
+        console.error(
+            "GEOPLAY UI: Destination indicator module is not available."
+        );
+    }
 
 
     // ==================================================
@@ -165,9 +234,9 @@ function geoplayMapUICreate()
     // CREATE FIND ANOTHER
     // ==================================================
     //
-    // The popup is created immediately but remains
-    // completely hidden until the user presses
-    // FIND ANOTHER.
+    // The Search popup is created during UI
+    // initialization but remains hidden until
+    // FIND ANOTHER is selected.
     //
     // ==================================================
 
@@ -178,7 +247,17 @@ function geoplayMapUICreate()
     {
         geoplayMapUICreateFindAnother();
     }
+    else
+    {
+        console.error(
+            "GEOPLAY UI: FIND ANOTHER module is not available."
+        );
+    }
 
+
+    // ==================================================
+    // INITIALIZATION COMPLETE
+    // ==================================================
 
     window.geoplayMapUIInitialized =
         true;
@@ -197,7 +276,7 @@ function geoplayMapUICreate()
 // LOAD MAP UI STYLESHEET
 // ==================================================
 //
-// geoplay_map.css is an HTML5 Included File.
+// geoplay_map.css is a GameMaker HTML5 Included File.
 //
 // GameMaker exports the Included File into:
 //
@@ -207,35 +286,41 @@ function geoplayMapUICreate()
 
 function geoplayMapUILoadStylesheet()
 {
-    if (
+    // ==================================================
+    // CHECK FOR EXISTING STYLESHEET
+    // ==================================================
+
+    var existingStylesheet =
         document.getElementById(
             "geoplay-map-ui-stylesheet"
-        )
+        );
+
+
+    if (
+        existingStylesheet
     )
     {
-        var existingStylesheet =
-            document.getElementById(
-                "geoplay-map-ui-stylesheet"
-            );
-
+        // ==================================================
+        // CSS IS ALREADY AVAILABLE
+        // ==================================================
 
         if (
-            existingStylesheet.sheet
+            existingStylesheet.sheet &&
+            window.geoplayMapUI
         )
         {
-            if (
-                window.geoplayMapUI
-            )
-            {
-                window.geoplayMapUI.style.visibility =
-                    "visible";
-            }
+            window.geoplayMapUI.style.visibility =
+                "visible";
         }
 
 
         return 1;
     }
 
+
+    // ==================================================
+    // CREATE STYLESHEET LINK
+    // ==================================================
 
     var link =
         document.createElement(
@@ -259,6 +344,10 @@ function geoplayMapUILoadStylesheet()
         "html5game/geoplay_map.css";
 
 
+    // ==================================================
+    // SUCCESS
+    // ==================================================
+
     link.onload =
         function()
         {
@@ -277,6 +366,15 @@ function geoplayMapUILoadStylesheet()
         };
 
 
+    // ==================================================
+    // FAIL SAFE
+    // ==================================================
+    //
+    // The UI should still become visible if the
+    // stylesheet fails to load.
+    //
+    // ==================================================
+
     link.onerror =
         function()
         {
@@ -284,10 +382,6 @@ function geoplayMapUILoadStylesheet()
                 "GEOPLAY UI: CSS FAILED to load."
             );
 
-
-            // ==================================================
-            // FAIL SAFE
-            // ==================================================
 
             if (
                 window.geoplayMapUI
@@ -311,9 +405,39 @@ function geoplayMapUILoadStylesheet()
 // ==================================================
 // CREATE STORY ACTIONS
 // ==================================================
+//
+// These are the two actions shown after the initial
+// robot story:
+//
+// FIND ANOTHER
+// BROWSE
+//
+// FIND ANOTHER opens the Search module.
+//
+// BROWSE is currently visual-only.
+//
+// ==================================================
 
 function geoplayMapUICreateStoryActions()
 {
+    // ==================================================
+    // PREVENT DUPLICATE CREATION
+    // ==================================================
+
+    if (
+        document.getElementById(
+            "geoplay-story-actions"
+        )
+    )
+    {
+        return 1;
+    }
+
+
+    // ==================================================
+    // CREATE ACTION CONTAINER
+    // ==================================================
+
     var actions =
         document.createElement(
             "div"
@@ -328,8 +452,8 @@ function geoplayMapUICreateStoryActions()
     // INITIAL STORY STATE
     // ==================================================
     //
-    // The buttons are completely non-interactive
-    // while the narration/story is running.
+    // Actions remain hidden and non-interactive while
+    // the robot story is running.
     //
     // ==================================================
 
@@ -340,6 +464,10 @@ function geoplayMapUICreateStoryActions()
     actions.style.pointerEvents =
         "none";
 
+
+    // ==================================================
+    // FIND ANOTHER BUTTON
+    // ==================================================
 
     var findAnother =
         document.createElement(
@@ -360,7 +488,7 @@ function geoplayMapUICreateStoryActions()
 
 
     // ==================================================
-    // FIND ANOTHER CLICK
+    // FIND ANOTHER ACTION
     // ==================================================
 
     findAnother.addEventListener(
@@ -389,6 +517,10 @@ function geoplayMapUICreateStoryActions()
     );
 
 
+    // ==================================================
+    // BROWSE BUTTON
+    // ==================================================
+
     var browse =
         document.createElement(
             "button"
@@ -409,7 +541,14 @@ function geoplayMapUICreateStoryActions()
 
 
     // ==================================================
-    // BROWSE IS CURRENTLY VISUAL ONLY
+    // BROWSE
+    // ==================================================
+    //
+    // Currently visual-only.
+    //
+    // The click handler intentionally prevents the
+    // event from reaching the map.
+    //
     // ==================================================
 
     browse.addEventListener(
@@ -423,6 +562,10 @@ function geoplayMapUICreateStoryActions()
     );
 
 
+    // ==================================================
+    // ADD BUTTONS
+    // ==================================================
+
     actions.appendChild(
         findAnother
     );
@@ -433,14 +576,31 @@ function geoplayMapUICreateStoryActions()
     );
 
 
-    window.geoplayMapUI.appendChild(
-        actions
-    );
+    // ==================================================
+    // ADD ACTIONS TO UI
+    // ==================================================
+
+    if (
+        window.geoplayMapUI
+    )
+    {
+        window.geoplayMapUI.appendChild(
+            actions
+        );
+    }
+
+
+    return 1;
 }
 
 
 // ==================================================
 // SHOW STORY ACTIONS
+// ==================================================
+//
+// Called when the introductory robot story has
+// finished.
+//
 // ==================================================
 
 function geoplayMapUIShowStoryActions()
@@ -451,29 +611,34 @@ function geoplayMapUIShowStoryActions()
         );
 
 
-    if (actions)
+    if (
+        !actions
+    )
     {
-        // ==================================================
-        // STORY IS COMPLETE
-        // ==================================================
-
-        actions.classList.remove(
-            "story-hidden"
-        );
-
-
-        actions.classList.add(
-            "visible"
-        );
-
-
-        // ==================================================
-        // ENABLE BUTTON INTERACTION
-        // ==================================================
-
-        actions.style.pointerEvents =
-            "auto";
+        return 0;
     }
+
+
+    // ==================================================
+    // SHOW ACTIONS
+    // ==================================================
+
+    actions.classList.remove(
+        "story-hidden"
+    );
+
+
+    actions.classList.add(
+        "visible"
+    );
+
+
+    // ==================================================
+    // ENABLE INTERACTION
+    // ==================================================
+
+    actions.style.pointerEvents =
+        "auto";
 
 
     return 1;
@@ -482,6 +647,11 @@ function geoplayMapUIShowStoryActions()
 
 // ==================================================
 // HIDE STORY ACTIONS
+// ==================================================
+//
+// Used when the story needs to hide the bottom
+// actions again.
+//
 // ==================================================
 
 function geoplayMapUIHideStoryActions()
@@ -492,29 +662,34 @@ function geoplayMapUIHideStoryActions()
         );
 
 
-    if (actions)
+    if (
+        !actions
+    )
     {
-        // ==================================================
-        // DISABLE BUTTON INTERACTION
-        // ==================================================
-
-        actions.style.pointerEvents =
-            "none";
-
-
-        // ==================================================
-        // HIDE BUTTONS
-        // ==================================================
-
-        actions.classList.remove(
-            "visible"
-        );
-
-
-        actions.classList.add(
-            "story-hidden"
-        );
+        return 0;
     }
+
+
+    // ==================================================
+    // DISABLE INTERACTION
+    // ==================================================
+
+    actions.style.pointerEvents =
+        "none";
+
+
+    // ==================================================
+    // HIDE ACTIONS
+    // ==================================================
+
+    actions.classList.remove(
+        "visible"
+    );
+
+
+    actions.classList.add(
+        "story-hidden"
+    );
 
 
     return 1;
@@ -523,6 +698,15 @@ function geoplayMapUIHideStoryActions()
 
 // ==================================================
 // LEGACY CONTINUE COMPATIBILITY
+// ==================================================
+//
+// These functions are intentionally retained for now.
+//
+// They allow older GameMaker references to continue
+// working while we complete the refactor.
+//
+// DO NOT REMOVE UNTIL THE GAMEMAKER EXTENSION /
+// PROJECT CALLBACK AUDIT IS COMPLETE.
 // ==================================================
 
 function geoplayMapUIShowContinue()
@@ -535,3 +719,8 @@ function geoplayMapUIHideContinue()
 {
     return geoplayMapUIHideStoryActions();
 }
+
+
+// ==================================================
+// END GEOPLAY MAP UI
+// ==================================================
