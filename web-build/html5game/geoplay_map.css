@@ -3186,6 +3186,11 @@
     justify-content:
         center;
 
+    transform:
+        translateY(
+            -2vh
+        );
+
     padding:
         16px;
 

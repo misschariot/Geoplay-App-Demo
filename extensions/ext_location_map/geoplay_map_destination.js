@@ -822,8 +822,18 @@ function geoplayMapUIPositionDestination()
             "px";
 
 
+        // ==================================================
+        // MATCH SEARCH POPUP VISUAL CENTERING
+        // ==================================================
+        //
+        // Move the expanded Pine Ridge card slightly above
+        // mathematical center so it feels visually centered
+        // on mobile and tablet viewports.
+        //
+        // ==================================================
+
         card.style.transform =
-            "translate(-50%,-50%)";
+            "translate(-50%,-50%) translateY(-2vh)";
 
 
         return;
