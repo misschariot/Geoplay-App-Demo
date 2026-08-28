@@ -1032,25 +1032,19 @@ function geoplayMapUIOpenFindAnother()
 
 
     // ==================================================
-    // FOCUS SEARCH FIELD
+    // DO NOT AUTO-FOCUS SEARCH FIELD
     // ==================================================
-
-    var input =
-        window.geoplayFindAnotherUI.querySelector(
-            ".geoplay-find-another-input"
-        );
-
-
-    if (input)
-    {
-        setTimeout(
-            function()
-            {
-                input.focus();
-            },
-            250
-        );
-    }
+    //
+    // The search input intentionally does NOT receive
+    // focus when the popup opens.
+    //
+    // This prevents mobile browsers from automatically
+    // opening the QWERTY keyboard.
+    //
+    // The player can still tap the input normally, and
+    // the browser will open the keyboard at that time.
+    //
+    // ==================================================
 
 
     console.log(
