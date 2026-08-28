@@ -323,10 +323,6 @@ function geoplayMapUISetDestinationExpanded(
                 "PLAY HERE" +
             "</span>" +
 
-            "<span class='geoplay-destination-play-arrow'>" +
-                "→" +
-            "</span>" +
-
         "</button>";
 
 
@@ -768,17 +764,6 @@ function geoplayMapUIPositionDestination()
     // ==================================================
     // EXPANDED DESTINATION = VIEWPORT-CENTERED MODAL
     // ==================================================
-    //
-    // Once the Pine Ridge card is expanded, it is no
-    // longer treated as map-attached UI.
-    //
-    // It is centered relative to the visible map/browser
-    // viewport instead.
-    //
-    // This also means the expanded card remains centered
-    // if the map moves underneath it.
-    //
-    // ==================================================
 
     if (
         window.geoplayDestinationExpanded
@@ -821,16 +806,6 @@ function geoplayMapUIPositionDestination()
             ) +
             "px";
 
-
-        // ==================================================
-        // MATCH SEARCH POPUP VISUAL CENTERING
-        // ==================================================
-        //
-        // Move the expanded Pine Ridge card slightly above
-        // mathematical center so it feels visually centered
-        // on mobile and tablet viewports.
-        //
-        // ==================================================
 
         card.style.transform =
             "translate(-50%,-50%) translateY(-2vh)";

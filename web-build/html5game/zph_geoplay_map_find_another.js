@@ -559,8 +559,7 @@ function geoplayMapUICreateFindAnother()
 
 
     searchButton.innerHTML =
-        "<span>SEARCH</span>" +
-        "<span class='geoplay-find-another-search-arrow'>→</span>";
+        "<span>SEARCH</span>";
 
 
     searchButton.style.pointerEvents =

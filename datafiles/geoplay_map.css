@@ -1316,9 +1316,6 @@
     justify-content:
         center;
 
-    gap:
-        8px;
-
     cursor:
         pointer;
 
@@ -1503,22 +1500,6 @@
 {
     text-align:
         center;
-}
-
-
-.geoplay-destination-play-arrow
-{
-    position:
-        relative;
-
-    z-index:
-        2;
-
-    font-size:
-        18px;
-
-    line-height:
-        1;
 }
 
 
@@ -4029,9 +4010,6 @@
     justify-content:
         center;
 
-    gap:
-        5px;
-
     cursor:
         pointer;
 
@@ -4213,16 +4191,6 @@
 
     z-index:
         2;
-}
-
-
-.geoplay-find-another-search-arrow
-{
-    font-size:
-        14px;
-
-    line-height:
-        1;
 }
 
 
@@ -5037,13 +5005,6 @@
 
         font-size:
             10px;
-    }
-
-
-    .geoplay-find-another-search-arrow
-    {
-        font-size:
-            13px;
     }
 
 
