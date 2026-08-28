@@ -1,0 +1,602 @@
+/* ==================================================
+   GEOPLAY MAP MARKERS
+   PLAYER + DESTINATION MARKER STYLES
+   ================================================== */
+
+
+/* ==================================================
+   PLAYER MAP MARKER
+   ================================================== */
+
+.geoplay-player-marker-ring
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        54px;
+
+    height:
+        54px;
+
+    border:
+        2px solid
+        rgba(
+            173,
+            78,
+            255,
+            .98
+        );
+
+    border-radius:
+        50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    box-shadow:
+        0 0 12px
+        rgba(
+            173,
+            78,
+            255,
+            .7
+        ),
+        0 0 22px
+        rgba(
+            173,
+            78,
+            255,
+            .25
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        1;
+
+    animation:
+        geoplayPlayerMarkerGlow
+        1.8s
+        ease-in-out
+        infinite;
+}
+
+
+/* ==================================================
+   PLAYER MARKER PULSE
+   ================================================== */
+
+.geoplay-player-marker-pulse
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    border:
+        2px solid
+        rgba(
+            173,
+            78,
+            255,
+            .65
+        );
+
+    border-radius:
+        50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        0;
+
+    animation:
+        geoplayPlayerMarkerPulse
+        2.15s
+        ease-out
+        infinite;
+}
+
+
+/* ==================================================
+   PLAYER MARKER IMAGE
+   ================================================== */
+
+.geoplay-player-marker-image
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        56px;
+
+    height:
+        56px;
+
+    object-fit:
+        contain;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    transform-origin:
+        center center;
+
+    display:
+        block;
+
+    pointer-events:
+        none;
+
+    user-select:
+        none;
+
+    -webkit-user-drag:
+        none;
+
+    z-index:
+        2;
+}
+
+
+/* ==================================================
+   PLAYER MARKER POP
+   ================================================== */
+
+.geoplay-player-marker-pop
+{
+    animation:
+        geoplayPlayerMarkerPop
+        .45s
+        cubic-bezier(
+            .22,
+            1.25,
+            .36,
+            1
+        );
+}
+
+
+/* ==================================================
+   PLAYER MARKER GLOW
+   ================================================== */
+
+@keyframes geoplayPlayerMarkerGlow
+{
+    0%,
+    100%
+    {
+        opacity:
+            .72;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                .94
+            );
+    }
+
+
+    50%
+    {
+        opacity:
+            1;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1.1
+            );
+    }
+}
+
+
+/* ==================================================
+   PLAYER MARKER PULSE
+   ================================================== */
+
+@keyframes geoplayPlayerMarkerPulse
+{
+    0%
+    {
+        opacity:
+            .78;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                .72
+            );
+    }
+
+
+    65%
+    {
+        opacity:
+            .25;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1.8
+            );
+    }
+
+
+    100%
+    {
+        opacity:
+            0;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                2.15
+            );
+    }
+}
+
+
+/* ==================================================
+   PLAYER MARKER POP
+   ================================================== */
+
+@keyframes geoplayPlayerMarkerPop
+{
+    0%
+    {
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                .75
+            );
+    }
+
+
+    65%
+    {
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1.12
+            );
+    }
+
+
+    100%
+    {
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1
+            );
+    }
+}
+
+
+/* ==================================================
+   PINE RIDGE DESTINATION MARKER
+   ================================================== */
+
+.geoplay-destination-marker-ring
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        54px;
+
+    height:
+        54px;
+
+    border:
+        2px solid
+        rgba(
+            255,
+            173,
+            34,
+            1
+        );
+
+    border-radius:
+        50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    box-shadow:
+        0 0 13px
+        rgba(
+            255,
+            173,
+            34,
+            .75
+        ),
+        0 0 24px
+        rgba(
+            255,
+            173,
+            34,
+            .28
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        1;
+
+    animation:
+        geoplayDestinationMarkerGlow
+        1.8s
+        ease-in-out
+        infinite;
+}
+
+
+/* ==================================================
+   PINE RIDGE DESTINATION MARKER PULSE
+   ================================================== */
+
+.geoplay-destination-marker-pulse
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    border:
+        2px solid
+        rgba(
+            255,
+            173,
+            34,
+            .7
+        );
+
+    border-radius:
+        50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        0;
+
+    animation:
+        geoplayDestinationMarkerPulse
+        2.15s
+        ease-out
+        infinite;
+}
+
+
+/* ==================================================
+   PINE RIDGE DESTINATION IMAGE
+   ================================================== */
+
+.geoplay-destination-marker-image
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        56px;
+
+    height:
+        56px;
+
+    object-fit:
+        contain;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    transform-origin:
+        center center;
+
+    display:
+        block;
+
+    pointer-events:
+        none;
+
+    user-select:
+        none;
+
+    -webkit-user-drag:
+        none;
+
+    z-index:
+        2;
+}
+
+
+/* ==================================================
+   DESTINATION MARKER GLOW
+   ================================================== */
+
+@keyframes geoplayDestinationMarkerGlow
+{
+    0%,
+    100%
+    {
+        opacity:
+            .75;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                .94
+            );
+    }
+
+
+    50%
+    {
+        opacity:
+            1;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1.1
+            );
+    }
+}
+
+
+/* ==================================================
+   DESTINATION MARKER PULSE
+   ================================================== */
+
+@keyframes geoplayDestinationMarkerPulse
+{
+    0%
+    {
+        opacity:
+            .8;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                .72
+            );
+    }
+
+
+    65%
+    {
+        opacity:
+            .28;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                1.8
+            );
+    }
+
+
+    100%
+    {
+        opacity:
+            0;
+
+        transform:
+            translate(
+                -50%,
+                -50%
+            )
+            scale(
+                2.15
+            );
+    }
+}
