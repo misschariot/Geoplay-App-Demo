@@ -135,8 +135,22 @@
 }
 
 
+/* ==================================================
+   FIND ANOTHER
+   GEOPLAY SECONDARY / MODAL STYLE
+   ================================================== */
+
 .geoplay-story-action
 {
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    isolation:
+        isolate;
+
     flex:
         1 1 0;
 
@@ -150,20 +164,41 @@
         10px 18px;
 
     border:
-        0;
+        1px solid
+        transparent;
 
     border-radius:
         23px;
 
     background:
         linear-gradient(
-            90deg,
-            #ff9418,
-            #ffc34d
-        );
+            145deg,
+            rgba(
+                27,
+                11,
+                48,
+                .98
+            ),
+            rgba(
+                11,
+                5,
+                27,
+                .99
+            )
+        )
+        padding-box,
+
+        linear-gradient(
+            105deg,
+            #ff9b18 0%,
+            #ff5a58 40%,
+            #b34cff 72%,
+            #7138ff 100%
+        )
+        border-box;
 
     color:
-        #281000;
+        #ffffff;
 
     font-family:
         'Poppins',
@@ -199,19 +234,169 @@
         auto;
 
     box-shadow:
-        0 5px 14px
+        0 0 8px
         rgba(
             255,
-            148,
+            155,
             24,
-            .24
+            .18
+        ),
+
+        0 0 18px
+        rgba(
+            139,
+            61,
+            255,
+            .14
+        ),
+
+        0 5px 14px
+        rgba(
+            0,
+            0,
+            0,
+            .30
+        ),
+
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .07
+        );
+
+    text-shadow:
+        0 0 7px
+        rgba(
+            255,
+            255,
+            255,
+            .18
         );
 
     -webkit-tap-highlight-color:
         transparent;
 
     transition:
-        transform .15s ease;
+        transform .15s ease,
+        filter .2s ease,
+        box-shadow .2s ease;
+}
+
+
+/* ==================================================
+   FIND ANOTHER — SUBTLE GLASS HIGHLIGHT
+   ================================================== */
+
+.geoplay-story-action::before
+{
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    top:
+        0;
+
+    width:
+        42%;
+
+    height:
+        100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(
+                255,
+                155,
+                24,
+                .08
+            ),
+            rgba(
+                179,
+                76,
+                255,
+                .04
+            ),
+            transparent
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        0;
+}
+
+
+/* Keep button text above highlight */
+
+.geoplay-story-action
+{
+    line-height:
+        1;
+}
+
+
+.geoplay-story-action span
+{
+    position:
+        relative;
+
+    z-index:
+        2;
+}
+
+
+/* ==================================================
+   FIND ANOTHER — HOVER / PRESS
+   ================================================== */
+
+.geoplay-story-action:hover
+{
+    filter:
+        brightness(
+            1.08
+        );
+
+    box-shadow:
+        0 0 10px
+        rgba(
+            255,
+            155,
+            24,
+            .22
+        ),
+
+        0 0 20px
+        rgba(
+            139,
+            61,
+            255,
+            .18
+        ),
+
+        0 6px 16px
+        rgba(
+            0,
+            0,
+            0,
+            .34
+        ),
+
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .10
+        );
 }
 
 
@@ -221,29 +406,264 @@
         scale(
             .97
         );
+
+    filter:
+        brightness(
+            .98
+        );
 }
 
 
+/* ==================================================
+   BROWSE
+   GOLD PRIMARY ACTION
+   ================================================== */
+
 .geoplay-story-action-browse
 {
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    isolation:
+        isolate;
+
     background:
         linear-gradient(
-            90deg,
-            #8b42d8,
-            #b66cff
+            105deg,
+            #b87500 0%,
+            #e6a719 18%,
+            #ffd45a 42%,
+            #fff0a3 55%,
+            #f8c63e 70%,
+            #d8950d 88%,
+            #b87300 100%
         );
 
     color:
-        #ffffff;
+        #2a1600;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            239,
+            163,
+            .95
+        );
 
     box-shadow:
-        0 5px 14px
+        0 6px 18px
         rgba(
-            139,
-            66,
-            216,
-            .25
+            218,
+            155,
+            25,
+            .38
+        ),
+
+        0 0 15px
+        rgba(
+            255,
+            205,
+            72,
+            .22
+        ),
+
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .78
+        ),
+
+        inset 0 -2px 0
+        rgba(
+            116,
+            69,
+            0,
+            .20
         );
+
+    text-shadow:
+        0 1px 0
+        rgba(
+            255,
+            244,
+            190,
+            .38
+        );
+}
+
+
+/* ==================================================
+   BROWSE — SHINE
+   ================================================== */
+
+.geoplay-story-action-browse::before
+{
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        -35%;
+
+    top:
+        0;
+
+    width:
+        26%;
+
+    height:
+        100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(
+                255,
+                255,
+                255,
+                .18
+            ),
+            transparent
+        );
+
+    transform:
+        skewX(
+            -20deg
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        1;
+
+    animation:
+        geoplayBrowseButtonShine
+        4s
+        ease-in-out
+        infinite;
+}
+
+
+.geoplay-story-action-browse span
+{
+    position:
+        relative;
+
+    z-index:
+        2;
+}
+
+
+/* ==================================================
+   BROWSE — HOVER / PRESS
+   ================================================== */
+
+.geoplay-story-action-browse:hover
+{
+    filter:
+        brightness(
+            1.06
+        );
+
+    box-shadow:
+        0 6px 18px
+        rgba(
+            218,
+            155,
+            25,
+            .38
+        ),
+
+        0 0 15px
+        rgba(
+            255,
+            205,
+            72,
+            .22
+        ),
+
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .78
+        ),
+
+        inset 0 -2px 0
+        rgba(
+            116,
+            69,
+            0,
+            .20
+        );
+}
+
+
+.geoplay-story-action-browse:active
+{
+    transform:
+        scale(
+            .96
+        );
+
+    filter:
+        brightness(
+            .98
+        );
+}
+
+
+/* ==================================================
+   BROWSE SHINE ANIMATION
+   ================================================== */
+
+@keyframes geoplayBrowseButtonShine
+{
+    0%,
+    58%
+    {
+        left:
+            -35%;
+
+        opacity:
+            0;
+    }
+
+    64%
+    {
+        opacity:
+            1;
+    }
+
+    78%
+    {
+        left:
+            120%;
+
+        opacity:
+            1;
+    }
+
+    84%,
+    100%
+    {
+        left:
+            120%;
+
+        opacity:
+            0;
+    }
 }
 
 
