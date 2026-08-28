@@ -887,7 +887,7 @@ function geoplayMapUIPositionDestination()
         if (
             point.y -
             cardHeight -
-            12 <
+            52 <
             10
         )
         {
@@ -903,7 +903,7 @@ function geoplayMapUIPositionDestination()
         {
             top =
                 point.y -
-                12;
+                52;
 
 
             card.style.transform =
