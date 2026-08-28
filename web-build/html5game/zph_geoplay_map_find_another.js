@@ -997,13 +997,22 @@ function geoplayMapUIOpenFindAnother()
 
 
     // ==================================================
-    // DO NOT HIDE STORY ACTIONS
-    // ==================================================
+    // IMPORTANT:
+    // DO NOT HIDE STORY ACTIONS.
     //
-    // FIND ANOTHER and BROWSE remain visible underneath
-    // the translucent modal backdrop.
+    // FIND ANOTHER / BROWSE remain visible underneath
+    // the transparent modal backdrop.
     //
     // ==================================================
+
+
+    // ==================================================
+    // RESET CLOSE STATE
+    // ==================================================
+
+    window.geoplayFindAnotherUI.classList.remove(
+        "modal-closing"
+    );
 
 
     // ==================================================
@@ -1023,13 +1032,8 @@ function geoplayMapUIOpenFindAnother()
 
 
     // ==================================================
-    // START SHARED MODAL ANIMATION
+    // START MODAL ANIMATION
     // ==================================================
-
-    window.geoplayFindAnotherUI.classList.remove(
-        "modal-closing"
-    );
-
 
     window.geoplayFindAnotherUI.classList.remove(
         "visible"
@@ -1042,6 +1046,14 @@ function geoplayMapUIOpenFindAnother()
             requestAnimationFrame(
                 function()
                 {
+                    if (
+                        !window.geoplayFindAnotherUI
+                    )
+                    {
+                        return;
+                    }
+
+
                     window.geoplayFindAnotherUI.classList.add(
                         "visible"
                     );
@@ -1091,7 +1103,7 @@ function geoplayMapUICloseFindAnother()
 
 
     // ==================================================
-    // START SHARED MODAL CLOSE ANIMATION
+    // START MODAL CLOSE ANIMATION
     // ==================================================
 
     window.geoplayFindAnotherUI.classList.add(
@@ -1105,7 +1117,7 @@ function geoplayMapUICloseFindAnother()
 
 
     // ==================================================
-    // WAIT FOR SHARED MODAL TIMING
+    // WAIT FOR MODAL TIMING
     // ==================================================
 
     setTimeout(
@@ -1137,16 +1149,14 @@ function geoplayMapUICloseFindAnother()
 
 
             // ==================================================
-            // RETURN TO STORY-END STATE
+            // IMPORTANT:
+            // DO NOT SHOW/HIDE STORY ACTIONS HERE.
+            //
+            // FIND ANOTHER / BROWSE were never hidden when
+            // SEARCH opened, so they remain underneath the
+            // backdrop for the entire modal lifecycle.
+            //
             // ==================================================
-
-            if (
-                typeof geoplayMapUIShowStoryActions ===
-                "function"
-            )
-            {
-                geoplayMapUIShowStoryActions();
-            }
 
 
             console.log(
