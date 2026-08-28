@@ -31,33 +31,63 @@
     padding:
         11px 14px;
 
+    border:
+        1px solid
+        transparent;
+
     border-radius:
         16px;
 
     background:
-        rgba(
-            20,
-            7,
-            31,
-            .97
-        );
+        linear-gradient(
+            145deg,
+            rgba(
+                25,
+                10,
+                45,
+                .98
+            ),
+            rgba(
+                12,
+                6,
+                28,
+                .99
+            )
+        )
+        padding-box,
 
-    border:
-        1px solid
-        rgba(
-            255,
-            173,
-            34,
-            .95
-        );
+        linear-gradient(
+            105deg,
+            #ff9b18 0%,
+            #ff5a58 42%,
+            #b34cff 72%,
+            #7138ff 100%
+        )
+        border-box;
 
     box-shadow:
-        0 0 15px
+        0 0 10px
         rgba(
             255,
-            173,
-            34,
-            .4
+            155,
+            24,
+            .18
+        ),
+
+        0 0 20px
+        rgba(
+            139,
+            61,
+            255,
+            .13
+        ),
+
+        0 7px 18px
+        rgba(
+            0,
+            0,
+            0,
+            .35
         );
 
     opacity:
@@ -101,6 +131,71 @@
 
     pointer-events:
         auto;
+}
+
+
+/* ==================================================
+   COLLAPSED DESTINATION CARD
+   GEOPLAY MODAL VISUAL LANGUAGE
+   ================================================== */
+
+.geoplay-destination:not(.expanded)
+{
+    border:
+        1px solid
+        transparent;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(
+                27,
+                11,
+                48,
+                .98
+            ),
+            rgba(
+                11,
+                5,
+                27,
+                .99
+            )
+        )
+        padding-box,
+
+        linear-gradient(
+            105deg,
+            #ff9b18 0%,
+            #ff5a58 40%,
+            #b34cff 72%,
+            #7138ff 100%
+        )
+        border-box;
+
+    box-shadow:
+        0 0 10px
+        rgba(
+            255,
+            155,
+            24,
+            .20
+        ),
+
+        0 0 22px
+        rgba(
+            139,
+            61,
+            255,
+            .14
+        ),
+
+        0 7px 18px
+        rgba(
+            0,
+            0,
+            0,
+            .34
+        );
 }
 
 
@@ -211,10 +306,10 @@
         0 0 auto;
 
     width:
-        24px;
+        26px;
 
     height:
-        24px;
+        26px;
 
     display:
         flex;
@@ -225,11 +320,40 @@
     justify-content:
         center;
 
+    border:
+        1px solid
+        rgba(
+            179,
+            76,
+            255,
+            .38
+        );
+
+    border-radius:
+        50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(
+                48,
+                22,
+                71,
+                .95
+            ),
+            rgba(
+                20,
+                8,
+                36,
+                .98
+            )
+        );
+
     color:
         #ffb52e;
 
     font-size:
-        20px;
+        19px;
 
     font-weight:
         800;
@@ -237,8 +361,27 @@
     line-height:
         1;
 
+    box-shadow:
+        0 0 7px
+        rgba(
+            179,
+            76,
+            255,
+            .18
+        ),
+
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .08
+        );
+
     transition:
-        transform .2s ease;
+        transform .15s ease,
+        filter .15s ease,
+        box-shadow .15s ease;
 }
 
 
@@ -249,11 +392,44 @@
         translateX(
             2px
         );
+
+    filter:
+        brightness(
+            1.08
+        );
+
+    box-shadow:
+        0 0 10px
+        rgba(
+            179,
+            76,
+            255,
+            .30
+        ),
+
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .12
+        );
+}
+
+
+.geoplay-destination:active
+.geoplay-destination-chevron
+{
+    transform:
+        scale(
+            .94
+        );
 }
 
 
 /* ==================================================
-   EXPANDED CARD
+   EXPANDED DESTINATION
+   SHARED GEOPLAY MODAL VISUAL TREATMENT
    ================================================== */
 
 .geoplay-destination.expanded
@@ -261,19 +437,85 @@
     width:
         min(
             88vw,
-            360px
+            410px
+        );
+
+    max-width:
+        calc(
+            100% -
+            24px
         );
 
     padding:
-        13px;
+        24px 21px 18px;
+
+    border:
+        1px solid
+        transparent;
 
     border-radius:
-        18px;
+        20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(
+                27,
+                11,
+                48,
+                .99
+            ),
+            rgba(
+                11,
+                5,
+                27,
+                .99
+            )
+        )
+        padding-box,
+
+        linear-gradient(
+            105deg,
+            #ff9b18 0%,
+            #ff5a58 40%,
+            #b34cff 72%,
+            #7138ff 100%
+        )
+        border-box;
+
+    box-shadow:
+        0 0 12px
+        rgba(
+            255,
+            155,
+            24,
+            .22
+        ),
+
+        0 0 28px
+        rgba(
+            139,
+            61,
+            255,
+            .18
+        ),
+
+        0 12px 30px
+        rgba(
+            0,
+            0,
+            0,
+            .42
+        );
 
     cursor:
         default;
 }
 
+
+/* ==================================================
+   EXPANDED HEADER
+   ================================================== */
 
 .geoplay-destination-expanded-header
 {
@@ -315,16 +557,19 @@
 
     font-size:
         clamp(
-            13px,
-            3.5vw,
-            16px
+            19px,
+            5vw,
+            25px
         );
 
     font-weight:
         800;
 
+    line-height:
+        1.15;
+
     letter-spacing:
-        .2px;
+        .1px;
 
     white-space:
         nowrap;
@@ -343,6 +588,9 @@
 
 .geoplay-destination-close
 {
+    position:
+        relative;
+
     flex:
         0 0 auto;
 
@@ -356,17 +604,32 @@
         0;
 
     border:
-        0;
+        1px solid
+        rgba(
+            255,
+            155,
+            24,
+            .55
+        );
 
     border-radius:
         50%;
 
     background:
-        rgba(
-            123,
-            69,
-            170,
-            .24
+        linear-gradient(
+            145deg,
+            rgba(
+                42,
+                20,
+                61,
+                .96
+            ),
+            rgba(
+                20,
+                8,
+                35,
+                .98
+            )
         );
 
     color:
@@ -381,7 +644,7 @@
         18px;
 
     font-weight:
-        600;
+        700;
 
     line-height:
         1;
@@ -398,8 +661,132 @@
     cursor:
         pointer;
 
+    pointer-events:
+        auto;
+
+    box-shadow:
+        0 0 8px
+        rgba(
+            173,
+            78,
+            255,
+            .20
+        ),
+
+        0 0 14px
+        rgba(
+            255,
+            155,
+            24,
+            .08
+        ),
+
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .10
+        );
+
+    text-shadow:
+        0 0 7px
+        rgba(
+            255,
+            255,
+            255,
+            .28
+        );
+
     -webkit-tap-highlight-color:
         transparent;
+
+    transition:
+        transform .15s ease,
+        box-shadow .2s ease,
+        filter .2s ease;
+}
+
+
+.geoplay-destination-close::before
+{
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        4px;
+
+    top:
+        3px;
+
+    width:
+        calc(
+            100% -
+            8px
+        );
+
+    height:
+        45%;
+
+    border-radius:
+        50%;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(
+                255,
+                255,
+                255,
+                .12
+            ),
+            rgba(
+                255,
+                255,
+                255,
+                0
+            )
+        );
+
+    pointer-events:
+        none;
+}
+
+
+.geoplay-destination-close:hover
+{
+    filter:
+        brightness(
+            1.10
+        );
+
+    box-shadow:
+        0 0 10px
+        rgba(
+            179,
+            76,
+            255,
+            .34
+        ),
+
+        0 0 18px
+        rgba(
+            255,
+            155,
+            24,
+            .12
+        ),
+
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .16
+        );
 }
 
 
@@ -407,7 +794,12 @@
 {
     transform:
         scale(
-            .92
+            .90
+        );
+
+    filter:
+        brightness(
+            .96
         );
 }
 
@@ -441,8 +833,8 @@
         1px solid
         rgba(
             255,
-            173,
-            34,
+            155,
+            24,
             .45
         );
 
@@ -450,8 +842,8 @@
         0 0 10px
         rgba(
             255,
-            173,
-            34,
+            155,
+            24,
             .15
         );
 
@@ -473,20 +865,41 @@
         1px;
 
     margin:
-        11px 0;
+        15px 0 13px;
 
     background:
-        rgba(
-            173,
-            78,
-            255,
-            .35
+        linear-gradient(
+            90deg,
+            rgba(
+                255,
+                155,
+                24,
+                .10
+            ),
+            rgba(
+                255,
+                90,
+                88,
+                .34
+            ),
+            rgba(
+                179,
+                76,
+                255,
+                .44
+            ),
+            rgba(
+                113,
+                56,
+                255,
+                .10
+            )
         );
 }
 
 
 /* ==================================================
-   DISTANCE + ADDRESS TWO-COLUMN LAYOUT
+   DISTANCE + ADDRESS
    ================================================== */
 
 .geoplay-destination-expanded-details
@@ -700,30 +1113,50 @@
 
 .geoplay-destination-play
 {
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    isolation:
+        isolate;
+
     width:
         100%;
 
     min-height:
-        46px;
+        47px;
 
     padding:
-        10px 16px;
+        0 16px;
 
     border:
-        0;
+        1px solid
+        rgba(
+            255,
+            239,
+            163,
+            .95
+        );
 
     border-radius:
-        23px;
+        24px;
 
     background:
         linear-gradient(
-            90deg,
-            #ff9418,
-            #ffc34d
+            105deg,
+            #b87500 0%,
+            #e6a719 18%,
+            #ffd45a 42%,
+            #fff0a3 55%,
+            #f8c63e 70%,
+            #d8950d 88%,
+            #b87300 100%
         );
 
     color:
-        #281000;
+        #2a1600;
 
     font-family:
         'Poppins',
@@ -739,6 +1172,9 @@
 
     font-weight:
         800;
+
+    line-height:
+        1;
 
     letter-spacing:
         .2px;
@@ -756,16 +1192,125 @@
         pointer;
 
     box-shadow:
-        0 5px 14px
+        0 6px 18px
+        rgba(
+            218,
+            155,
+            25,
+            .38
+        ),
+
+        0 0 15px
         rgba(
             255,
-            148,
-            24,
-            .24
+            205,
+            72,
+            .22
+        ),
+
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .78
+        ),
+
+        inset 0 -2px 0
+        rgba(
+            116,
+            69,
+            0,
+            .20
+        );
+
+    text-shadow:
+        0 1px 0
+        rgba(
+            255,
+            244,
+            190,
+            .38
         );
 
     -webkit-tap-highlight-color:
         transparent;
+
+    transition:
+        transform .15s ease,
+        box-shadow .2s ease,
+        filter .2s ease;
+}
+
+
+.geoplay-destination-play::before
+{
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        -35%;
+
+    top:
+        0;
+
+    width:
+        26%;
+
+    height:
+        100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(
+                255,
+                255,
+                255,
+                .18
+            ),
+            transparent
+        );
+
+    transform:
+        skewX(
+            -20deg
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        1;
+
+    animation:
+        geoplayDestinationButtonShine
+        4s
+        ease-in-out
+        infinite;
+}
+
+
+.geoplay-destination-play span
+{
+    position:
+        relative;
+
+    z-index:
+        2;
+}
+
+
+.geoplay-destination-play:hover
+{
+    filter:
+        brightness(
+            1.06
+        );
 }
 
 
@@ -773,8 +1318,52 @@
 {
     transform:
         scale(
-            .97
+            .96
         );
+
+    filter:
+        brightness(
+            .98
+        );
+}
+
+
+@keyframes geoplayDestinationButtonShine
+{
+    0%,
+    58%
+    {
+        left:
+            -35%;
+
+        opacity:
+            0;
+    }
+
+    64%
+    {
+        opacity:
+            1;
+    }
+
+    78%
+    {
+        left:
+            120%;
+
+        opacity:
+            1;
+    }
+
+    84%,
+    100%
+    {
+        left:
+            120%;
+
+        opacity:
+            0;
+    }
 }
 
 
@@ -978,10 +1567,30 @@
             );
 
         max-width:
-            340px;
+            390px;
 
         padding:
-            12px;
+            21px 16px 16px;
+
+        border-radius:
+            20px;
+    }
+
+
+    .geoplay-destination-expanded-title
+    {
+        font-size:
+            20px;
+    }
+
+
+    .geoplay-destination-close
+    {
+        width:
+            33px;
+
+        height:
+            33px;
     }
 
 
@@ -989,6 +1598,13 @@
     {
         height:
             125px;
+    }
+
+
+    .geoplay-destination-expanded-divider
+    {
+        margin:
+            12px 0 12px;
     }
 
 
@@ -1043,6 +1659,19 @@
     }
 
 
+    .geoplay-destination-play
+    {
+        min-height:
+            44px;
+
+        border-radius:
+            23px;
+
+        font-size:
+            12px;
+    }
+
+
     .geoplay-destination-offscreen
     {
         padding:
@@ -1068,9 +1697,12 @@
     {
         width:
             min(
-                88vw,
-                360px
+                78vw,
+                410px
             );
+
+        padding:
+            24px 21px 18px;
     }
 
 
