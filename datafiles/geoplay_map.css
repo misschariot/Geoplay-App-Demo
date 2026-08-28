@@ -102,6 +102,70 @@
 
 
 /* ==================================================
+   PINE RIDGE DESTINATION OVERLAY
+   MATCHES SEARCH POPUP BACKDROP
+   ================================================== */
+
+.geoplay-destination-overlay
+{
+    position:
+        absolute;
+
+    left:
+        0;
+
+    top:
+        0;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    box-sizing:
+        border-box;
+
+    background:
+        rgba(
+            4,
+            2,
+            17,
+            .52
+        );
+
+    opacity:
+        0;
+
+    visibility:
+        hidden;
+
+    pointer-events:
+        none;
+
+    z-index:
+        105;
+
+    transition:
+        opacity .25s ease,
+        visibility .25s ease;
+}
+
+
+.geoplay-destination-overlay.visible
+{
+    opacity:
+        1;
+
+    visibility:
+        visible;
+
+    pointer-events:
+        auto;
+}
+
+
+/* ==================================================
    PINE RIDGE DESTINATION CARD
    ================================================== */
 
@@ -591,6 +655,7 @@
         );
 }
 
+
 /* ==================================================
    EXPANDED CLOSE BUTTON
    GEOPLAY GLASS + GRADIENT STYLE
@@ -718,10 +783,6 @@
 }
 
 
-/* ==================================================
-   CLOSE BUTTON — INNER GLOW
-   ================================================== */
-
 .geoplay-destination-close::before
 {
     content:
@@ -770,10 +831,6 @@
 }
 
 
-/* ==================================================
-   CLOSE BUTTON — HOVER
-   ================================================== */
-
 .geoplay-destination-close:hover
 {
     filter:
@@ -805,10 +862,6 @@
         );
 }
 
-
-/* ==================================================
-   CLOSE BUTTON — ACTIVE
-   ================================================== */
 
 .geoplay-destination-close:active
 {
@@ -962,10 +1015,6 @@
 }
 
 
-/* ==================================================
-   DISTANCE
-   ================================================== */
-
 .geoplay-destination-expanded-distance
 {
     display:
@@ -1068,10 +1117,6 @@
         );
 }
 
-
-/* ==================================================
-   ADDRESS
-   ================================================== */
 
 .geoplay-destination-expanded-address
 {
@@ -1326,10 +1371,6 @@
 }
 
 
-/* ==================================================
-   PLAY HERE — TOP GLOSS
-   ================================================== */
-
 .geoplay-destination-play::before
 {
     content:
@@ -1383,10 +1424,6 @@
         0;
 }
 
-
-/* ==================================================
-   PLAY HERE — MOVING SHINE
-   ================================================== */
 
 .geoplay-destination-play::after
 {
@@ -1462,10 +1499,6 @@
 }
 
 
-/* ==================================================
-   PLAY HERE — ARROW / CONTENT
-   ================================================== */
-
 .geoplay-destination-play
 {
     text-align:
@@ -1488,10 +1521,6 @@
         1;
 }
 
-
-/* ==================================================
-   PLAY HERE — HOVER
-   ================================================== */
 
 .geoplay-destination-play:hover
 {
@@ -1561,10 +1590,6 @@
         );
 }
 
-
-/* ==================================================
-   PLAY HERE — SHINE ANIMATION
-   ================================================== */
 
 @keyframes geoplayDestinationButtonShine
 {
@@ -1713,7 +1738,6 @@
             34,
             .55
         ),
-
         0 0 22px
         rgba(
             255,
@@ -3133,7 +3157,7 @@
 
 
 /* ==================================================
-   FIND ANOTHER POPUP
+   SEARCH POPUP
    ================================================== */
 
 .geoplay-find-another-overlay
@@ -3163,17 +3187,17 @@
         center;
 
     padding:
-        20px;
+        16px;
 
     box-sizing:
         border-box;
 
     background:
         rgba(
-            5,
+            4,
             2,
-            18,
-            .42
+            17,
+            .52
         );
 
     opacity:
@@ -3207,6 +3231,10 @@
 }
 
 
+/* ==================================================
+   SEARCH PANEL
+   ================================================== */
+
 .geoplay-find-another
 {
     position:
@@ -3214,65 +3242,77 @@
 
     width:
         min(
-            88vw,
-            400px
+            90vw,
+            410px
         );
 
     max-width:
         calc(
             100% -
-            24px
+            20px
         );
 
     box-sizing:
         border-box;
 
     padding:
-        25px 22px 22px;
+        23px 20px 19px;
 
     border:
         1px solid
-        rgba(
-            173,
-            78,
-            255,
-            .92
-        );
+        transparent;
 
     border-radius:
         22px;
 
     background:
         linear-gradient(
-            135deg,
+            145deg,
             rgba(
-                18,
-                7,
-                38,
+                27,
+                11,
+                48,
                 .99
             ),
             rgba(
-                11,
+                10,
                 4,
-                27,
+                25,
                 .99
             )
-        );
+        )
+        padding-box,
+
+        linear-gradient(
+            105deg,
+            #ff9b18 0%,
+            #ff5a58 38%,
+            #b34cff 70%,
+            #7138ff 100%
+        )
+        border-box;
 
     box-shadow:
-        0 0 18px
+        0 0 14px
         rgba(
-            173,
-            78,
             255,
-            .28
+            155,
+            24,
+            .18
         ),
-        0 14px 38px
+        0 0 30px
+        rgba(
+            139,
+            61,
+            255,
+            .20
+        ),
+        0 14px 34px
         rgba(
             0,
             0,
             0,
-            .45
+            .48
         );
 
     color:
@@ -3291,12 +3331,18 @@
             12px
         )
         scale(
-            .98
+            .97
         );
 
     transition:
         opacity .25s ease,
-        transform .25s ease;
+        transform .25s
+        cubic-bezier(
+            .22,
+            1,
+            .36,
+            1
+        );
 
     pointer-events:
         auto;
@@ -3329,8 +3375,30 @@
 
 
 /* ==================================================
-   FIND ANOTHER HEADER
+   SEARCH HEADER
    ================================================== */
+
+.geoplay-find-another-header
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    width:
+        100%;
+
+    margin:
+        0 0 5px;
+}
+
 
 .geoplay-find-another-title
 {
@@ -3350,7 +3418,7 @@
 
     font-size:
         clamp(
-            19px,
+            20px,
             5vw,
             25px
         );
@@ -3359,23 +3427,37 @@
         800;
 
     line-height:
-        1.15;
+        1.1;
 
     letter-spacing:
-        .1px;
+        .2px;
+
+    text-shadow:
+        0 0 9px
+        rgba(
+            255,
+            173,
+            34,
+            .14
+        );
 }
 
 
 .geoplay-find-another-subtitle
 {
     margin:
-        7px 0 18px;
+        0 42px 18px 0;
 
     padding:
         0;
 
     color:
-        #ffffff;
+        rgba(
+            255,
+            255,
+            255,
+            .92
+        );
 
     font-family:
         'Poppins',
@@ -3385,12 +3467,12 @@
     font-size:
         clamp(
             12px,
-            3.2vw,
-            15px
+            3.1vw,
+            14px
         );
 
     font-weight:
-        600;
+        500;
 
     line-height:
         1.4;
@@ -3398,7 +3480,7 @@
 
 
 /* ==================================================
-   FIND ANOTHER CLOSE
+   SEARCH CLOSE BUTTON
    ================================================== */
 
 .geoplay-find-another-close
@@ -3407,10 +3489,10 @@
         absolute;
 
     right:
-        15px;
+        13px;
 
     top:
-        14px;
+        12px;
 
     width:
         34px;
@@ -3422,18 +3504,38 @@
         0;
 
     border:
-        0;
+        1px solid
+        transparent;
 
     border-radius:
         50%;
 
     background:
-        rgba(
-            123,
-            69,
-            170,
-            .24
-        );
+        linear-gradient(
+            145deg,
+            rgba(
+                39,
+                18,
+                67,
+                .98
+            ),
+            rgba(
+                17,
+                7,
+                35,
+                .99
+            )
+        )
+        padding-box,
+
+        linear-gradient(
+            135deg,
+            #ff9b18 0%,
+            #ff5a58 34%,
+            #b34cff 70%,
+            #7138ff 100%
+        )
+        border-box;
 
     color:
         #ffffff;
@@ -3467,8 +3569,125 @@
     pointer-events:
         auto;
 
+    box-shadow:
+        0 0 8px
+        rgba(
+            179,
+            76,
+            255,
+            .20
+        ),
+        0 0 14px
+        rgba(
+            255,
+            155,
+            24,
+            .08
+        ),
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .10
+        );
+
+    text-shadow:
+        0 0 7px
+        rgba(
+            255,
+            255,
+            255,
+            .28
+        );
+
     -webkit-tap-highlight-color:
         transparent;
+
+    transition:
+        transform .15s ease,
+        box-shadow .2s ease,
+        filter .2s ease;
+}
+
+
+.geoplay-find-another-close::before
+{
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        4px;
+
+    top:
+        3px;
+
+    width:
+        calc(
+            100% -
+            8px
+        );
+
+    height:
+        45%;
+
+    border-radius:
+        50%;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(
+                255,
+                255,
+                255,
+                .12
+            ),
+            rgba(
+                255,
+                255,
+                255,
+                0
+            )
+        );
+
+    pointer-events:
+        none;
+}
+
+
+.geoplay-find-another-close:hover
+{
+    filter:
+        brightness(
+            1.10
+        );
+
+    box-shadow:
+        0 0 10px
+        rgba(
+            179,
+            76,
+            255,
+            .34
+        ),
+        0 0 18px
+        rgba(
+            255,
+            155,
+            24,
+            .12
+        ),
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .16
+        );
 }
 
 
@@ -3476,13 +3695,18 @@
 {
     transform:
         scale(
-            .92
+            .90
+        );
+
+    filter:
+        brightness(
+            .96
         );
 }
 
 
 /* ==================================================
-   FIND ANOTHER LABEL
+   SEARCH LABEL
    ================================================== */
 
 .geoplay-find-another-label
@@ -3502,7 +3726,7 @@
         sans-serif;
 
     font-size:
-        12px;
+        11px;
 
     font-weight:
         800;
@@ -3511,7 +3735,7 @@
         1.2;
 
     letter-spacing:
-        .2px;
+        .35px;
 
     text-transform:
         uppercase;
@@ -3538,6 +3762,47 @@
 }
 
 
+/* ==================================================
+   SEARCH INPUT WRAPPER
+   ================================================== */
+
+.geoplay-find-another-input-wrapper
+{
+    position:
+        relative;
+
+    flex:
+        1 1 auto;
+
+    min-width:
+        0;
+
+    height:
+        47px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+}
+
+
+/* ==================================================
+   SEARCH INPUT ICON
+   ================================================== */
+
+.geoplay-find-another-input-icon
+{
+    display:
+        none;
+}
+
+
+/* ==================================================
+   SEARCH INPUT
+   ================================================== */
+
 .geoplay-find-another-input
 {
     flex:
@@ -3546,37 +3811,54 @@
     min-width:
         0;
 
+    width:
+        100%;
+
     height:
-        46px;
+        47px;
 
     box-sizing:
         border-box;
 
     padding:
-        0 14px;
+        0 15px;
 
     border:
         1px solid
-        rgba(
-            173,
-            78,
-            255,
-            .95
-        );
+        transparent;
 
     border-radius:
-        23px;
+        24px;
 
     outline:
         none;
 
     background:
-        rgba(
-            255,
-            255,
-            255,
-            .07
-        );
+        linear-gradient(
+            145deg,
+            rgba(
+                42,
+                25,
+                55,
+                .94
+            ),
+            rgba(
+                25,
+                14,
+                38,
+                .96
+            )
+        )
+        padding-box,
+
+        linear-gradient(
+            105deg,
+            #ff9b18 0%,
+            #ff5a58 40%,
+            #b34cff 72%,
+            #7138ff 100%
+        )
+        border-box;
 
     color:
         #ffffff;
@@ -3595,8 +3877,28 @@
     pointer-events:
         auto;
 
+    box-shadow:
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .05
+        ),
+        0 0 10px
+        rgba(
+            139,
+            61,
+            255,
+            .08
+        );
+
     -webkit-tap-highlight-color:
         transparent;
+
+    transition:
+        box-shadow .2s ease,
+        filter .2s ease;
 }
 
 
@@ -3607,68 +3909,97 @@
             255,
             255,
             255,
-            .62
+            .55
         );
 }
 
 
 .geoplay-find-another-input:focus
 {
-    border-color:
-        #b66cff;
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            .09
+    filter:
+        brightness(
+            1.08
         );
 
     box-shadow:
-        0 0 0 2px
+        0 0 10px
         rgba(
-            173,
-            78,
+            179,
+            76,
             255,
-            .12
+            .20
+        ),
+        0 0 18px
+        rgba(
+            255,
+            155,
+            24,
+            .08
+        ),
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .08
         );
 }
 
 
 /* ==================================================
    SEARCH BUTTON
+   PREMIUM GOLD STYLE
    ================================================== */
 
 .geoplay-find-another-search
 {
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    isolation:
+        isolate;
+
     flex:
         0 0 auto;
 
     min-width:
-        82px;
+        86px;
 
     height:
-        46px;
+        47px;
 
     padding:
-        0 16px;
+        0 15px;
 
     border:
-        0;
+        1px solid
+        rgba(
+            255,
+            239,
+            163,
+            .95
+        );
 
     border-radius:
-        23px;
+        24px;
 
     background:
         linear-gradient(
-            90deg,
-            #ff9418,
-            #ffc34d
+            105deg,
+            #b87500 0%,
+            #e6a719 18%,
+            #ffd45a 42%,
+            #fff0a3 55%,
+            #f8c63e 70%,
+            #d8950d 88%,
+            #b87300 100%
         );
 
     color:
-        #281000;
+        #2a1600;
 
     font-family:
         'Poppins',
@@ -3676,13 +4007,25 @@
         sans-serif;
 
     font-size:
-        12px;
+        11px;
 
     font-weight:
         800;
 
     line-height:
         1;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        5px;
 
     cursor:
         pointer;
@@ -3691,16 +4034,229 @@
         auto;
 
     box-shadow:
-        0 5px 14px
+        0 5px 15px
+        rgba(
+            218,
+            155,
+            25,
+            .28
+        ),
+        0 0 11px
         rgba(
             255,
-            148,
-            24,
-            .24
+            205,
+            72,
+            .14
+        ),
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .70
+        ),
+        inset 0 -2px 0
+        rgba(
+            116,
+            69,
+            0,
+            .22
         );
 
     -webkit-tap-highlight-color:
         transparent;
+
+    transition:
+        transform .15s ease,
+        filter .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.geoplay-find-another-search::before
+{
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        5%;
+
+    top:
+        2px;
+
+    width:
+        90%;
+
+    height:
+        46%;
+
+    border-radius:
+        20px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(
+                255,
+                255,
+                255,
+                .42
+            ),
+            rgba(
+                255,
+                255,
+                255,
+                .08
+            ),
+            rgba(
+                255,
+                255,
+                255,
+                0
+            )
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        0;
+}
+
+
+.geoplay-find-another-search::after
+{
+    content:
+        "";
+
+    position:
+        absolute;
+
+    top:
+        -70%;
+
+    left:
+        -35%;
+
+    width:
+        28%;
+
+    height:
+        240%;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(
+                255,
+                255,
+                255,
+                0
+            ),
+            rgba(
+                255,
+                255,
+                255,
+                .15
+            ),
+            rgba(
+                255,
+                255,
+                255,
+                .82
+            ),
+            rgba(
+                255,
+                255,
+                255,
+                .18
+            ),
+            rgba(
+                255,
+                255,
+                255,
+                0
+            )
+        );
+
+    transform:
+        skewX(
+            -20deg
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        1;
+
+    animation:
+        geoplaySearchButtonShine
+        4s
+        ease-in-out
+        infinite;
+}
+
+
+.geoplay-find-another-search span
+{
+    position:
+        relative;
+
+    z-index:
+        2;
+}
+
+
+.geoplay-find-another-search-arrow
+{
+    font-size:
+        14px;
+
+    line-height:
+        1;
+}
+
+
+.geoplay-find-another-search:hover
+{
+    filter:
+        brightness(
+            1.06
+        );
+
+    box-shadow:
+        0 6px 18px
+        rgba(
+            218,
+            155,
+            25,
+            .38
+        ),
+        0 0 15px
+        rgba(
+            255,
+            205,
+            72,
+            .22
+        ),
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .78
+        ),
+        inset 0 -2px 0
+        rgba(
+            116,
+            69,
+            0,
+            .20
+        );
 }
 
 
@@ -3710,90 +4266,239 @@
         scale(
             .96
         );
-}
 
-
-/* ==================================================
-   DIVIDER
-   ================================================== */
-
-.geoplay-find-another-divider
-{
-    width:
-        100%;
-
-    height:
-        1px;
-
-    margin:
-        20px 0 18px;
-
-    background:
-        rgba(
-            173,
-            78,
-            255,
-            .30
+    filter:
+        brightness(
+            .98
         );
 }
 
 
+@keyframes geoplaySearchButtonShine
+{
+    0%,
+    58%
+    {
+        left:
+            -35%;
+
+        opacity:
+            0;
+    }
+
+    64%
+    {
+        opacity:
+            1;
+    }
+
+    78%
+    {
+        left:
+            120%;
+
+        opacity:
+            1;
+    }
+
+    84%,
+    100%
+    {
+        left:
+            120%;
+
+        opacity:
+            0;
+    }
+}
+
+
 /* ==================================================
-   RADIUS OPTIONS
+   OR DIVIDER
    ================================================== */
 
-.geoplay-find-another-radius
+.geoplay-find-another-or
 {
+    position:
+        relative;
+
+    width:
+        100%;
+
+    height:
+        18px;
+
+    margin:
+        15px 0 13px;
+
+    background:
+        transparent;
+}
+
+
+.geoplay-find-another-or::before
+{
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    top:
+        50%;
+
+    height:
+        1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(
+                255,
+                155,
+                24,
+                .10
+            ),
+            rgba(
+                255,
+                90,
+                88,
+                .34
+            ),
+            rgba(
+                179,
+                76,
+                255,
+                .44
+            ),
+            rgba(
+                113,
+                56,
+                255,
+                .10
+            )
+        );
+}
+
+
+.geoplay-find-another-or-text
+{
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    padding:
+        0 10px;
+
+    background:
+        #140821;
+
+    color:
+        #b98ae8;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        .8px;
+}
+
+
+/* ==================================================
+   USE MY LOCATION
+   COMPACT SECONDARY ACTION
+   ================================================== */
+
+.geoplay-find-another-location
+{
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    isolation:
+        isolate;
+
+    width:
+        100%;
+
+    min-height:
+        54px;
+
+    box-sizing:
+        border-box;
+
+    padding:
+        8px 14px;
+
     display:
         flex;
 
     align-items:
         center;
 
-    justify-content:
-        space-between;
-
     gap:
-        8px;
-
-    width:
-        100%;
-}
-
-
-.geoplay-find-another-radius-button
-{
-    flex:
-        1 1 0;
-
-    min-width:
-        0;
-
-    min-height:
-        43px;
-
-    padding:
-        8px;
+        11px;
 
     border:
         1px solid
-        rgba(
-            173,
-            78,
-            255,
-            .68
-        );
+        transparent;
 
     border-radius:
-        22px;
+        17px;
 
     background:
-        rgba(
-            173,
-            78,
-            255,
-            .06
-        );
+        linear-gradient(
+            145deg,
+            rgba(
+                44,
+                20,
+                62,
+                .88
+            ),
+            rgba(
+                19,
+                8,
+                34,
+                .94
+            )
+        )
+        padding-box,
+
+        linear-gradient(
+            105deg,
+            #ff9b18 0%,
+            #ff5a58 38%,
+            #b34cff 70%,
+            #7138ff 100%
+        )
+        border-box;
 
     color:
         #ffffff;
@@ -3803,92 +4508,108 @@
         Arial,
         sans-serif;
 
-    font-size:
-        11px;
-
-    font-weight:
-        800;
-
-    line-height:
-        1;
-
     cursor:
         pointer;
 
-    pointer-events:
-        auto;
+    text-align:
+        left;
+
+    box-shadow:
+        0 0 9px
+        rgba(
+            179,
+            76,
+            255,
+            .12
+        ),
+        0 6px 16px
+        rgba(
+            0,
+            0,
+            0,
+            .22
+        ),
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .07
+        );
 
     -webkit-tap-highlight-color:
         transparent;
 
     transition:
-        background .2s ease,
-        border-color .2s ease,
-        box-shadow .2s ease,
-        transform .15s ease;
+        transform .15s ease,
+        filter .2s ease,
+        box-shadow .2s ease;
 }
 
 
-.geoplay-find-another-radius-button:hover
+.geoplay-find-another-location::before
 {
-    background:
-        rgba(
-            173,
-            78,
-            255,
-            .12
-        );
+    content:
+        "";
 
-    border-color:
-        rgba(
-            182,
-            108,
-            255,
-            .95
-        );
-}
+    position:
+        absolute;
 
+    left:
+        0;
 
-.geoplay-find-another-radius-button.selected,
-.geoplay-find-another-radius-button.active
-{
-    border-color:
-        #ffad22;
+    top:
+        0;
+
+    width:
+        34%;
+
+    height:
+        100%;
 
     background:
-        rgba(
-            255,
-            173,
-            34,
-            .12
+        linear-gradient(
+            90deg,
+            rgba(
+                255,
+                155,
+                24,
+                .08
+            ),
+            rgba(
+                179,
+                76,
+                255,
+                .04
+            ),
+            transparent
         );
 
-    box-shadow:
-        0 0 12px
-        rgba(
-            255,
-            173,
-            34,
-            .12
-        );
+    pointer-events:
+        none;
+
+    z-index:
+        0;
 }
 
 
-.geoplay-find-another-radius-button:active
+.geoplay-find-another-location-icon
 {
-    transform:
-        scale(
-            .96
-        );
-}
+    position:
+        relative;
 
+    z-index:
+        1;
 
-/* ==================================================
-   CANCEL
-   ================================================== */
+    flex:
+        0 0 28px;
 
-.geoplay-find-another-cancel
-{
+    width:
+        28px;
+
+    height:
+        28px;
+
     display:
         flex;
 
@@ -3898,48 +4619,57 @@
     justify-content:
         center;
 
-    width:
-        min(
-            120px,
-            42%
+    color:
+        #ffbd38;
+
+    filter:
+        drop-shadow(
+            0 0 5px
+            rgba(
+                255,
+                173,
+                34,
+                .30
+            )
         );
+}
 
-    min-height:
-        43px;
 
-    margin:
-        20px auto 0;
+.geoplay-find-another-location-text
+{
+    position:
+        relative;
 
-    padding:
-        9px 16px;
+    z-index:
+        1;
 
-    border:
-        1px solid
-        rgba(
-            173,
-            78,
-            255,
-            .70
-        );
+    min-width:
+        0;
 
-    border-radius:
-        23px;
+    flex:
+        1;
 
-    background:
-        rgba(
-            173,
-            78,
-            255,
-            .05
-        );
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        center;
+
+    gap:
+        1px;
+}
+
+
+.geoplay-find-another-location-title
+{
+    display:
+        block;
 
     color:
         #ffffff;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
 
     font-size:
         11px;
@@ -3948,24 +4678,241 @@
         800;
 
     line-height:
-        1;
+        1.25;
 
-    cursor:
-        pointer;
-
-    pointer-events:
-        auto;
-
-    -webkit-tap-highlight-color:
-        transparent;
+    letter-spacing:
+        .15px;
 }
 
 
-.geoplay-find-another-cancel:active
+.geoplay-find-another-location-subtitle
+{
+    display:
+        block;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            .58
+        );
+
+    font-size:
+        9px;
+
+    font-weight:
+        500;
+
+    line-height:
+        1.3;
+}
+
+
+.geoplay-find-another-location-arrow
+{
+    position:
+        relative;
+
+    z-index:
+        1;
+
+    flex:
+        0 0 auto;
+
+    color:
+        #ffbd38;
+
+    font-size:
+        20px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1;
+
+    text-shadow:
+        0 0 7px
+        rgba(
+            255,
+            173,
+            34,
+            .30
+        );
+
+    transition:
+        transform .15s ease;
+}
+
+
+.geoplay-find-another-location:hover
+{
+    filter:
+        brightness(
+            1.06
+        );
+
+    box-shadow:
+        0 0 11px
+        rgba(
+            179,
+            76,
+            255,
+            .20
+        ),
+        0 7px 18px
+        rgba(
+            0,
+            0,
+            0,
+            .26
+        ),
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .10
+        );
+}
+
+
+.geoplay-find-another-location:hover
+.geoplay-find-another-location-arrow
+{
+    transform:
+        translateX(
+            2px
+        );
+}
+
+
+.geoplay-find-another-location:active
 {
     transform:
         scale(
-            .96
+            .98
+        );
+
+    filter:
+        brightness(
+            .98
+        );
+}
+
+
+/* ==================================================
+   SEARCH FOOTER
+   ================================================== */
+
+.geoplay-find-another-footer
+{
+    position:
+        relative;
+
+    width:
+        100%;
+
+    display:
+        flex;
+
+    justify-content:
+        flex-start;
+
+    align-items:
+        center;
+
+    margin-top:
+        14px;
+
+    padding-top:
+        11px;
+
+    border-top:
+        1px solid
+        rgba(
+            179,
+            76,
+            255,
+            .24
+        );
+}
+
+
+.geoplay-find-another-footer-text
+{
+    display:
+        block;
+
+    width:
+        100%;
+
+    padding:
+        0 2px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            .58
+        );
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        8px;
+
+    font-weight:
+        500;
+
+    line-height:
+        1.45;
+
+    text-align:
+        left;
+}
+
+
+/* ==================================================
+   CANCEL
+   ==================================================
+   Kept hidden intentionally.
+   The popup now closes only through the X button.
+   ================================================== */
+
+.geoplay-find-another-cancel
+{
+    display:
+        none;
+}
+
+
+/* ==================================================
+   STORY ACTION BUTTON INTERACTION
+   ================================================== */
+
+.geoplay-story-actions.visible
+.geoplay-story-action
+{
+    pointer-events:
+        auto;
+
+    cursor:
+        pointer;
+}
+
+
+.geoplay-story-actions.visible
+.geoplay-story-action:active
+{
+    transform:
+        scale(
+            .97
         );
 }
 
@@ -3979,7 +4926,7 @@
     .geoplay-find-another-overlay
     {
         padding:
-            14px;
+            12px;
     }
 
 
@@ -3992,13 +4939,13 @@
             );
 
         max-width:
-            400px;
+            390px;
 
         padding:
-            24px 18px 20px;
+            21px 16px 16px;
 
         border-radius:
-            22px;
+            20px;
     }
 
 
@@ -4011,11 +4958,37 @@
 
     .geoplay-find-another-subtitle
     {
-        margin-bottom:
-            17px;
+        margin:
+            0 40px 17px 0;
 
         font-size:
             12px;
+    }
+
+
+    .geoplay-find-another-close
+    {
+        right:
+            11px;
+
+        top:
+            10px;
+
+        width:
+            33px;
+
+        height:
+            33px;
+    }
+
+
+    .geoplay-find-another-label
+    {
+        margin-bottom:
+            7px;
+
+        font-size:
+            10px;
     }
 
 
@@ -4023,6 +4996,13 @@
     {
         gap:
             7px;
+    }
+
+
+    .geoplay-find-another-input-wrapper
+    {
+        height:
+            44px;
     }
 
 
@@ -4042,36 +5022,97 @@
     .geoplay-find-another-search
     {
         min-width:
-            80px;
+            78px;
 
         height:
             44px;
 
         padding:
-            0 14px;
+            0 12px;
 
         font-size:
+            10px;
+    }
+
+
+    .geoplay-find-another-search-arrow
+    {
+        font-size:
+            13px;
+    }
+
+
+    .geoplay-find-another-or
+    {
+        margin:
+            12px 0 12px;
+    }
+
+
+    .geoplay-find-another-location
+    {
+        min-height:
+            50px;
+
+        padding:
+            7px 12px;
+
+        gap:
+            9px;
+
+        border-radius:
+            15px;
+    }
+
+
+    .geoplay-find-another-location-icon
+    {
+        flex-basis:
+            25px;
+
+        width:
+            25px;
+
+        height:
+            25px;
+    }
+
+
+    .geoplay-find-another-location-title
+    {
+        font-size:
+            10px;
+    }
+
+
+    .geoplay-find-another-location-subtitle
+    {
+        font-size:
+            8px;
+    }
+
+
+    .geoplay-find-another-location-arrow
+    {
+        font-size:
+            18px;
+    }
+
+
+    .geoplay-find-another-footer
+    {
+        margin-top:
+            14px;
+
+        padding-top:
             11px;
     }
 
 
-    .geoplay-find-another-radius
+    .geoplay-find-another-footer-text
     {
-        gap:
-            7px;
-    }
-
-
-    .geoplay-find-another-radius-button
-    {
-        min-height:
-            42px;
-
-        padding:
-            8px 5px;
-
         font-size:
-            10px;
+            8px;
     }
 }
 
@@ -4087,11 +5128,11 @@
         width:
             min(
                 78vw,
-                400px
+                410px
             );
 
         padding:
-            26px 22px 22px;
+            24px 21px 18px;
     }
 
 
@@ -4109,20 +5150,45 @@
     }
 
 
+    .geoplay-find-another-input-wrapper
+    {
+        height:
+            48px;
+    }
+
+
     .geoplay-find-another-input,
     .geoplay-find-another-search
     {
         height:
-            47px;
+            48px;
     }
 
 
-    .geoplay-find-another-radius-button
+    .geoplay-find-another-location
     {
         min-height:
-            44px;
+            56px;
+    }
 
+
+    .geoplay-find-another-location-title
+    {
         font-size:
-            11px;
+            12px;
+    }
+
+
+    .geoplay-find-another-location-subtitle
+    {
+        font-size:
+            9px;
+    }
+
+
+    .geoplay-find-another-footer-text
+    {
+        font-size:
+            9px;
     }
 }

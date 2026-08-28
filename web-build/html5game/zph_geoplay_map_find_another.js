@@ -1,11 +1,18 @@
 // ==================================================
-// GEOPLAY FIND ANOTHER
+// GEOPLAY SEARCH
 // ==================================================
 //
+// INTERNAL MODULE NAME:
+// - Search
+//
+// PLAYER-FACING NAME:
+// - SEARCH
+//
 // RESPONSIBILITY:
-// - FIND ANOTHER popup
-// - Manual location UI
-// - Nearby radius UI
+// - SEARCH popup
+// - Manual casino / location UI
+// - Use My Location UI
+// - Compact Use My Location UI
 // - Popup open / close
 //
 // CURRENT VERSION:
@@ -28,7 +35,7 @@ window.geoplayFindAnotherUI =
 
 
 // ==================================================
-// CREATE FIND ANOTHER UI
+// CREATE SEARCH UI
 // ==================================================
 
 function geoplayMapUICreateFindAnother()
@@ -54,7 +61,7 @@ function geoplayMapUICreateFindAnother()
     )
     {
         console.error(
-            "GEOPLAY FIND ANOTHER: Map UI not found."
+            "GEOPLAY SEARCH: Map UI not found."
         );
 
         return 0;
@@ -208,15 +215,6 @@ function geoplayMapUICreateFindAnother()
     // ==================================================
     // CREATE POPUP PANEL
     // ==================================================
-    //
-    // IMPORTANT:
-    // The CSS uses .geoplay-find-another for the
-    // actual popup panel.
-    //
-    // The full-screen layer above uses:
-    // .geoplay-find-another-overlay
-    //
-    // ==================================================
 
     var panel =
         document.createElement(
@@ -300,7 +298,7 @@ function geoplayMapUICreateFindAnother()
 
 
     title.textContent =
-        "FIND ANOTHER";
+        "SEARCH";
 
 
     var close =
@@ -323,7 +321,7 @@ function geoplayMapUICreateFindAnother()
 
     close.setAttribute(
         "aria-label",
-        "Close"
+        "Close search"
     );
 
 
@@ -377,65 +375,132 @@ function geoplayMapUICreateFindAnother()
 
 
     // ==================================================
-    // INTRODUCTION
+    // SUBTITLE
     // ==================================================
 
-    var intro =
+    var subtitle =
         document.createElement(
             "div"
         );
 
 
-    intro.className =
-        "geoplay-find-another-intro";
+    subtitle.className =
+        "geoplay-find-another-subtitle";
 
 
-    intro.textContent =
-        "Where would you like to go?";
+    subtitle.textContent =
+        "Where do you want to play?";
 
 
     panel.appendChild(
-        intro
+        subtitle
     );
 
 
     // ==================================================
-    // MANUAL LOCATION SECTION
+    // CASINO OR LOCATION
     // ==================================================
 
-    var manualSection =
+    var searchSection =
         document.createElement(
             "div"
         );
 
 
-    manualSection.className =
+    searchSection.className =
         "geoplay-find-another-section";
 
 
-    var manualLabel =
+    var searchLabel =
         document.createElement(
             "div"
         );
 
 
-    manualLabel.className =
+    searchLabel.className =
         "geoplay-find-another-label";
 
 
-    manualLabel.textContent =
-        "ENTER A LOCATION";
+    searchLabel.textContent =
+        "CASINO OR LOCATION";
 
 
-    var manualRow =
+    searchSection.appendChild(
+        searchLabel
+    );
+
+
+    // ==================================================
+    // SEARCH ROW
+    // ==================================================
+
+    var searchRow =
         document.createElement(
             "div"
         );
 
 
-    manualRow.className =
+    searchRow.className =
         "geoplay-find-another-search-row";
 
+
+    // ==================================================
+    // SEARCH INPUT WRAPPER
+    // ==================================================
+
+    var inputWrapper =
+        document.createElement(
+            "div"
+        );
+
+
+    inputWrapper.className =
+        "geoplay-find-another-input-wrapper";
+
+
+    // ==================================================
+    // SEARCH ICON
+    // ==================================================
+
+    var searchIcon =
+        document.createElement(
+            "span"
+        );
+
+
+    searchIcon.className =
+        "geoplay-find-another-input-icon";
+
+
+    searchIcon.innerHTML =
+        "<svg " +
+        "width='19' " +
+        "height='19' " +
+        "viewBox='0 0 24 24' " +
+        "fill='none' " +
+        "xmlns='http://www.w3.org/2000/svg'>" +
+        "<circle " +
+        "cx='11' " +
+        "cy='11' " +
+        "r='6.5' " +
+        "stroke='currentColor' " +
+        "stroke-width='2'/>" +
+        "<path " +
+        "d='M16 16L21 21' " +
+        "stroke='currentColor' " +
+        "stroke-width='2' " +
+        "stroke-linecap='round'/>" +
+        "</svg>";
+
+
+    inputWrapper.appendChild(
+        searchIcon
+    );
+
+
+    // ==================================================
+    // INPUT
+    // ==================================================
 
     var input =
         document.createElement(
@@ -452,18 +517,32 @@ function geoplayMapUICreateFindAnother()
 
 
     input.placeholder =
-        "Search a place or address";
+        "Search casino name or address";
 
 
     input.setAttribute(
         "aria-label",
-        "Enter a location"
+        "Search casino name or address"
     );
 
 
     input.style.pointerEvents =
         "auto";
 
+
+    inputWrapper.appendChild(
+        input
+    );
+
+
+    searchRow.appendChild(
+        inputWrapper
+    );
+
+
+    // ==================================================
+    // SEARCH BUTTON
+    // ==================================================
 
     var searchButton =
         document.createElement(
@@ -479,8 +558,9 @@ function geoplayMapUICreateFindAnother()
         "geoplay-find-another-search";
 
 
-    searchButton.textContent =
-        "SEARCH";
+    searchButton.innerHTML =
+        "<span>SEARCH</span>" +
+        "<span class='geoplay-find-another-search-arrow'>→</span>";
 
 
     searchButton.style.pointerEvents =
@@ -497,7 +577,7 @@ function geoplayMapUICreateFindAnother()
 
 
             console.log(
-                "GEOPLAY FIND ANOTHER: Manual search selected.",
+                "GEOPLAY SEARCH: Manual search selected.",
                 input.value
             );
         }
@@ -514,7 +594,7 @@ function geoplayMapUICreateFindAnother()
 
 
             console.log(
-                "GEOPLAY FIND ANOTHER: Manual search selected.",
+                "GEOPLAY SEARCH: Manual search selected.",
                 input.value
             );
         },
@@ -525,259 +605,297 @@ function geoplayMapUICreateFindAnother()
     );
 
 
-    manualRow.appendChild(
-        input
-    );
-
-
-    manualRow.appendChild(
+    searchRow.appendChild(
         searchButton
     );
 
 
-    manualSection.appendChild(
-        manualLabel
-    );
-
-
-    manualSection.appendChild(
-        manualRow
+    searchSection.appendChild(
+        searchRow
     );
 
 
     panel.appendChild(
-        manualSection
+        searchSection
     );
 
 
     // ==================================================
-    // DIVIDER
+    // OR DIVIDER
     // ==================================================
 
-    var divider =
+    var orDivider =
         document.createElement(
             "div"
         );
 
 
-    divider.className =
-        "geoplay-find-another-divider";
+    orDivider.className =
+        "geoplay-find-another-or";
+
+
+    var orLeft =
+        document.createElement(
+            "span"
+        );
+
+
+    var orText =
+        document.createElement(
+            "span"
+        );
+
+
+    orText.className =
+        "geoplay-find-another-or-text";
+
+
+    orText.textContent =
+        "OR";
+
+
+    var orRight =
+        document.createElement(
+            "span"
+        );
+
+
+    orDivider.appendChild(
+        orLeft
+    );
+
+
+    orDivider.appendChild(
+        orText
+    );
+
+
+    orDivider.appendChild(
+        orRight
+    );
 
 
     panel.appendChild(
-        divider
+        orDivider
     );
 
 
     // ==================================================
-    // NEARBY SECTION
+    // USE MY LOCATION
+    // ==================================================
+    //
+    // Display-only for now.
+    // This is intentionally compact so it reads as a
+    // secondary search method rather than a large CTA.
+    //
     // ==================================================
 
-    var nearbySection =
+    var locationButton =
         document.createElement(
-            "div"
+            "button"
         );
 
 
-    nearbySection.className =
-        "geoplay-find-another-section";
+    locationButton.type =
+        "button";
 
 
-    var nearbyLabel =
+    locationButton.className =
+        "geoplay-find-another-location";
+
+
+    locationButton.style.pointerEvents =
+        "auto";
+
+
+    // ==================================================
+    // LOCATION ICON
+    // ==================================================
+
+    var locationIcon =
         document.createElement(
-            "div"
+            "span"
         );
 
 
-    nearbyLabel.className =
-        "geoplay-find-another-label";
+    locationIcon.className =
+        "geoplay-find-another-location-icon";
 
 
-    nearbyLabel.textContent =
-        "PLACES NEARBY";
+    locationIcon.innerHTML =
+        "<svg " +
+        "width='22' " +
+        "height='22' " +
+        "viewBox='0 0 24 24' " +
+        "fill='none' " +
+        "xmlns='http://www.w3.org/2000/svg'>" +
+
+        "<circle " +
+        "cx='12' " +
+        "cy='12' " +
+        "r='3.5' " +
+        "stroke='currentColor' " +
+        "stroke-width='1.8'/>" +
+
+        "<path " +
+        "d='M12 2V6' " +
+        "stroke='currentColor' " +
+        "stroke-width='1.8' " +
+        "stroke-linecap='round'/>" +
+
+        "<path " +
+        "d='M12 18V22' " +
+        "stroke='currentColor' " +
+        "stroke-width='1.8' " +
+        "stroke-linecap='round'/>" +
+
+        "<path " +
+        "d='M2 12H6' " +
+        "stroke='currentColor' " +
+        "stroke-width='1.8' " +
+        "stroke-linecap='round'/>" +
+
+        "<path " +
+        "d='M18 12H22' " +
+        "stroke='currentColor' " +
+        "stroke-width='1.8' " +
+        "stroke-linecap='round'/>" +
+
+        "</svg>";
 
 
-    nearbySection.appendChild(
-        nearbyLabel
+    locationButton.appendChild(
+        locationIcon
     );
 
 
     // ==================================================
-    // RADIUS OPTIONS
+    // LOCATION TEXT
     // ==================================================
 
-    var radiusGroup =
+    var locationText =
         document.createElement(
-            "div"
+            "span"
         );
 
 
-    radiusGroup.className =
-        "geoplay-find-another-radius";
+    locationText.className =
+        "geoplay-find-another-location-text";
 
 
-    var radiusValues =
-        [
-            "5",
-            "10",
-            "25"
-        ];
+    var locationTitle =
+        document.createElement(
+            "span"
+        );
 
 
-    var radiusButtons =
-        [];
+    locationTitle.className =
+        "geoplay-find-another-location-title";
 
 
-    for (
-        var i = 0;
-        i < radiusValues.length;
-        i++
-    )
-    {
-        var radius =
-            radiusValues[i];
+    locationTitle.textContent =
+        "USE MY LOCATION";
 
 
-        var radiusButton =
-            document.createElement(
-                "button"
+    var locationSubtitle =
+        document.createElement(
+            "span"
+        );
+
+
+    locationSubtitle.className =
+        "geoplay-find-another-location-subtitle";
+
+
+    locationSubtitle.textContent =
+        "Find casinos near you";
+
+
+    locationText.appendChild(
+        locationTitle
+    );
+
+
+    locationText.appendChild(
+        locationSubtitle
+    );
+
+
+    locationButton.appendChild(
+        locationText
+    );
+
+
+    // ==================================================
+    // LOCATION ARROW
+    // ==================================================
+
+    var locationArrow =
+        document.createElement(
+            "span"
+        );
+
+
+    locationArrow.className =
+        "geoplay-find-another-location-arrow";
+
+
+    locationArrow.textContent =
+        "›";
+
+
+    locationButton.appendChild(
+        locationArrow
+    );
+
+
+    // ==================================================
+    // LOCATION BUTTON CLICK
+    // ==================================================
+
+    locationButton.addEventListener(
+        "click",
+        function(event)
+        {
+            event.preventDefault();
+
+            event.stopPropagation();
+
+
+            console.log(
+                "GEOPLAY SEARCH: Use My Location selected."
             );
+        }
+    );
 
 
-        radiusButton.type =
-            "button";
+    locationButton.addEventListener(
+        "touchend",
+        function(event)
+        {
+            event.preventDefault();
+
+            event.stopPropagation();
 
 
-        radiusButton.className =
-            "geoplay-find-another-radius-button";
-
-
-        radiusButton.textContent =
-            radius +
-            " MILES";
-
-
-        radiusButton.dataset.radius =
-            radius;
-
-
-        radiusButton.style.pointerEvents =
-            "auto";
-
-
-        radiusButton.addEventListener(
-            "click",
-            function(event)
-            {
-                event.preventDefault();
-
-                event.stopPropagation();
-
-
-                for (
-                    var j = 0;
-                    j < radiusButtons.length;
-                    j++
-                )
-                {
-                    radiusButtons[j]
-                        .classList.remove(
-                            "selected"
-                        );
-                }
-
-
-                this.classList.add(
-                    "selected"
-                );
-
-
-                console.log(
-                    "GEOPLAY FIND ANOTHER: Nearby radius selected:",
-                    this.dataset.radius,
-                    "miles"
-                );
-            }
-        );
-
-
-        radiusButton.addEventListener(
-            "touchend",
-            function(event)
-            {
-                event.preventDefault();
-
-                event.stopPropagation();
-
-
-                for (
-                    var j = 0;
-                    j < radiusButtons.length;
-                    j++
-                )
-                {
-                    radiusButtons[j]
-                        .classList.remove(
-                            "selected"
-                        );
-                }
-
-
-                this.classList.add(
-                    "selected"
-                );
-
-
-                console.log(
-                    "GEOPLAY FIND ANOTHER: Nearby radius selected:",
-                    this.dataset.radius,
-                    "miles"
-                );
-            },
-            {
-                passive:
-                    false
-            }
-        );
-
-
-        radiusButtons.push(
-            radiusButton
-        );
-
-
-        radiusGroup.appendChild(
-            radiusButton
-        );
-    }
-
-
-    // ==================================================
-    // DEFAULT RADIUS
-    // ==================================================
-
-    if (
-        radiusButtons.length > 0
-    )
-    {
-        radiusButtons[0].classList.add(
-            "selected"
-        );
-    }
-
-
-    nearbySection.appendChild(
-        radiusGroup
+            console.log(
+                "GEOPLAY SEARCH: Use My Location selected."
+            );
+        },
+        {
+            passive:
+                false
+        }
     );
 
 
     panel.appendChild(
-        nearbySection
+        locationButton
     );
 
 
     // ==================================================
-    // FOOTER
+    // SEARCH FOOTER
     // ==================================================
 
     var footer =
@@ -790,60 +908,22 @@ function geoplayMapUICreateFindAnother()
         "geoplay-find-another-footer";
 
 
-    var cancel =
+    var footerText =
         document.createElement(
-            "button"
+            "span"
         );
 
 
-    cancel.type =
-        "button";
+    footerText.className =
+        "geoplay-find-another-footer-text";
 
 
-    cancel.className =
-        "geoplay-find-another-cancel";
-
-
-    cancel.textContent =
-        "CANCEL";
-
-
-    cancel.style.pointerEvents =
-        "auto";
-
-
-    cancel.addEventListener(
-        "click",
-        function(event)
-        {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            geoplayMapUICloseFindAnother();
-        }
-    );
-
-
-    cancel.addEventListener(
-        "touchend",
-        function(event)
-        {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            geoplayMapUICloseFindAnother();
-        },
-        {
-            passive:
-                false
-        }
-    );
+    footerText.textContent =
+        "You can search by casino name, city, or address.";
 
 
     footer.appendChild(
-        cancel
+        footerText
     );
 
 
@@ -875,7 +955,7 @@ function geoplayMapUICreateFindAnother()
 
 
     console.log(
-        "GEOPLAY FIND ANOTHER: UI created."
+        "GEOPLAY SEARCH: UI created."
     );
 
 
@@ -884,7 +964,7 @@ function geoplayMapUICreateFindAnother()
 
 
 // ==================================================
-// OPEN FIND ANOTHER
+// OPEN SEARCH
 // ==================================================
 
 function geoplayMapUIOpenFindAnother()
@@ -910,7 +990,7 @@ function geoplayMapUIOpenFindAnother()
     )
     {
         console.error(
-            "GEOPLAY FIND ANOTHER: Unable to create popup."
+            "GEOPLAY SEARCH: Unable to create popup."
         );
 
         return 0;
@@ -974,7 +1054,7 @@ function geoplayMapUIOpenFindAnother()
 
 
     console.log(
-        "GEOPLAY FIND ANOTHER: Opened."
+        "GEOPLAY SEARCH: Opened."
     );
 
 
@@ -983,7 +1063,7 @@ function geoplayMapUIOpenFindAnother()
 
 
 // ==================================================
-// CLOSE FIND ANOTHER
+// CLOSE SEARCH
 // ==================================================
 
 function geoplayMapUICloseFindAnother()
@@ -1031,7 +1111,7 @@ function geoplayMapUICloseFindAnother()
 
 
     console.log(
-        "GEOPLAY FIND ANOTHER: Closed."
+        "GEOPLAY SEARCH: Closed."
     );
 
 

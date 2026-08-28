@@ -41,6 +41,9 @@ window.geoplayDestinationOffscreen =
 window.geoplayDestinationExpanded =
     false;
 
+window.geoplayDestinationOverlay =
+    null;
+
 
 // ==================================================
 // CREATE DESTINATION CARD
@@ -48,6 +51,37 @@ window.geoplayDestinationExpanded =
 
 function geoplayMapUICreateDestinationCard()
 {
+    // ==================================================
+    // CREATE DESTINATION OVERLAY
+    // ==================================================
+
+    var overlay =
+        document.createElement(
+            "div"
+        );
+
+
+    overlay.id =
+        "geoplay-destination-overlay";
+
+
+    overlay.className =
+        "geoplay-destination-overlay";
+
+
+    window.geoplayMapUI.appendChild(
+        overlay
+    );
+
+
+    window.geoplayDestinationOverlay =
+        overlay;
+
+
+    // ==================================================
+    // CREATE DESTINATION CARD
+    // ==================================================
+
     var card =
         document.createElement(
             "div"
@@ -410,6 +444,20 @@ function geoplayMapUIExpandDestination()
     );
 
 
+    // ==================================================
+    // SHOW DESTINATION OVERLAY
+    // ==================================================
+
+    if (
+        window.geoplayDestinationOverlay
+    )
+    {
+        window.geoplayDestinationOverlay.classList.add(
+            "visible"
+        );
+    }
+
+
     geoplayMapUIPositionDestination();
 
 
@@ -439,6 +487,20 @@ function geoplayMapUICollapseDestination()
     geoplayMapUISetDestinationCollapsed(
         window.geoplayDestinationCard
     );
+
+
+    // ==================================================
+    // HIDE DESTINATION OVERLAY
+    // ==================================================
+
+    if (
+        window.geoplayDestinationOverlay
+    )
+    {
+        window.geoplayDestinationOverlay.classList.remove(
+            "visible"
+        );
+    }
 
 
     geoplayMapUIPositionDestination();
@@ -1163,6 +1225,16 @@ function geoplayMapUIHideDestination()
     if (indicator)
     {
         indicator.classList.remove(
+            "visible"
+        );
+    }
+
+
+    if (
+        window.geoplayDestinationOverlay
+    )
+    {
+        window.geoplayDestinationOverlay.classList.remove(
             "visible"
         );
     }
