@@ -139,7 +139,7 @@ function geoplayMapUICreateFindAnother()
 
 
     overlay.style.zIndex =
-        "2000";
+        "500";
 
 
     // ==================================================
@@ -231,7 +231,7 @@ function geoplayMapUICreateFindAnother()
 
 
     panel.style.zIndex =
-        "2001";
+        "501";
 
 
     panel.style.pointerEvents =
@@ -997,16 +997,13 @@ function geoplayMapUIOpenFindAnother()
 
 
     // ==================================================
-    // HIDE STORY ACTIONS WHILE POPUP IS OPEN
+    // DO NOT HIDE STORY ACTIONS
     // ==================================================
-
-    if (
-        typeof geoplayMapUIHideStoryActions ===
-        "function"
-    )
-    {
-        geoplayMapUIHideStoryActions();
-    }
+    //
+    // FIND ANOTHER and BROWSE remain visible underneath
+    // the translucent modal backdrop.
+    //
+    // ==================================================
 
 
     // ==================================================
@@ -1025,8 +1022,32 @@ function geoplayMapUIOpenFindAnother()
         "auto";
 
 
-    window.geoplayFindAnotherUI.classList.add(
+    // ==================================================
+    // START SHARED MODAL ANIMATION
+    // ==================================================
+
+    window.geoplayFindAnotherUI.classList.remove(
+        "modal-closing"
+    );
+
+
+    window.geoplayFindAnotherUI.classList.remove(
         "visible"
+    );
+
+
+    requestAnimationFrame(
+        function()
+        {
+            requestAnimationFrame(
+                function()
+                {
+                    window.geoplayFindAnotherUI.classList.add(
+                        "visible"
+                    );
+                }
+            );
+        }
     );
 
 
@@ -1070,19 +1091,12 @@ function geoplayMapUICloseFindAnother()
 
 
     // ==================================================
-    // HIDE POPUP
+    // START SHARED MODAL CLOSE ANIMATION
     // ==================================================
 
-    window.geoplayFindAnotherUI.style.opacity =
-        "0";
-
-
-    window.geoplayFindAnotherUI.style.visibility =
-        "hidden";
-
-
-    window.geoplayFindAnotherUI.style.pointerEvents =
-        "none";
+    window.geoplayFindAnotherUI.classList.add(
+        "modal-closing"
+    );
 
 
     window.geoplayFindAnotherUI.classList.remove(
@@ -1091,20 +1105,55 @@ function geoplayMapUICloseFindAnother()
 
 
     // ==================================================
-    // RETURN TO STORY-END STATE
+    // WAIT FOR SHARED MODAL TIMING
     // ==================================================
 
-    if (
-        typeof geoplayMapUIShowStoryActions ===
-        "function"
-    )
-    {
-        geoplayMapUIShowStoryActions();
-    }
+    setTimeout(
+        function()
+        {
+            if (
+                !window.geoplayFindAnotherUI
+            )
+            {
+                return;
+            }
 
 
-    console.log(
-        "GEOPLAY SEARCH: Closed."
+            window.geoplayFindAnotherUI.style.opacity =
+                "0";
+
+
+            window.geoplayFindAnotherUI.style.visibility =
+                "hidden";
+
+
+            window.geoplayFindAnotherUI.style.pointerEvents =
+                "none";
+
+
+            window.geoplayFindAnotherUI.classList.remove(
+                "modal-closing"
+            );
+
+
+            // ==================================================
+            // RETURN TO STORY-END STATE
+            // ==================================================
+
+            if (
+                typeof geoplayMapUIShowStoryActions ===
+                "function"
+            )
+            {
+                geoplayMapUIShowStoryActions();
+            }
+
+
+            console.log(
+                "GEOPLAY SEARCH: Closed."
+            );
+        },
+        300
     );
 
 

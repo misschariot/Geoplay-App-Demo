@@ -44,6 +44,9 @@ window.geoplayDestinationExpanded =
 window.geoplayDestinationOverlay =
     null;
 
+window.geoplayDestinationClosing =
+    false;
+
 
 // ==================================================
 // CREATE DESTINATION CARD
@@ -143,7 +146,8 @@ function geoplayMapUICreateDestinationCard()
 
 
             if (
-                !window.geoplayDestinationExpanded
+                !window.geoplayDestinationExpanded &&
+                !window.geoplayDestinationClosing
             )
             {
                 geoplayMapUIExpandDestination();
@@ -184,6 +188,14 @@ function geoplayMapUICreateDestinationCard()
             }
 
 
+            if (
+                window.geoplayDestinationClosing
+            )
+            {
+                return;
+            }
+
+
             event.preventDefault();
 
 
@@ -212,6 +224,10 @@ function geoplayMapUISetDestinationCollapsed(
 {
     card.classList.remove(
         "expanded"
+    );
+
+    card.classList.remove(
+        "modal-closing"
     );
 
 
@@ -252,6 +268,11 @@ function geoplayMapUISetDestinationExpanded(
 {
     card.classList.add(
         "expanded"
+    );
+
+
+    card.classList.remove(
+        "modal-closing"
     );
 
 
@@ -435,6 +456,18 @@ function geoplayMapUIExpandDestination()
     }
 
 
+    if (
+        window.geoplayDestinationClosing
+    )
+    {
+        return 0;
+    }
+
+
+    window.geoplayDestinationExpanded =
+        true;
+
+
     geoplayMapUISetDestinationExpanded(
         window.geoplayDestinationCard
     );
@@ -454,7 +487,91 @@ function geoplayMapUIExpandDestination()
     }
 
 
-    geoplayMapUIPositionDestination();
+    // ==================================================
+    // GET MAP CONTAINER
+    // ==================================================
+
+    var mapContainer =
+        document.getElementById(
+            "geoplay-map"
+        );
+
+
+    var card =
+        window.geoplayDestinationCard;
+
+
+    // ==================================================
+    // CENTER MODAL BEFORE ANIMATION
+    // MATCHES SEARCH POPUP
+    // ==================================================
+
+    if (mapContainer)
+    {
+        card.style.left =
+            (
+                mapContainer.clientWidth /
+                2
+            ) +
+            "px";
+
+
+        card.style.top =
+            (
+                mapContainer.clientHeight /
+                2
+            ) +
+            "px";
+    }
+
+
+    // ==================================================
+    // START SHARED MODAL INITIAL STATE
+    // ==================================================
+
+    card.classList.remove(
+        "modal-closing"
+    );
+
+
+    card.classList.remove(
+        "visible"
+    );
+
+
+    card.style.transform =
+        "translate(-50%,-50%) translateY(-2vh) scale(.97)";
+
+
+    // ==================================================
+    // START SHARED MODAL OPEN ANIMATION
+    // ==================================================
+
+    requestAnimationFrame(
+        function()
+        {
+            requestAnimationFrame(
+                function()
+                {
+                    if (
+                        !window.geoplayDestinationExpanded
+                    )
+                    {
+                        return;
+                    }
+
+
+                    card.classList.add(
+                        "visible"
+                    );
+
+
+                    card.style.transform =
+                        "translate(-50%,-50%) translateY(-2vh) scale(1)";
+                }
+            );
+        }
+    );
 
 
     console.log(
@@ -480,13 +597,38 @@ function geoplayMapUICollapseDestination()
     }
 
 
-    geoplayMapUISetDestinationCollapsed(
-        window.geoplayDestinationCard
+    if (
+        window.geoplayDestinationClosing
+    )
+    {
+        return 0;
+    }
+
+
+    // ==================================================
+    // BEGIN SHARED MODAL CLOSE ANIMATION
+    // ==================================================
+
+    window.geoplayDestinationClosing =
+        true;
+
+
+    var card =
+        window.geoplayDestinationCard;
+
+
+    card.classList.add(
+        "modal-closing"
+    );
+
+
+    card.classList.remove(
+        "visible"
     );
 
 
     // ==================================================
-    // HIDE DESTINATION OVERLAY
+    // HIDE BACKDROP
     // ==================================================
 
     if (
@@ -499,11 +641,53 @@ function geoplayMapUICollapseDestination()
     }
 
 
-    geoplayMapUIPositionDestination();
+    // ==================================================
+    // WAIT FOR SHARED 300MS TIMING
+    // ==================================================
+
+    setTimeout(
+        function()
+        {
+            if (
+                !window.geoplayDestinationCard
+            )
+            {
+                window.geoplayDestinationClosing =
+                    false;
+
+                return;
+            }
 
 
-    console.log(
-        "GEOPLAY UI: Pine Ridge information card collapsed."
+            geoplayMapUISetDestinationCollapsed(
+                window.geoplayDestinationCard
+            );
+
+
+            window.geoplayDestinationCard.style.transform =
+                "";
+
+
+            window.geoplayDestinationCard.style.left =
+                "";
+
+
+            window.geoplayDestinationCard.style.top =
+                "";
+
+
+            geoplayMapUIPositionDestination();
+
+
+            window.geoplayDestinationClosing =
+                false;
+
+
+            console.log(
+                "GEOPLAY UI: Pine Ridge information card collapsed."
+            );
+        },
+        300
     );
 
 
@@ -762,7 +946,7 @@ function geoplayMapUIPositionDestination()
 
 
     // ==================================================
-    // EXPANDED DESTINATION = VIEWPORT-CENTERED MODAL
+    // EXPANDED DESTINATION = CENTERED GEOPLAY MODAL
     // ==================================================
 
     if (
@@ -807,8 +991,13 @@ function geoplayMapUIPositionDestination()
             "px";
 
 
-        card.style.transform =
-            "translate(-50%,-50%) translateY(-2vh)";
+        if (
+            !window.geoplayDestinationClosing
+        )
+        {
+            card.style.transform =
+                "translate(-50%,-50%) translateY(-2vh) scale(1)";
+        }
 
 
         return;
@@ -1204,6 +1393,19 @@ function geoplayMapUIHideDestination()
         card.classList.remove(
             "expanded"
         );
+
+        card.classList.remove(
+            "modal-closing"
+        );
+
+        card.style.transform =
+            "";
+
+        card.style.left =
+            "";
+
+        card.style.top =
+            "";
     }
 
 
@@ -1234,6 +1436,10 @@ function geoplayMapUIHideDestination()
 
 
     window.geoplayDestinationExpanded =
+        false;
+
+
+    window.geoplayDestinationClosing =
         false;
 
 
