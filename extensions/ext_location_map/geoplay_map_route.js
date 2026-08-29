@@ -9,7 +9,7 @@
 // - Route distance calculations
 // - Route geometry interpolation
 // - Route drawing / animation
-// - Section-based camera movement
+// - Calm route overview camera
 // - Route fallback
 //
 // DEPENDENCIES:
@@ -39,23 +39,188 @@ var geoplayDestinationLatitude =
 // ==================================================
 // ROUTE TIMING
 // ==================================================
+//
+// Slightly faster than the previous 4.5 second route.
+// The route should remain easy to follow without
+// slowing down the overall demo.
+//
+// ==================================================
 
 var geoplayFlowRouteDuration =
-    4500;
+    3600;
 
 
 // ==================================================
 // ROUTE CAMERA
 // ==================================================
+//
+// The route camera uses one calm overview.
+//
+// Instead of following the dotted line section by section,
+// the map fits the complete route into the viewport first.
+// The camera then stays still while the route draws.
+//
+// ==================================================
 
-var geoplayRouteCameraLookAhead =
-    0.12;
+function geoplayMapRouteGetCameraPadding()
+{
+    if (!window.geoplayMap)
+    {
+        return {
+            top:
+                70,
 
-var geoplayRouteCameraMoveDuration =
-    700;
+            bottom:
+                175,
 
-var geoplayRouteCameraPause =
-    120;
+            left:
+                45,
+
+            right:
+                45
+        };
+    }
+
+
+    var container =
+        document.getElementById(
+            "geoplay-map"
+        );
+
+
+    if (!container)
+    {
+        return {
+            top:
+                70,
+
+            bottom:
+                175,
+
+            left:
+                45,
+
+            right:
+                45
+        };
+    }
+
+
+    var width =
+        container.clientWidth;
+
+
+    var height =
+        container.clientHeight;
+
+
+    return {
+        top:
+            Math.max(
+                65,
+                Math.round(
+                    height *
+                    0.10
+                )
+            ),
+
+        bottom:
+            Math.max(
+                165,
+                Math.round(
+                    height *
+                    0.22
+                )
+            ),
+
+        left:
+            Math.max(
+                40,
+                Math.round(
+                    width *
+                    0.10
+                )
+            ),
+
+        right:
+            Math.max(
+                40,
+                Math.round(
+                    width *
+                    0.10
+                )
+            )
+    };
+}
+
+
+// ==================================================
+// FIT COMPLETE ROUTE IN VIEW
+// ==================================================
+//
+// Fits the player and destination into one calm map view.
+// The camera does not follow the animated route afterward.
+//
+// ==================================================
+
+function geoplayMapRouteFitOverview(
+    coordinates
+)
+{
+    if (
+        !window.geoplayMap ||
+        !coordinates ||
+        coordinates.length < 2
+    )
+    {
+        return false;
+    }
+
+
+    var bounds =
+        new maplibregl.LngLatBounds(
+            coordinates[0],
+            coordinates[0]
+        );
+
+
+    for (
+        var i = 1;
+        i < coordinates.length;
+        i++
+    )
+    {
+        bounds.extend(
+            coordinates[i]
+        );
+    }
+
+
+    console.log(
+        "GEOPLAY ROUTING: Fitting complete route into view."
+    );
+
+
+    window.geoplayMap.fitBounds(
+        bounds,
+        {
+            padding:
+                geoplayMapRouteGetCameraPadding(),
+
+            duration:
+                1200,
+
+            maxZoom:
+                14.5,
+
+            essential:
+                true
+        }
+    );
+
+
+    return true;
+}
 
 
 // ==================================================
@@ -449,383 +614,6 @@ function geoplayMapRouteGetCoordinateAtProgress(
 
 
 // ==================================================
-// ROUTE CAMERA PADDING
-// ==================================================
-
-function geoplayMapRouteGetCameraPadding()
-{
-    if (!window.geoplayMap)
-    {
-        return {
-            top:
-                70,
-
-            bottom:
-                175,
-
-            left:
-                45,
-
-            right:
-                45
-        };
-    }
-
-
-    var container =
-        document.getElementById(
-            "geoplay-map"
-        );
-
-
-    if (!container)
-    {
-        return {
-            top:
-                70,
-
-            bottom:
-                175,
-
-            left:
-                45,
-
-            right:
-                45
-        };
-    }
-
-
-    var width =
-        container.clientWidth;
-
-
-    var height =
-        container.clientHeight;
-
-
-    return {
-        top:
-            Math.max(
-                65,
-                Math.round(
-                    height *
-                    0.08
-                )
-            ),
-
-        bottom:
-            Math.max(
-                165,
-                Math.round(
-                    height *
-                    0.20
-                )
-            ),
-
-        left:
-            Math.max(
-                40,
-                Math.round(
-                    width *
-                    0.08
-                )
-            ),
-
-        right:
-            Math.max(
-                40,
-                Math.round(
-                    width *
-                    0.08
-                )
-            )
-    };
-}
-
-
-// ==================================================
-// ROUTE CAMERA SECTION CHECK
-// ==================================================
-
-function geoplayMapRouteNeedsCameraMove(
-    point
-)
-{
-    if (!window.geoplayMap)
-    {
-        return false;
-    }
-
-
-    var container =
-        document.getElementById(
-            "geoplay-map"
-        );
-
-
-    if (!container)
-    {
-        return false;
-    }
-
-
-    var width =
-        container.clientWidth;
-
-
-    var height =
-        container.clientHeight;
-
-
-    var horizontalMargin =
-        width *
-        0.20;
-
-
-    var verticalTopMargin =
-        height *
-        0.18;
-
-
-    var verticalBottomMargin =
-        height *
-        0.25;
-
-
-    if (
-        point.x <
-        horizontalMargin
-    )
-    {
-        return true;
-    }
-
-
-    if (
-        point.x >
-        width -
-        horizontalMargin
-    )
-    {
-        return true;
-    }
-
-
-    if (
-        point.y <
-        verticalTopMargin
-    )
-    {
-        return true;
-    }
-
-
-    if (
-        point.y >
-        height -
-        verticalBottomMargin
-    )
-    {
-        return true;
-    }
-
-
-    return false;
-}
-
-
-// ==================================================
-// FIND CAMERA TARGET FOR NEXT SECTION
-// ==================================================
-
-function geoplayMapRouteGetCameraSectionTarget(
-    coordinates,
-    distances,
-    total,
-    progress
-)
-{
-    var lookAheadProgress =
-        Math.min(
-            progress +
-            geoplayRouteCameraLookAhead,
-            1
-        );
-
-
-    return geoplayMapRouteGetCoordinateAtProgress(
-        coordinates,
-        distances,
-        total,
-        lookAheadProgress
-    );
-}
-
-
-// ==================================================
-// MOVE CAMERA TO NEXT ROUTE SECTION
-// ==================================================
-
-function geoplayMapRouteMoveCamera(
-    coordinates,
-    distances,
-    total,
-    progress
-)
-{
-    if (!window.geoplayMap)
-    {
-        return false;
-    }
-
-
-    if (
-        window.geoplayRouteCameraMoving
-    )
-    {
-        return true;
-    }
-
-
-    if (
-        window.geoplayRouteCameraQueued
-    )
-    {
-        return true;
-    }
-
-
-    window.geoplayRouteCameraQueued =
-        true;
-
-
-    var target =
-        geoplayMapRouteGetCameraSectionTarget(
-            coordinates,
-            distances,
-            total,
-            progress
-        );
-
-
-    var targetPoint =
-        window.geoplayMap.project(
-            target
-        );
-
-
-    var container =
-        document.getElementById(
-            "geoplay-map"
-        );
-
-
-    if (!container)
-    {
-        window.geoplayRouteCameraQueued =
-            false;
-
-        return false;
-    }
-
-
-    var width =
-        container.clientWidth;
-
-
-    var height =
-        container.clientHeight;
-
-
-    var safeLeft =
-        width *
-        0.24;
-
-
-    var safeRight =
-        width *
-        0.76;
-
-
-    var safeTop =
-        height *
-        0.22;
-
-
-    var safeBottom =
-        height *
-        0.72;
-
-
-    var targetAlreadyComfortable =
-        targetPoint.x >= safeLeft &&
-        targetPoint.x <= safeRight &&
-        targetPoint.y >= safeTop &&
-        targetPoint.y <= safeBottom;
-
-
-    if (targetAlreadyComfortable)
-    {
-        window.geoplayRouteCameraQueued =
-            false;
-
-        return false;
-    }
-
-
-    window.geoplayRouteCameraMoving =
-        true;
-
-
-    window.geoplayRouteCameraQueued =
-        false;
-
-
-    console.log(
-        "GEOPLAY ROUTING: Moving camera to next route section."
-    );
-
-
-    window.geoplayMap.easeTo(
-    {
-        center:
-            target,
-
-        bearing:
-            0,
-
-        pitch:
-            0,
-
-        duration:
-            geoplayRouteCameraMoveDuration,
-
-        essential:
-            true,
-
-        padding:
-            geoplayMapRouteGetCameraPadding()
-    });
-
-
-    setTimeout(
-        function()
-        {
-            window.geoplayRouteCameraMoving =
-                false;
-
-        },
-        geoplayRouteCameraMoveDuration +
-        geoplayRouteCameraPause
-    );
-
-
-    return true;
-}
-
-
-// ==================================================
 // ANIMATE ROUTE
 // ==================================================
 
@@ -864,7 +652,7 @@ function geoplayMapRouteAnimate(
 
 
     console.log(
-        "GEOPLAY ROUTING: Animating route with section-based camera."
+        "GEOPLAY ROUTING: Animating route with fixed overview camera."
     );
 
 
@@ -881,6 +669,21 @@ function geoplayMapRouteAnimate(
 
     window.geoplayRouteCameraQueued =
         false;
+
+
+    // ==================================================
+    // FIT COMPLETE ROUTE BEFORE DRAWING
+    // ==================================================
+    //
+    // The camera moves once to a view containing both
+    // the player and casino. It then remains still while
+    // the dotted route animates.
+    //
+    // ==================================================
+
+    geoplayMapRouteFitOverview(
+        coordinates
+    );
 
 
     // ==================================================
@@ -1243,37 +1046,16 @@ function geoplayMapRouteAnimate(
 
 
         // ==================================================
-        // SECTION CAMERA CHECK
+        // CAMERA DOES NOT FOLLOW THE ROUTE
         // ==================================================
-
-        if (
-            progress >
-            0.03 &&
-            progress <
-            0.96 &&
-            !window.geoplayRouteCameraMoving
-        )
-        {
-            var currentScreenPoint =
-                window.geoplayMap.project(
-                    currentPoint
-                );
-
-
-            if (
-                geoplayMapRouteNeedsCameraMove(
-                    currentScreenPoint
-                )
-            )
-            {
-                geoplayMapRouteMoveCamera(
-                    coordinates,
-                    distances,
-                    totalDistance,
-                    easedProgress
-                );
-            }
-        }
+        //
+        // The complete route was already fitted into view
+        // before the animation began.
+        //
+        // The camera remains stationary while the route
+        // draws.
+        //
+        // ==================================================
 
 
         if (progress < 1)
@@ -1319,44 +1101,23 @@ function geoplayMapRouteAnimate(
         );
 
 
-        window.geoplayMap.easeTo(
+        // ==================================================
+        // COMPLETE IMMEDIATELY WHEN THE ROUTE FINISHES
+        // ==================================================
+        //
+        // No additional camera movement or artificial
+        // delay is added here. The story can immediately
+        // continue to "There we go!"
+        //
+        // ==================================================
+
+        if (
+            typeof onComplete ===
+            "function"
+        )
         {
-            center:
-            [
-                destinationLongitude,
-                destinationLatitude
-            ],
-
-            zoom:
-                15.2,
-
-            bearing:
-                0,
-
-            pitch:
-                0,
-
-            duration:
-                900,
-
-            essential:
-                true
-        });
-
-
-        setTimeout(
-            function()
-            {
-                if (
-                    typeof onComplete ===
-                    "function"
-                )
-                {
-                    onComplete();
-                }
-            },
-            950
-        );
+            onComplete();
+        }
     }
 
 

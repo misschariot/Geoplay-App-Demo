@@ -13,6 +13,7 @@
 // - Create destination marker
 // - Lock / unlock player map interaction
 // - Keep map UI synchronized with camera movement
+// - Get real player location
 //
 // STORY UI:
 // geoplay_map_ui.js
@@ -45,12 +46,33 @@ window.geoplayMapStoryLocked =
 // ==================================================
 // PLAYER LOCATION
 // ==================================================
+//
+// These coordinates remain as the fallback location
+// used while the map is initializing.
+//
+// They are replaced with the player's real device
+// location once geoplayMapGetRealPlayerLocation()
+// succeeds.
+//
+// ==================================================
 
 var geoplayMapLongitude =
     -118.1046;
 
 var geoplayMapLatitude =
     34.1123;
+
+
+// ==================================================
+// REAL PLAYER LOCATION STATE
+// ==================================================
+
+window.geoplayPlayerLocationReady =
+    false;
+
+
+window.geoplayPlayerLocationError =
+    false;
 
 
 // ==================================================
@@ -67,6 +89,236 @@ window.geoplayPlayerMarker =
 
 window.geoplayDestinationMarker =
     null;
+
+
+// ==================================================
+// GET REAL PLAYER LOCATION
+// ==================================================
+//
+// Requests the player's actual device/browser location.
+//
+// On success:
+// - Updates geoplayMapLongitude
+// - Updates geoplayMapLatitude
+// - Updates the existing player marker
+// - Calls the supplied success callback
+//
+// On failure:
+// - Keeps the existing fallback coordinates
+// - Calls the supplied error callback
+//
+// ==================================================
+
+function geoplayMapGetRealPlayerLocation(
+    onSuccess,
+    onError
+)
+{
+    console.log(
+        "GEOPLAY MAP: Checking real player location..."
+    );
+
+
+    // ==================================================
+    // CHECK GEOLOCATION SUPPORT
+    // ==================================================
+
+    if (
+        !navigator.geolocation
+    )
+    {
+        console.warn(
+            "GEOPLAY MAP: Geolocation is not supported by this browser."
+        );
+
+
+        window.geoplayPlayerLocationError =
+            true;
+
+
+        if (
+            typeof onError ===
+            "function"
+        )
+        {
+            onError(
+                "Geolocation is not supported."
+            );
+        }
+
+
+        return 0;
+    }
+
+
+    // ==================================================
+    // REQUEST CURRENT LOCATION
+    // ==================================================
+
+    navigator.geolocation.getCurrentPosition(
+        function(position)
+        {
+            var longitude =
+                position.coords.longitude;
+
+
+            var latitude =
+                position.coords.latitude;
+
+
+            // ==================================================
+            // VALIDATE LOCATION
+            // ==================================================
+
+            if (
+                typeof longitude !==
+                "number" ||
+
+                typeof latitude !==
+                "number" ||
+
+                !isFinite(longitude) ||
+
+                !isFinite(latitude)
+            )
+            {
+                console.error(
+                    "GEOPLAY MAP: Invalid location received."
+                );
+
+
+                window.geoplayPlayerLocationError =
+                    true;
+
+
+                if (
+                    typeof onError ===
+                    "function"
+                )
+                {
+                    onError(
+                        "Invalid location received."
+                    );
+                }
+
+
+                return;
+            }
+
+
+            // ==================================================
+            // UPDATE PLAYER LOCATION
+            // ==================================================
+
+            geoplayMapLongitude =
+                longitude;
+
+
+            geoplayMapLatitude =
+                latitude;
+
+
+            window.geoplayPlayerLocationReady =
+                true;
+
+
+            window.geoplayPlayerLocationError =
+                false;
+
+
+            console.log(
+                "GEOPLAY MAP: Real player location received."
+            );
+
+
+            console.log(
+                "GEOPLAY MAP: Longitude = " +
+                geoplayMapLongitude
+            );
+
+
+            console.log(
+                "GEOPLAY MAP: Latitude = " +
+                geoplayMapLatitude
+            );
+
+
+            // ==================================================
+            // UPDATE EXISTING PLAYER MARKER
+            // ==================================================
+
+            if (
+                window.geoplayPlayerMarker
+            )
+            {
+                window.geoplayPlayerMarker.setLngLat(
+                [
+                    geoplayMapLongitude,
+                    geoplayMapLatitude
+                ]);
+            }
+
+
+            // ==================================================
+            // SUCCESS CALLBACK
+            // ==================================================
+
+            if (
+                typeof onSuccess ===
+                "function"
+            )
+            {
+                onSuccess(
+                    geoplayMapLongitude,
+                    geoplayMapLatitude
+                );
+            }
+        },
+
+
+        function(error)
+        {
+            console.warn(
+                "GEOPLAY MAP: Unable to get real player location.",
+                error
+            );
+
+
+            window.geoplayPlayerLocationError =
+                true;
+
+
+            // ==================================================
+            // ERROR CALLBACK
+            // ==================================================
+
+            if (
+                typeof onError ===
+                "function"
+            )
+            {
+                onError(
+                    error
+                );
+            }
+        },
+
+
+        {
+            enableHighAccuracy:
+                true,
+
+            timeout:
+                10000,
+
+            maximumAge:
+                0
+        }
+    );
+
+
+    return 1;
+}
 
 
 // ==================================================
@@ -872,8 +1124,12 @@ function initGeoplayMap()
             ],
 
 
+            // CHANGED:
+            // Start zoomed farther out so the player
+            // can visually experience the location
+            // discovery when the camera moves in.
             zoom:
-                15.5,
+                11.8,
 
 
             style:

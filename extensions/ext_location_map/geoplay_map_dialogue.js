@@ -10,33 +10,27 @@
 // - Dialogue text
 // - Typing effect
 // - Typing timer/state
-// - Auto-hide
+// - Natural reading pause
 // - Special destination-arrival dialogue
+// - Event-driven dialogue visibility
 //
 // DEPENDENCY:
 // - geoplay_map_ui.js
 //
-// The dialogue system uses the shared
-// window.geoplayMapUI container created by
-// geoplay_map_ui.js.
-//
 // ==================================================
 
 
 // ==================================================
-// DIALOGUE AUTO-HIDE TIMER
-// ==================================================
-
-window.geoplayDialogueHideTimer =
-    null;
-
-
-// ==================================================
-// DIALOGUE TYPING STATE
+// DIALOGUE STATE
 // ==================================================
 
 window.geoplayDialogueTypingTimer =
     null;
+
+
+window.geoplayDialogueHideTimer =
+    null;
+
 
 window.geoplayDialogueTypingToken =
     0;
@@ -48,10 +42,6 @@ window.geoplayDialogueTypingToken =
 
 function geoplayMapUICreateDialogue()
 {
-    // ==================================================
-    // CREATE DIALOGUE CONTAINER
-    // ==================================================
-
     var dialogue =
         document.createElement(
             "div"
@@ -64,6 +54,15 @@ function geoplayMapUICreateDialogue()
 
     dialogue.className =
         "geoplay-dialogue";
+
+
+    // ==================================================
+    // IMPORTANT:
+    // START COMPLETELY HIDDEN
+    // ==================================================
+
+    dialogue.style.visibility =
+        "hidden";
 
 
     // ==================================================
@@ -163,14 +162,146 @@ function geoplayMapUICreateDialogue()
 
 
 // ==================================================
+// HIDE DIALOGUE
+// ==================================================
+//
+// This hides the dialogue visually for a map event.
+//
+// IMPORTANT:
+// - Does NOT cancel the current story callback.
+// - Does NOT change the typing token.
+// - Does NOT destroy the dialogue.
+// - Does NOT clear the current text.
+//
+// The flow can therefore hide the robot while a visual
+// event plays, then call geoplayMapUISay() later.
+//
+// ==================================================
+
+function geoplayMapUIHideDialogue()
+{
+    var dialogue =
+        document.getElementById(
+            "geoplay-dialogue"
+        );
+
+
+    if (
+        !dialogue
+    )
+    {
+        return 0;
+    }
+
+
+    dialogue.classList.remove(
+        "visible"
+    );
+
+
+    dialogue.style.visibility =
+        "hidden";
+
+
+    console.log(
+        "GEOPLAY UI: Dialogue hidden for visual event."
+    );
+
+
+    return 1;
+}
+
+
+// ==================================================
+// SHOW DIALOGUE
+// ==================================================
+
+function geoplayMapUIShowDialogue()
+{
+    var dialogue =
+        document.getElementById(
+            "geoplay-dialogue"
+        );
+
+
+    if (
+        !dialogue
+    )
+    {
+        return 0;
+    }
+
+
+    dialogue.style.visibility =
+        "visible";
+
+
+    dialogue.classList.add(
+        "visible"
+    );
+
+
+    return 1;
+}
+
+
+// ==================================================
+// CALCULATE NATURAL READING PAUSE
+// ==================================================
+
+function geoplayMapUIDialogueReadingPause(
+    message
+)
+{
+    var length =
+        String(message).length;
+
+
+    var pause =
+        900 +
+        (
+            length *
+            22
+        );
+
+
+    pause =
+        Math.max(
+            1100,
+            pause
+        );
+
+
+    pause =
+        Math.min(
+            2800,
+            pause
+        );
+
+
+    return pause;
+}
+
+
+// ==================================================
 // SAY
+// ==================================================
+//
+// The callback belongs to this specific invocation of
+// geoplayMapUISay() rather than relying on a shared
+// callback variable.
+//
 // ==================================================
 
 function geoplayMapUISay(
     message,
-    unused
+    onComplete
 )
 {
+    // ==================================================
+    // MAKE SURE UI EXISTS
+    // ==================================================
+
     if (
         !window.geoplayMapUI
     )
@@ -184,6 +315,10 @@ function geoplayMapUISay(
         }
     }
 
+
+    // ==================================================
+    // FIND DIALOGUE
+    // ==================================================
 
     var dialogue =
         document.getElementById(
@@ -202,6 +337,11 @@ function geoplayMapUISay(
         !text
     )
     {
+        console.error(
+            "GEOPLAY UI: Dialogue element is unavailable."
+        );
+
+
         return 0;
     }
 
@@ -218,13 +358,14 @@ function geoplayMapUISay(
             window.geoplayDialogueTypingTimer
         );
 
+
         window.geoplayDialogueTypingTimer =
             null;
     }
 
 
     // ==================================================
-    // CANCEL PREVIOUS AUTO-HIDE
+    // CANCEL PREVIOUS READING PAUSE
     // ==================================================
 
     if (
@@ -234,6 +375,7 @@ function geoplayMapUISay(
         clearTimeout(
             window.geoplayDialogueHideTimer
         );
+
 
         window.geoplayDialogueHideTimer =
             null;
@@ -254,7 +396,15 @@ function geoplayMapUISay(
 
 
     // ==================================================
-    // RESET ARRIVAL POSITION
+    // CLEAR TEXT
+    // ==================================================
+
+    text.textContent =
+        "";
+
+
+    // ==================================================
+    // RESET ARRIVAL STYLE
     // ==================================================
 
     dialogue.classList.remove(
@@ -263,15 +413,7 @@ function geoplayMapUISay(
 
 
     // ==================================================
-    // CLEAR CURRENT TEXT
-    // ==================================================
-
-    text.textContent =
-        "";
-
-
-    // ==================================================
-    // NO MESSAGE
+    // EMPTY MESSAGE
     // ==================================================
 
     if (
@@ -282,12 +424,17 @@ function geoplayMapUISay(
             "visible"
         );
 
+
+        dialogue.style.visibility =
+            "hidden";
+
+
         return 1;
     }
 
 
     // ==================================================
-    // MESSAGE
+    // NORMALIZE MESSAGE
     // ==================================================
 
     var fullMessage =
@@ -295,7 +442,7 @@ function geoplayMapUISay(
 
 
     // ==================================================
-    // DESTINATION ARRIVAL MESSAGE
+    // DESTINATION ARRIVAL
     // ==================================================
 
     var isArrivalMessage =
@@ -319,6 +466,10 @@ function geoplayMapUISay(
     // SHOW DIALOGUE
     // ==================================================
 
+    dialogue.style.visibility =
+        "visible";
+
+
     dialogue.classList.add(
         "visible"
     );
@@ -326,12 +477,6 @@ function geoplayMapUISay(
 
     // ==================================================
     // TYPING SETTINGS
-    // ==================================================
-    //
-    // Slowed down from 32ms so the dialogue
-    // is easier to read, especially toward
-    // the end of each sentence.
-    //
     // ==================================================
 
     var characterIndex =
@@ -349,7 +494,7 @@ function geoplayMapUISay(
     function typeNextCharacter()
     {
         // ==================================================
-        // IGNORE OLD TYPING SEQUENCE
+        // IGNORE OLD DIALOGUE INSTANCE
         // ==================================================
 
         if (
@@ -362,7 +507,7 @@ function geoplayMapUISay(
 
 
         // ==================================================
-        // FINISHED
+        // FINISHED TYPING
         // ==================================================
 
         if (
@@ -370,55 +515,14 @@ function geoplayMapUISay(
             fullMessage.length
         )
         {
-            window.geoplayDialogueTypingTimer =
-                null;
-
-
-            // ==================================================
-            // AUTO-HIDE "THERE IT IS!"
-            // ==================================================
-
-            if (
-                isArrivalMessage
-            )
-            {
-                window.geoplayDialogueHideTimer =
-                    setTimeout(
-                        function()
-                        {
-                            if (
-                                typingToken !==
-                                window.geoplayDialogueTypingToken
-                            )
-                            {
-                                return;
-                            }
-
-
-                            dialogue.classList.remove(
-                                "visible"
-                            );
-
-
-                            dialogue.classList.remove(
-                                "destination-arrival"
-                            );
-
-
-                            window.geoplayDialogueHideTimer =
-                                null;
-                        },
-                        3000
-                    );
-            }
-
+            finishTyping();
 
             return;
         }
 
 
         // ==================================================
-        // ADD NEXT CHARACTER
+        // ADD CHARACTER
         // ==================================================
 
         text.textContent =
@@ -435,13 +539,88 @@ function geoplayMapUISay(
 
 
         // ==================================================
-        // CONTINUE TYPING
+        // CONTINUE
         // ==================================================
 
         window.geoplayDialogueTypingTimer =
             setTimeout(
                 typeNextCharacter,
                 typingSpeed
+            );
+    }
+
+
+    // ==================================================
+    // FINISH TYPING
+    // ==================================================
+
+    function finishTyping()
+    {
+        // ==================================================
+        // IGNORE OLD INSTANCE
+        // ==================================================
+
+        if (
+            typingToken !==
+            window.geoplayDialogueTypingToken
+        )
+        {
+            return;
+        }
+
+
+        window.geoplayDialogueTypingTimer =
+            null;
+
+
+        // ==================================================
+        // CALCULATE READING TIME
+        // ==================================================
+
+        var readingPause =
+            geoplayMapUIDialogueReadingPause(
+                fullMessage
+            );
+
+
+        // ==================================================
+        // WAIT FOR PLAYER TO READ
+        // ==================================================
+
+        window.geoplayDialogueHideTimer =
+            setTimeout(
+                function()
+                {
+                    // ==================================================
+                    // IGNORE IF A NEW DIALOGUE HAS STARTED
+                    // ==================================================
+
+                    if (
+                        typingToken !==
+                        window.geoplayDialogueTypingToken
+                    )
+                    {
+                        return;
+                    }
+
+
+                    window.geoplayDialogueHideTimer =
+                        null;
+
+
+                    // ==================================================
+                    // RUN THIS MESSAGE'S CALLBACK
+                    // ==================================================
+
+                    if (
+                        typeof onComplete ===
+                        "function"
+                    )
+                    {
+                        onComplete();
+                    }
+                },
+                readingPause
             );
     }
 
