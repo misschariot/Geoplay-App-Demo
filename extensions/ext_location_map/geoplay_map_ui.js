@@ -51,6 +51,265 @@ window.geoplayMapUIInitialized =
 
 
 // ==================================================
+// STORY ACTION VIEWPORT POSITIONING
+// ==================================================
+//
+// SEARCH + HOME are intentionally positioned against
+// the REAL browser viewport.
+//
+// We do not rely on CSS "right" positioning because
+// GameMaker HTML5 can introduce a separate canvas /
+// rendering coordinate system on mobile browsers.
+//
+// The controls are measured and positioned explicitly
+// using the browser's current viewport width.
+//
+// ==================================================
+
+function geoplayMapUIPositionStoryActions()
+{
+    var actions =
+        document.getElementById(
+            "geoplay-story-actions"
+        );
+
+
+    if (
+        !actions
+    )
+    {
+        return 0;
+    }
+
+
+    // ==================================================
+    // GET ACTUAL VIEWPORT WIDTH
+    // ==================================================
+
+    var viewportWidth =
+        window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
+
+
+    if (
+        !viewportWidth ||
+        viewportWidth <= 0
+    )
+    {
+        return 0;
+    }
+
+
+    // ==================================================
+    // GET ACTUAL ACTION CONTAINER SIZE
+    // ==================================================
+    //
+    // getBoundingClientRect() gives us the actual
+    // rendered CSS-pixel dimensions of the control.
+    //
+    // This is what we want on phones, tablets and
+    // desktop browsers.
+    //
+    // ==================================================
+
+    var rect =
+        actions.getBoundingClientRect();
+
+
+    var actionsWidth =
+        rect.width;
+
+
+    if (
+        !actionsWidth ||
+        actionsWidth <= 0
+    )
+    {
+        return 0;
+    }
+
+
+    // ==================================================
+    // DESIRED RIGHT EDGE PADDING
+    // ==================================================
+    //
+    // This is intentionally small.
+    //
+    // The controls should sit close to the physical
+    // right edge without touching it.
+    //
+    // ==================================================
+
+    var rightPadding =
+        10;
+
+
+    // ==================================================
+    // CALCULATE EXACT LEFT POSITION
+    // ==================================================
+
+    var leftPosition =
+        viewportWidth -
+        actionsWidth -
+        rightPadding;
+
+
+    // ==================================================
+    // SAFETY
+    // ==================================================
+    //
+    // Never allow the controls to move outside the
+    // left edge of the viewport.
+    //
+    // ==================================================
+
+    leftPosition =
+        Math.max(
+            0,
+            leftPosition
+        );
+
+
+    // ==================================================
+    // FORCE VIEWPORT-BASED POSITION
+    // ==================================================
+    //
+    // We deliberately use left instead of right.
+    //
+    // The calculated position is now based on the
+    // actual browser width.
+    //
+    // ==================================================
+
+    actions.style.position =
+        "fixed";
+
+
+    actions.style.left =
+        leftPosition +
+        "px";
+
+
+    actions.style.right =
+        "auto";
+
+
+    // ==================================================
+    // KEEP THE EXISTING VERTICAL POSITION
+    // ==================================================
+
+    actions.style.bottom =
+        "24px";
+
+
+    return 1;
+}
+
+
+// ==================================================
+// INSTALL STORY ACTION VIEWPORT LISTENERS
+// ==================================================
+//
+// Mobile browsers can change their viewport when:
+// - orientation changes
+// - browser UI expands/collapses
+// - device dimensions change
+// - simulator size changes
+//
+// Recalculate whenever that happens.
+//
+// ==================================================
+
+function geoplayMapUIInstallStoryActionPositioning()
+{
+    // ==================================================
+    // PREVENT DUPLICATE LISTENERS
+    // ==================================================
+
+    if (
+        window.geoplayMapUIStoryActionPositioningInstalled
+    )
+    {
+        return 1;
+    }
+
+
+    window.geoplayMapUIStoryActionPositioningInstalled =
+        true;
+
+
+    // ==================================================
+    // STANDARD RESIZE
+    // ==================================================
+
+    window.addEventListener(
+        "resize",
+        function()
+        {
+            geoplayMapUIPositionStoryActions();
+        }
+    );
+
+
+    // ==================================================
+    // ORIENTATION CHANGE
+    // ==================================================
+
+    window.addEventListener(
+        "orientationchange",
+        function()
+        {
+            setTimeout(
+                function()
+                {
+                    geoplayMapUIPositionStoryActions();
+                },
+                100
+            );
+        }
+    );
+
+
+    // ==================================================
+    // VISUAL VIEWPORT
+    // ==================================================
+    //
+    // Supported by modern mobile browsers.
+    //
+    // This catches changes to the visual viewport
+    // that don't always trigger a normal resize.
+    //
+    // ==================================================
+
+    if (
+        window.visualViewport
+    )
+    {
+        window.visualViewport.addEventListener(
+            "resize",
+            function()
+            {
+                geoplayMapUIPositionStoryActions();
+            }
+        );
+
+
+        window.visualViewport.addEventListener(
+            "scroll",
+            function()
+            {
+                geoplayMapUIPositionStoryActions();
+            }
+        );
+    }
+
+
+    return 1;
+}
+
+
+// ==================================================
 // CREATE MAP UI
 // ==================================================
 
@@ -127,11 +386,6 @@ function geoplayMapUICreate()
 
     // ==================================================
     // UI CONTAINER DOES NOT BLOCK THE MAP
-    // ==================================================
-    //
-    // Individual interactive components enable
-    // pointer events when necessary.
-    //
     // ==================================================
 
     ui.style.pointerEvents =
@@ -233,12 +487,6 @@ function geoplayMapUICreate()
     // ==================================================
     // CREATE FIND ANOTHER / SEARCH
     // ==================================================
-    //
-    // The Search popup is created during UI
-    // initialization but remains hidden until
-    // SEARCH is selected.
-    //
-    // ==================================================
 
     if (
         typeof geoplayMapUICreateFindAnother ===
@@ -253,6 +501,31 @@ function geoplayMapUICreate()
             "GEOPLAY UI: SEARCH module is not available."
         );
     }
+
+
+    // ==================================================
+    // INSTALL RESPONSIVE POSITIONING
+    // ==================================================
+
+    geoplayMapUIInstallStoryActionPositioning();
+
+
+    // ==================================================
+    // INITIAL POSITION
+    // ==================================================
+    //
+    // Run after the DOM has had an opportunity to
+    // calculate the action container's dimensions.
+    //
+    // ==================================================
+
+    setTimeout(
+        function()
+        {
+            geoplayMapUIPositionStoryActions();
+        },
+        0
+    );
 
 
     // ==================================================
@@ -362,6 +635,19 @@ function geoplayMapUILoadStylesheet()
                 window.geoplayMapUI.style.visibility =
                     "visible";
             }
+
+
+            // ==================================================
+            // CSS HAS LOADED — RECALCULATE POSITION
+            // ==================================================
+
+            setTimeout(
+                function()
+                {
+                    geoplayMapUIPositionStoryActions();
+                },
+                0
+            );
         };
 
 
@@ -384,6 +670,19 @@ function geoplayMapUILoadStylesheet()
                 window.geoplayMapUI.style.visibility =
                     "visible";
             }
+
+
+            // ==================================================
+            // POSITION EVEN IF CSS FAILS
+            // ==================================================
+
+            setTimeout(
+                function()
+                {
+                    geoplayMapUIPositionStoryActions();
+                },
+                0
+            );
         };
 
 
@@ -445,35 +744,30 @@ function geoplayMapUICreateStoryActions()
     // ==================================================
     // INITIAL STORY STATE
     // ==================================================
-    //
-    // Actions remain hidden and non-interactive while
-    // the robot story is running.
-    //
-    // ==================================================
 
     actions.className =
         "geoplay-story-actions story-hidden";
 
 
     // ==================================================
-    // IMPORTANT:
-    // POSITION THE ACTION CONTAINER DIRECTLY AGAINST
-    // THE BROWSER VIEWPORT.
-    //
-    // The map UI container can have its own coordinate
-    // system on some mobile browsers.
-    //
-    // By attaching this element to document.body and
-    // using fixed positioning, right/bottom are based
-    // on the actual browser viewport.
+    // VIEWPORT POSITIONING
     // ==================================================
 
     actions.style.position =
         "fixed";
 
 
+    // ==================================================
+    // RIGHT IS TEMPORARILY SET FOR INITIAL LAYOUT
+    // ==================================================
+    //
+    // The JavaScript viewport-positioning function
+    // replaces this with an exact left coordinate.
+    //
+    // ==================================================
+
     actions.style.right =
-        "4px";
+        "10px";
 
 
     actions.style.bottom =
@@ -693,16 +987,8 @@ function geoplayMapUICreateStoryActions()
     // ADD ACTION CONTAINER DIRECTLY TO DOCUMENT BODY
     // ==================================================
     //
-    // IMPORTANT:
-    //
-    // Do NOT append this to window.geoplayMapUI.
-    //
-    // The map UI container lives inside the MapLibre
-    // map container and can have a different effective
-    // coordinate space on mobile browsers.
-    //
-    // Attaching directly to <body> allows position:fixed
-    // to use the actual browser viewport.
+    // This keeps the controls independent from the
+    // MapLibre/GameMaker map coordinate system.
     //
     // ==================================================
 
@@ -722,6 +1008,19 @@ function geoplayMapUICreateStoryActions()
 
         return 0;
     }
+
+
+    // ==================================================
+    // POSITION AFTER INSERTION
+    // ==================================================
+
+    setTimeout(
+        function()
+        {
+            geoplayMapUIPositionStoryActions();
+        },
+        0
+    );
 
 
     return 1;
@@ -774,16 +1073,30 @@ function geoplayMapUIShowStoryActions()
         "auto";
 
 
+    // ==================================================
+    // RECALCULATE POSITION
+    // ==================================================
+    //
+    // The visible state may change the measured
+    // dimensions, so calculate again after showing.
+    //
+    // ==================================================
+
+    setTimeout(
+        function()
+        {
+            geoplayMapUIPositionStoryActions();
+        },
+        0
+    );
+
+
     return 1;
 }
 
 
 // ==================================================
 // HIDE STORY ACTIONS
-// ==================================================
-//
-// Used when the story needs to hide the bottom
-// actions again.
 // ==================================================
 
 function geoplayMapUIHideStoryActions()
@@ -837,8 +1150,6 @@ function geoplayMapUIHideStoryActions()
 // They allow older GameMaker references to continue
 // working while we complete the refactor.
 //
-// DO NOT REMOVE UNTIL THE GAMEMAKER EXTENSION /
-// PROJECT CALLBACK AUDIT IS COMPLETE.
 // ==================================================
 
 function geoplayMapUIShowContinue()
