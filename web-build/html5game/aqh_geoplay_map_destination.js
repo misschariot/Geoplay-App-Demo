@@ -47,6 +47,15 @@ window.geoplayDestinationOverlay =
 window.geoplayDestinationClosing =
     false;
 
+window.geoplayDestinationFinalPresentation =
+    false;
+
+window.geoplayDestinationControlledTransition =
+    false;
+
+window.geoplayDestinationMapListenersAttached =
+    false;
+
 
 // ==================================================
 // DESTINATION CONSTANTS
@@ -69,6 +78,12 @@ var geoplayDestinationVisibilityMargin =
 
 var geoplayDestinationCardGap =
     12;
+
+var geoplayDestinationMarkerGap =
+    16;
+
+var geoplayDestinationSideGap =
+    18;
 
 var geoplayDestinationModalShift =
     "-2vh";
@@ -241,7 +256,7 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "width: 214px;" +
 
-            "max-width: calc(100vw - 32px);" +
+            "max-width: calc(100vw - 20px);" +
 
             "border-radius: 14px;" +
 
@@ -263,11 +278,15 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "cursor: pointer;" +
 
+            "--geoplay-pointer-left: 50%;" +
+
+            "--geoplay-pointer-top: 50%;" +
+
         "}" +
 
 
         // ==================================================
-        // CALLOUT POINTER
+        // DEFAULT POINTER
         // ==================================================
 
         ".geoplay-destination:not(.expanded)::after {" +
@@ -276,25 +295,91 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "position: absolute;" +
 
-            "left: 50%;" +
-
-            "bottom: -7px;" +
-
             "width: 12px;" +
 
             "height: 12px;" +
 
-            "transform: translateX(-50%) rotate(45deg);" +
+            "box-sizing: border-box;" +
 
             "background: #100a2b;" +
+
+            "z-index: -1;" +
+
+        "}" +
+
+
+        // ==================================================
+        // POINTER - CARD ABOVE MARKER
+        // ==================================================
+
+        ".geoplay-destination[data-pointer-side='top']::after {" +
+
+            "left: var(--geoplay-pointer-left);" +
+
+            "bottom: -7px;" +
+
+            "transform: translateX(-50%) rotate(45deg);" +
 
             "border-right: 1.5px solid #ff8f18;" +
 
             "border-bottom: 1.5px solid #d52cff;" +
 
-            "box-sizing: border-box;" +
+        "}" +
 
-            "z-index: -1;" +
+
+        // ==================================================
+        // POINTER - CARD BELOW MARKER
+        // ==================================================
+
+        ".geoplay-destination[data-pointer-side='bottom']::after {" +
+
+            "left: var(--geoplay-pointer-left);" +
+
+            "top: -7px;" +
+
+            "transform: translateX(-50%) rotate(45deg);" +
+
+            "border-left: 1.5px solid #8b3dff;" +
+
+            "border-top: 1.5px solid #d52cff;" +
+
+        "}" +
+
+
+        // ==================================================
+        // POINTER - CARD LEFT OF MARKER
+        // ==================================================
+
+        ".geoplay-destination[data-pointer-side='left']::after {" +
+
+            "right: -7px;" +
+
+            "top: var(--geoplay-pointer-top);" +
+
+            "transform: translateY(-50%) rotate(45deg);" +
+
+            "border-top: 1.5px solid #d52cff;" +
+
+            "border-right: 1.5px solid #ff8f18;" +
+
+        "}" +
+
+
+        // ==================================================
+        // POINTER - CARD RIGHT OF MARKER
+        // ==================================================
+
+        ".geoplay-destination[data-pointer-side='right']::after {" +
+
+            "left: -7px;" +
+
+            "top: var(--geoplay-pointer-top);" +
+
+            "transform: translateY(-50%) rotate(45deg);" +
+
+            "border-left: 1.5px solid #8b3dff;" +
+
+            "border-bottom: 1.5px solid #d52cff;" +
 
         "}" +
 
@@ -305,9 +390,9 @@ function geoplayMapUIDestinationEnsureStyles()
 
         ".geoplay-destination-collapsed {" +
 
-            "min-height: 44px;" +
+            "min-height: 40px;" +
 
-            "padding: 6px 10px 6px 11px;" +
+            "padding: 4px 34px 4px 10px;" +
 
             "box-sizing: border-box;" +
 
@@ -317,7 +402,7 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "justify-content: center;" +
 
-            "gap: 1px;" +
+            "gap: 0;" +
 
             "position: relative;" +
 
@@ -340,7 +425,7 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "align-items: center;" +
 
-            "gap: 6px;" +
+            "gap: 5px;" +
 
             "box-sizing: border-box;" +
 
@@ -400,9 +485,9 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "white-space: nowrap;" +
 
-            "overflow: hidden;" +
+            "overflow: visible;" +
 
-            "text-overflow: ellipsis;" +
+            "text-overflow: clip;" +
 
         "}" +
 
@@ -417,13 +502,15 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "align-items: center;" +
 
-            "justify-content: space-between;" +
+            "justify-content: flex-start;" +
 
             "width: 100%;" +
 
-            "min-height: 14px;" +
+            "min-height: 13px;" +
 
-            "padding-left: 22px;" +
+            "padding-left: 31px;" +
+
+            "padding-right: 34px;" +
 
             "box-sizing: border-box;" +
 
@@ -461,11 +548,17 @@ function geoplayMapUIDestinationEnsureStyles()
 
         ".geoplay-destination-chevron {" +
 
+            "position: absolute;" +
+
+            "right: 12px;" +
+
+            "top: 50%;" +
+
             "width: auto;" +
 
             "height: auto;" +
 
-            "margin-left: 8px;" +
+            "margin: 0;" +
 
             "display: flex;" +
 
@@ -489,20 +582,55 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "line-height: 1;" +
 
-            "padding: 0 0 1px 0;" +
+            "padding: 0;" +
+
+            "transform: translateY(-50%);" +
 
             "box-sizing: border-box;" +
+
+            "pointer-events: none;" +
+
+            "transition: none !important;" +
+
+            "animation: none !important;" +
 
         "}" +
 
 
         // ==================================================
-        // SUBTLE HOVER
+        // CHEVRON - NO HOVER EFFECT
+        // ==================================================
+        //
+        // The casino card remains clickable, but the
+        // chevron itself must stay completely static.
+        //
+        // These rules explicitly neutralize any hover
+        // styling that may be applied by another stylesheet
+        // to the card or the chevron.
+        //
         // ==================================================
 
-        ".geoplay-destination:not(.expanded):hover {" +
+        ".geoplay-destination:hover .geoplay-destination-chevron," +
 
-            "box-shadow: 0 8px 22px rgba(0,0,0,0.35), 0 0 18px rgba(151,65,255,0.24), 0 0 24px rgba(255,132,0,0.10);" +
+        ".geoplay-destination-chevron:hover {" +
+
+            "color: rgba(255,255,255,0.95) !important;" +
+
+            "background: transparent !important;" +
+
+            "border: 0 !important;" +
+
+            "box-shadow: none !important;" +
+
+            "filter: none !important;" +
+
+            "opacity: 1 !important;" +
+
+            "transform: translateY(-50%) !important;" +
+
+            "transition: none !important;" +
+
+            "animation: none !important;" +
 
         "}" +
 
@@ -515,9 +643,9 @@ function geoplayMapUIDestinationEnsureStyles()
 
             ".geoplay-destination {" +
 
-                "width: 204px;" +
+                "width: 194px;" +
 
-                "max-width: calc(100vw - 28px);" +
+                "max-width: calc(100vw - 20px);" +
 
                 "border-radius: 13px;" +
 
@@ -526,9 +654,9 @@ function geoplayMapUIDestinationEnsureStyles()
 
             ".geoplay-destination-collapsed {" +
 
-                "min-height: 42px;" +
+                "min-height: 38px;" +
 
-                "padding: 5px 9px 5px 10px;" +
+                "padding: 4px 32px 4px 9px;" +
 
             "}" +
 
@@ -562,7 +690,9 @@ function geoplayMapUIDestinationEnsureStyles()
 
             ".geoplay-destination-bottom-row {" +
 
-                "padding-left: 20px;" +
+                "padding-left: 29px;" +
+
+                "padding-right: 32px;" +
 
             "}" +
 
@@ -576,9 +706,9 @@ function geoplayMapUIDestinationEnsureStyles()
 
             ".geoplay-destination-chevron {" +
 
-                "font-size: 17px;" +
+                "right: 11px;" +
 
-                "margin-left: 7px;" +
+                "font-size: 17px;" +
 
             "}" +
 
@@ -709,6 +839,12 @@ function geoplayMapUICreateDestinationCard()
         geoplayDestinationSceneZIndex;
 
 
+    card.setAttribute(
+        "data-pointer-side",
+        "bottom"
+    );
+
+
     geoplayMapUISetDestinationCollapsed(
         card
     );
@@ -721,6 +857,13 @@ function geoplayMapUICreateDestinationCard()
 
     window.geoplayDestinationCard =
         card;
+
+
+    // ==================================================
+    // ATTACH MAP POSITION LISTENERS
+    // ==================================================
+
+    geoplayMapUIAttachDestinationMapListeners();
 
 
     // ==================================================
@@ -1014,6 +1157,35 @@ function geoplayMapUISetDestinationCollapsed(
             distanceMarkup +
 
         "</div>";
+
+
+    // ==================================================
+    // DEFAULT POINTER STATE
+    // ==================================================
+
+    if (
+        !card.getAttribute(
+            "data-pointer-side"
+        )
+    )
+    {
+        card.setAttribute(
+            "data-pointer-side",
+            "bottom"
+        );
+    }
+
+
+    card.style.setProperty(
+        "--geoplay-pointer-left",
+        "50%"
+    );
+
+
+    card.style.setProperty(
+        "--geoplay-pointer-top",
+        "50%"
+    );
 
 
     window.geoplayDestinationExpanded =
@@ -1641,6 +1813,198 @@ function geoplayMapUIAttachOffscreenIndicatorInteraction(
 
 
 // ==================================================
+// ATTACH DESTINATION MAP LISTENERS
+// ==================================================
+//
+// The destination card and the off-screen indicator are
+// separate UI states, but both need to react to map
+// movement.
+//
+// During the controlled story transition we keep both
+// destination UIs hidden until the camera reaches the
+// destination. Once the user manually moves the map,
+// normal viewport logic resumes:
+//
+// - destination in view  -> card
+// - destination out of view -> indicator
+//
+// ==================================================
+
+function geoplayMapUIAttachDestinationMapListeners()
+{
+    if (
+        window.geoplayDestinationMapListenersAttached
+    )
+    {
+        return;
+    }
+
+
+    if (
+        !window.geoplayMap ||
+        typeof window.geoplayMap.on !==
+        "function"
+    )
+    {
+        return;
+    }
+
+
+    window.geoplayDestinationMapListenersAttached =
+        true;
+
+
+    window.geoplayMap.on(
+        "movestart",
+        function()
+        {
+            // A programmatic destination flight belongs to
+            // the controlled story flow. Do not switch UI
+            // states while the camera is traveling.
+            if (
+                window.geoplayDestinationControlledTransition
+            )
+            {
+                return;
+            }
+
+
+            if (
+                window.geoplayMapStoryLocked
+            )
+            {
+                return;
+            }
+
+
+            // The user has started freely navigating the map.
+            // From this point onward the card/indicator should
+            // follow the casino's actual viewport position.
+            window.geoplayDestinationFinalPresentation =
+                false;
+        }
+    );
+
+
+    window.geoplayMap.on(
+        "move",
+        function()
+        {
+            if (
+                !window.geoplayDestinationVisible
+            )
+            {
+                return;
+            }
+
+
+            if (
+                window.geoplayDestinationExpanded
+            )
+            {
+                return;
+            }
+
+
+            // Keep the destination UI hidden during the
+            // controlled camera flight. It will be presented
+            // again on moveend.
+            if (
+                window.geoplayDestinationControlledTransition
+            )
+            {
+                var card =
+                    document.getElementById(
+                        "geoplay-destination"
+                    );
+
+                var indicator =
+                    document.getElementById(
+                        "geoplay-destination-offscreen"
+                    );
+
+
+                if (
+                    card
+                )
+                {
+                    card.classList.remove(
+                        "visible"
+                    );
+                }
+
+
+                if (
+                    indicator
+                )
+                {
+                    indicator.classList.remove(
+                        "visible"
+                    );
+                }
+
+
+                return;
+            }
+
+
+            geoplayMapUIPositionDestination();
+        }
+    );
+
+
+    window.geoplayMap.on(
+        "moveend",
+        function()
+        {
+            if (
+                window.geoplayDestinationControlledTransition
+            )
+            {
+                window.geoplayDestinationControlledTransition =
+                    false;
+
+
+                geoplayMapUIShowDestination();
+
+
+                geoplayMapUISay(
+                    "There it is!"
+                );
+
+
+                return;
+            }
+
+
+            if (
+                window.geoplayDestinationVisible &&
+                !window.geoplayDestinationExpanded
+            )
+            {
+                geoplayMapUIPositionDestination();
+            }
+        }
+    );
+
+
+    window.geoplayMap.on(
+        "resize",
+        function()
+        {
+            if (
+                window.geoplayDestinationVisible &&
+                !window.geoplayDestinationExpanded
+            )
+            {
+                geoplayMapUIPositionDestination();
+            }
+        }
+    );
+}
+
+
+// ==================================================
 // SHOW DESTINATION
 // ==================================================
 
@@ -1669,6 +2033,14 @@ function geoplayMapUIShowDestination()
 
 
     window.geoplayDestinationVisible =
+        true;
+
+
+    // ==================================================
+    // FINAL DESTINATION PRESENTATION
+    // ==================================================
+
+    window.geoplayDestinationFinalPresentation =
         true;
 
 
@@ -1784,6 +2156,63 @@ function geoplayMapUIPositionDestination()
 
     var height =
         mapContainer.clientHeight;
+
+
+    // ==================================================
+    // CONTROLLED CAMERA TRANSITION
+    // ==================================================
+    //
+    // Do not show either destination UI while the camera
+    // is flying to Pine Ridge. The destination card is
+    // presented only after moveend.
+    //
+    // ==================================================
+
+    if (
+        window.geoplayDestinationControlledTransition
+    )
+    {
+        card.classList.remove(
+            "visible"
+        );
+
+
+        indicator.classList.remove(
+            "visible"
+        );
+
+
+        return;
+    }
+
+
+    // ==================================================
+    // FINAL DESTINATION PRESENTATION
+    // ==================================================
+    //
+    // The first destination presentation after the story
+    // uses the card immediately, even if the marker is
+    // near an edge.
+    //
+    // Once the user manually moves the map, the normal
+    // card/indicator viewport rules take over.
+    //
+    // ==================================================
+
+    if (
+        window.geoplayDestinationFinalPresentation
+    )
+    {
+        geoplayMapUIPositionVisibleDestination(
+            card,
+            indicator,
+            point,
+            width,
+            height
+        );
+
+        return;
+    }
 
 
     var margin =
@@ -1909,6 +2338,10 @@ function geoplayMapUIPositionVisibleDestination(
     );
 
 
+    // ==================================================
+    // CARD DIMENSIONS
+    // ==================================================
+
     var cardWidth =
         card.offsetWidth;
 
@@ -1917,74 +2350,220 @@ function geoplayMapUIPositionVisibleDestination(
         card.offsetHeight;
 
 
+    var margin =
+        geoplayDestinationViewportMargin;
+
+
+    var markerGap =
+        geoplayDestinationMarkerGap;
+
+
+    var sideGap =
+        geoplayDestinationSideGap;
+
+
+    // ==================================================
+    // AVAILABLE SPACE
+    // ==================================================
+
+    var spaceTop =
+        point.y -
+        margin;
+
+
+    var spaceBottom =
+        height -
+        point.y -
+        margin;
+
+
+    var spaceLeft =
+        point.x -
+        margin;
+
+
+    var spaceRight =
+        width -
+        point.x -
+        margin;
+
+
+    // ==================================================
+    // CHECK WHICH SIDES CAN FIT THE FULL CARD
+    // ==================================================
+
+    var canFitTop =
+        spaceTop >=
+        cardHeight +
+        markerGap;
+
+
+    var canFitBottom =
+        spaceBottom >=
+        cardHeight +
+        markerGap;
+
+
+    var canFitLeft =
+        spaceLeft >=
+        cardWidth +
+        sideGap;
+
+
+    var canFitRight =
+        spaceRight >=
+        cardWidth +
+        sideGap;
+
+
+    // ==================================================
+    // DETERMINE PREFERRED SIDE
+    // ==================================================
+
+    var side =
+        null;
+
+
+    if (
+        canFitTop
+    )
+    {
+        side =
+            "top";
+    }
+    else if (
+        canFitBottom
+    )
+    {
+        side =
+            "bottom";
+    }
+    else if (
+        canFitRight
+    )
+    {
+        side =
+            "right";
+    }
+    else if (
+        canFitLeft
+    )
+    {
+        side =
+            "left";
+    }
+
+
+    // ==================================================
+    // IF NOTHING FITS PERFECTLY
+    // ==================================================
+
+    if (
+        !side
+    )
+    {
+        var largestSpace =
+            Math.max(
+                spaceTop,
+                spaceBottom,
+                spaceLeft,
+                spaceRight
+            );
+
+
+        if (
+            largestSpace ===
+            spaceTop
+        )
+        {
+            side =
+                "top";
+        }
+        else if (
+            largestSpace ===
+            spaceBottom
+        )
+        {
+            side =
+                "bottom";
+        }
+        else if (
+            largestSpace ===
+            spaceRight
+        )
+        {
+            side =
+                "right";
+        }
+        else
+        {
+            side =
+                "left";
+        }
+    }
+
+
+    // ==================================================
+    // APPLY POINTER SIDE
+    // ==================================================
+
+    card.setAttribute(
+        "data-pointer-side",
+        side
+    );
+
+
+    // ==================================================
+    // POSITION VARIABLES
+    // ==================================================
+
     var left =
         point.x;
 
 
-    var top;
-
-
-    var halfWidth =
-        cardWidth /
-        2;
+    var top =
+        point.y;
 
 
     // ==================================================
-    // KEEP CALLOUT HORIZONTALLY INSIDE VIEWPORT
+    // POSITION ABOVE
     // ==================================================
 
     if (
-        left -
-        halfWidth <
-        geoplayDestinationViewportMargin
+        side ===
+        "top"
     )
     {
         left =
-            halfWidth +
-            geoplayDestinationViewportMargin;
-    }
+            point.x;
 
 
-    if (
-        left +
-        halfWidth >
-        width -
-        geoplayDestinationViewportMargin
-    )
-    {
-        left =
-            width -
-            halfWidth -
-            geoplayDestinationViewportMargin;
+        top =
+            point.y -
+            markerGap;
+
+
+        card.style.transform =
+            "translate(-50%,-100%)";
     }
 
 
     // ==================================================
-    // POSITION ABOVE DESTINATION
+    // POSITION BELOW
     // ==================================================
 
-    top =
-        point.y -
-        geoplayDestinationCardGap;
-
-
-    card.style.transform =
-        "translate(-50%,-100%)";
-
-
-    // ==================================================
-    // IF TOO CLOSE TO TOP, PLACE BELOW
-    // ==================================================
-
-    if (
-        top <
-        geoplayDestinationViewportMargin
+    else if (
+        side ===
+        "bottom"
     )
     {
+        left =
+            point.x;
+
+
         top =
             point.y +
-            geoplayDestinationCardGap +
-            18;
+            markerGap;
 
 
         card.style.transform =
@@ -1993,22 +2572,263 @@ function geoplayMapUIPositionVisibleDestination(
 
 
     // ==================================================
-    // KEEP CALLOUT VERTICALLY INSIDE VIEWPORT
+    // POSITION LEFT
+    // ==================================================
+
+    else if (
+        side ===
+        "left"
+    )
+    {
+        left =
+            point.x -
+            sideGap;
+
+
+        top =
+            point.y;
+
+
+        card.style.transform =
+            "translate(-100%,-50%)";
+    }
+
+
+    // ==================================================
+    // POSITION RIGHT
+    // ==================================================
+
+    else if (
+        side ===
+        "right"
+    )
+    {
+        left =
+            point.x +
+            sideGap;
+
+
+        top =
+            point.y;
+
+
+        card.style.transform =
+            "translate(0,-50%)";
+    }
+
+
+    // ==================================================
+    // CALCULATE ACTUAL CARD EDGES
+    // ==================================================
+
+    var actualLeft =
+        left;
+
+
+    var actualTop =
+        top;
+
+
+    if (
+        side ===
+        "top" ||
+        side ===
+        "bottom"
+    )
+    {
+        actualLeft =
+            left -
+            (
+                cardWidth /
+                2
+            );
+    }
+
+
+    if (
+        side ===
+        "top"
+    )
+    {
+        actualTop =
+            top -
+            cardHeight;
+    }
+
+
+    else if (
+        side ===
+        "bottom"
+    )
+    {
+        actualTop =
+            top;
+    }
+
+
+    else if (
+        side ===
+        "left" ||
+        side ===
+        "right"
+    )
+    {
+        actualTop =
+            top -
+            (
+                cardHeight /
+                2
+            );
+    }
+
+
+    if (
+        side ===
+        "left"
+    )
+    {
+        actualLeft =
+            left -
+            cardWidth;
+    }
+
+
+    if (
+        side ===
+        "right"
+    )
+    {
+        actualLeft =
+            left;
+    }
+
+
+    // ==================================================
+    // CLAMP HORIZONTALLY
+    // ==================================================
+
+    var clampedLeft =
+        Math.max(
+            margin,
+            Math.min(
+                width -
+                cardWidth -
+                margin,
+                actualLeft
+            )
+        );
+
+
+    // ==================================================
+    // CLAMP VERTICALLY
+    // ==================================================
+
+    var clampedTop =
+        Math.max(
+            margin,
+            Math.min(
+                height -
+                cardHeight -
+                margin,
+                actualTop
+            )
+        );
+
+
+    // ==================================================
+    // RECONSTRUCT TRANSFORM ANCHOR
     // ==================================================
 
     if (
-        top +
-        cardHeight >
-        height -
-        geoplayDestinationViewportMargin
+        side ===
+        "top"
     )
     {
+        left =
+            clampedLeft +
+            (
+                cardWidth /
+                2
+            );
+
+
         top =
-            height -
-            cardHeight -
-            geoplayDestinationViewportMargin;
+            clampedTop +
+            cardHeight;
+
+
+        card.style.transform =
+            "translate(-50%,-100%)";
     }
 
+
+    else if (
+        side ===
+        "bottom"
+    )
+    {
+        left =
+            clampedLeft +
+            (
+                cardWidth /
+                2
+            );
+
+
+        top =
+            clampedTop;
+
+
+        card.style.transform =
+            "translate(-50%,0)";
+    }
+
+
+    else if (
+        side ===
+        "left"
+    )
+    {
+        left =
+            clampedLeft +
+            cardWidth;
+
+
+        top =
+            clampedTop +
+            (
+                cardHeight /
+                2
+            );
+
+
+        card.style.transform =
+            "translate(-100%,-50%)";
+    }
+
+
+    else
+    {
+        left =
+            clampedLeft;
+
+
+        top =
+            clampedTop +
+            (
+                cardHeight /
+                2
+            );
+
+
+        card.style.transform =
+            "translate(0,-50%)";
+    }
+
+
+    // ==================================================
+    // APPLY CARD POSITION
+    // ==================================================
 
     card.style.left =
         left +
@@ -2018,6 +2838,100 @@ function geoplayMapUIPositionVisibleDestination(
     card.style.top =
         top +
         "px";
+
+
+    // ==================================================
+    // POINTER POSITION
+    // ==================================================
+
+    if (
+        side ===
+        "top" ||
+        side ===
+        "bottom"
+    )
+    {
+        var pointerX =
+            point.x -
+            clampedLeft;
+
+
+        var pointerPadding =
+            16;
+
+
+        pointerX =
+            Math.max(
+                pointerPadding,
+                Math.min(
+                    cardWidth -
+                    pointerPadding,
+                    pointerX
+                )
+            );
+
+
+        var pointerPercent =
+            (
+                pointerX /
+                cardWidth
+            )
+            *
+            100;
+
+
+        card.style.setProperty(
+            "--geoplay-pointer-left",
+            pointerPercent +
+            "%"
+        );
+    }
+
+
+    else
+    {
+        var pointerY =
+            point.y -
+            clampedTop;
+
+
+        var verticalPointerPadding =
+            14;
+
+
+        pointerY =
+            Math.max(
+                verticalPointerPadding,
+                Math.min(
+                    cardHeight -
+                    verticalPointerPadding,
+                    pointerY
+                )
+            );
+
+
+        var pointerVerticalPercent =
+            (
+                pointerY /
+                cardHeight
+            )
+            *
+            100;
+
+
+        card.style.setProperty(
+            "--geoplay-pointer-top",
+            pointerVerticalPercent +
+            "%"
+        );
+    }
+
+
+    console.log(
+        "GEOPLAY UI: Destination card positioned " +
+        side +
+        " of casino marker."
+    );
 }
 
 
@@ -2296,6 +3210,24 @@ function geoplayMapUIHideDestination()
 
         card.style.zIndex =
             geoplayDestinationSceneZIndex;
+
+
+        card.setAttribute(
+            "data-pointer-side",
+            "bottom"
+        );
+
+
+        card.style.setProperty(
+            "--geoplay-pointer-left",
+            "50%"
+        );
+
+
+        card.style.setProperty(
+            "--geoplay-pointer-top",
+            "50%"
+        );
     }
 
 
@@ -2344,6 +3276,14 @@ function geoplayMapUIHideDestination()
 
 
     window.geoplayDestinationClosing =
+        false;
+
+
+    window.geoplayDestinationFinalPresentation =
+        false;
+
+
+    window.geoplayDestinationControlledTransition =
         false;
 
 
@@ -2429,8 +3369,37 @@ function geoplayMapUIGoToDestination()
     }
 
 
+    var card =
+        document.getElementById(
+            "geoplay-destination"
+        );
+
+
+    if (
+        card
+    )
+    {
+        card.classList.remove(
+            "visible"
+        );
+    }
+
+
     window.geoplayDestinationOffscreen =
         false;
+
+
+    window.geoplayDestinationFinalPresentation =
+        false;
+
+
+    window.geoplayDestinationControlledTransition =
+        true;
+
+
+    // Make sure the movement listeners are available before
+    // starting the controlled camera flight.
+    geoplayMapUIAttachDestinationMapListeners();
 
 
     window.geoplayMap.easeTo(
@@ -2456,20 +3425,6 @@ function geoplayMapUIGoToDestination()
         essential:
             true
     });
-
-
-    window.geoplayMap.once(
-        "moveend",
-        function()
-        {
-            geoplayMapUIShowDestination();
-
-
-            geoplayMapUISay(
-                "There it is!"
-            );
-        }
-    );
 
 
     return 1;

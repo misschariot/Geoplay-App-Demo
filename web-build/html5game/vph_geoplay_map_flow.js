@@ -958,7 +958,7 @@ function geoplayMapFlowBeginSearch()
 
 
 // ==================================================
-// 4. GENERATE NEARBY CASINO
+// GENERATE NEARBY CASINO
 // ==================================================
 
 function geoplayMapFlowGenerateNearbyCasino()
@@ -1224,10 +1224,19 @@ function geoplayMapFlowSearchComplete()
 
 function geoplayMapFlowShowDiscoveredCasino()
 {
+    // ==================================================
+    // SHOW ONLY THE CASINO MARKER
+    // ==================================================
+    //
+    // IMPORTANT:
+    // The casino information card intentionally does NOT
+    // appear here.
+    //
+    // The camera needs to travel to the destination first.
+    //
+    // ==================================================
+
     geoplayMapShowDestinationMarker();
-
-
-    geoplayMapUIShowDestination();
 
 
     // ==================================================
@@ -1316,6 +1325,19 @@ function geoplayMapFlowDestinationArrived()
     console.log(
         "GEOPLAY FLOW: Destination reached."
     );
+
+
+    // ==================================================
+    // NOW SHOW THE DESTINATION CARD
+    // ==================================================
+    //
+    // The camera has completed its moveend event.
+    // This is the first point where the casino card
+    // should become visible.
+    //
+    // ==================================================
+
+    geoplayMapUIShowDestination();
 
 
     // ==================================================
