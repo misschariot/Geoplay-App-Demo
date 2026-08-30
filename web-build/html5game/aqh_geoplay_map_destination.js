@@ -254,7 +254,7 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "box-sizing: border-box;" +
 
-            "width: 214px;" +
+            "width: 218px;" +
 
             "max-width: calc(100vw - 20px);" +
 
@@ -392,7 +392,7 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "min-height: 40px;" +
 
-            "padding: 4px 34px 4px 10px;" +
+            "padding: 4px 8px 4px 10px;" +
 
             "box-sizing: border-box;" +
 
@@ -471,6 +471,8 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "flex: 1;" +
 
+            "padding-right: 4px;" +
+
             "font-family: Arial, sans-serif;" +
 
             "font-size: 11px;" +
@@ -510,7 +512,7 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "padding-left: 31px;" +
 
-            "padding-right: 34px;" +
+            "padding-right: 0;" +
 
             "box-sizing: border-box;" +
 
@@ -550,7 +552,7 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "position: absolute;" +
 
-            "right: 12px;" +
+            "right: 13px;" +
 
             "top: 50%;" +
 
@@ -560,17 +562,19 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "margin: 0;" +
 
-            "display: flex;" +
+            "display: block;" +
 
-            "align-items: center;" +
+            "background: transparent !important;" +
 
-            "justify-content: center;" +
+            "background-image: none !important;" +
 
-            "flex-shrink: 0;" +
+            "border: 0 !important;" +
 
-            "background: transparent;" +
+            "border-radius: 0 !important;" +
 
-            "border: 0;" +
+            "outline: 0 !important;" +
+
+            "box-shadow: none !important;" +
 
             "color: rgba(255,255,255,0.95);" +
 
@@ -586,7 +590,17 @@ function geoplayMapUIDestinationEnsureStyles()
 
             "transform: translateY(-50%);" +
 
-            "box-sizing: border-box;" +
+            "box-sizing: content-box;" +
+
+            "appearance: none;" +
+
+            "-webkit-appearance: none;" +
+
+            "text-decoration: none;" +
+
+            "text-shadow: none;" +
+
+            "filter: none;" +
 
             "pointer-events: none;" +
 
@@ -598,27 +612,30 @@ function geoplayMapUIDestinationEnsureStyles()
 
 
         // ==================================================
-        // CHEVRON - NO HOVER EFFECT
-        // ==================================================
-        //
-        // The casino card remains clickable, but the
-        // chevron itself must stay completely static.
-        //
-        // These rules explicitly neutralize any hover
-        // styling that may be applied by another stylesheet
-        // to the card or the chevron.
-        //
+        // CHEVRON - NO HOVER / FOCUS / ACTIVE EFFECT
         // ==================================================
 
         ".geoplay-destination:hover .geoplay-destination-chevron," +
 
-        ".geoplay-destination-chevron:hover {" +
+        ".geoplay-destination-chevron:hover," +
+
+        ".geoplay-destination-chevron:focus," +
+
+        ".geoplay-destination-chevron:focus-visible," +
+
+        ".geoplay-destination-chevron:active {" +
 
             "color: rgba(255,255,255,0.95) !important;" +
 
             "background: transparent !important;" +
 
+            "background-image: none !important;" +
+
             "border: 0 !important;" +
+
+            "border-radius: 0 !important;" +
+
+            "outline: 0 !important;" +
 
             "box-shadow: none !important;" +
 
@@ -643,7 +660,7 @@ function geoplayMapUIDestinationEnsureStyles()
 
             ".geoplay-destination {" +
 
-                "width: 194px;" +
+                "width: 202px;" +
 
                 "max-width: calc(100vw - 20px);" +
 
@@ -656,7 +673,7 @@ function geoplayMapUIDestinationEnsureStyles()
 
                 "min-height: 38px;" +
 
-                "padding: 4px 32px 4px 9px;" +
+                "padding: 4px 8px 4px 9px;" +
 
             "}" +
 
@@ -685,6 +702,8 @@ function geoplayMapUIDestinationEnsureStyles()
 
                 "letter-spacing: 0.45px;" +
 
+                "padding-right: 4px;" +
+
             "}" +
 
 
@@ -692,7 +711,7 @@ function geoplayMapUIDestinationEnsureStyles()
 
                 "padding-left: 29px;" +
 
-                "padding-right: 32px;" +
+                "padding-right: 0;" +
 
             "}" +
 
@@ -1120,12 +1139,6 @@ function geoplayMapUISetDestinationCollapsed(
 
                 "</span>" +
 
-                "<span class='geoplay-destination-chevron'>" +
-
-                    "›" +
-
-                "</span>" +
-
             "</div>";
     }
 
@@ -1155,6 +1168,12 @@ function geoplayMapUISetDestinationCollapsed(
             "</div>" +
 
             distanceMarkup +
+
+            "<span class='geoplay-destination-chevron'>" +
+
+                "›" +
+
+            "</span>" +
 
         "</div>";
 
@@ -1815,20 +1834,6 @@ function geoplayMapUIAttachOffscreenIndicatorInteraction(
 // ==================================================
 // ATTACH DESTINATION MAP LISTENERS
 // ==================================================
-//
-// The destination card and the off-screen indicator are
-// separate UI states, but both need to react to map
-// movement.
-//
-// During the controlled story transition we keep both
-// destination UIs hidden until the camera reaches the
-// destination. Once the user manually moves the map,
-// normal viewport logic resumes:
-//
-// - destination in view  -> card
-// - destination out of view -> indicator
-//
-// ==================================================
 
 function geoplayMapUIAttachDestinationMapListeners()
 {
@@ -1858,9 +1863,6 @@ function geoplayMapUIAttachDestinationMapListeners()
         "movestart",
         function()
         {
-            // A programmatic destination flight belongs to
-            // the controlled story flow. Do not switch UI
-            // states while the camera is traveling.
             if (
                 window.geoplayDestinationControlledTransition
             )
@@ -1877,9 +1879,6 @@ function geoplayMapUIAttachDestinationMapListeners()
             }
 
 
-            // The user has started freely navigating the map.
-            // From this point onward the card/indicator should
-            // follow the casino's actual viewport position.
             window.geoplayDestinationFinalPresentation =
                 false;
         }
@@ -1906,9 +1905,6 @@ function geoplayMapUIAttachDestinationMapListeners()
             }
 
 
-            // Keep the destination UI hidden during the
-            // controlled camera flight. It will be presented
-            // again on moveend.
             if (
                 window.geoplayDestinationControlledTransition
             )
@@ -1968,9 +1964,9 @@ function geoplayMapUIAttachDestinationMapListeners()
                 geoplayMapUIShowDestination();
 
 
-                geoplayMapUISay(
-                    "There it is!"
-                );
+                // "There it is!" removed.
+                // The casino card now appears silently
+                // when the camera reaches the destination.
 
 
                 return;
@@ -2161,12 +2157,6 @@ function geoplayMapUIPositionDestination()
     // ==================================================
     // CONTROLLED CAMERA TRANSITION
     // ==================================================
-    //
-    // Do not show either destination UI while the camera
-    // is flying to Pine Ridge. The destination card is
-    // presented only after moveend.
-    //
-    // ==================================================
 
     if (
         window.geoplayDestinationControlledTransition
@@ -2188,15 +2178,6 @@ function geoplayMapUIPositionDestination()
 
     // ==================================================
     // FINAL DESTINATION PRESENTATION
-    // ==================================================
-    //
-    // The first destination presentation after the story
-    // uses the card immediately, even if the marker is
-    // near an edge.
-    //
-    // Once the user manually moves the map, the normal
-    // card/indicator viewport rules take over.
-    //
     // ==================================================
 
     if (

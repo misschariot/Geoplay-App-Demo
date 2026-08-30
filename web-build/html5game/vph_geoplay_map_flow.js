@@ -1576,8 +1576,10 @@ function geoplayMapFlowReturnToPlayer()
                     55
             },
 
+            // Slightly more zoomed out so the player
+            // gets a little more surrounding map context.
             maxZoom:
-                13.7,
+                13.2,
 
             bearing:
                 0,
