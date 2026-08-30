@@ -455,8 +455,37 @@ function geoplayMapUICreateStoryActions()
         "geoplay-story-actions story-hidden";
 
 
+    // ==================================================
+    // IMPORTANT:
+    // POSITION THE ACTION CONTAINER DIRECTLY AGAINST
+    // THE BROWSER VIEWPORT.
+    //
+    // The map UI container can have its own coordinate
+    // system on some mobile browsers.
+    //
+    // By attaching this element to document.body and
+    // using fixed positioning, right/bottom are based
+    // on the actual browser viewport.
+    // ==================================================
+
+    actions.style.position =
+        "fixed";
+
+
+    actions.style.right =
+        "4px";
+
+
+    actions.style.bottom =
+        "24px";
+
+
     actions.style.pointerEvents =
         "none";
+
+
+    actions.style.zIndex =
+        "120000";
 
 
     // ==================================================
@@ -647,7 +676,7 @@ function geoplayMapUICreateStoryActions()
 
 
     // ==================================================
-    // ADD BUTTONS
+    // ADD BUTTONS TO ACTION CONTAINER
     // ==================================================
 
     actions.appendChild(
@@ -661,16 +690,37 @@ function geoplayMapUICreateStoryActions()
 
 
     // ==================================================
-    // ADD ACTIONS TO UI
+    // ADD ACTION CONTAINER DIRECTLY TO DOCUMENT BODY
+    // ==================================================
+    //
+    // IMPORTANT:
+    //
+    // Do NOT append this to window.geoplayMapUI.
+    //
+    // The map UI container lives inside the MapLibre
+    // map container and can have a different effective
+    // coordinate space on mobile browsers.
+    //
+    // Attaching directly to <body> allows position:fixed
+    // to use the actual browser viewport.
+    //
     // ==================================================
 
     if (
-        window.geoplayMapUI
+        document.body
     )
     {
-        window.geoplayMapUI.appendChild(
+        document.body.appendChild(
             actions
         );
+    }
+    else
+    {
+        console.error(
+            "GEOPLAY UI: Document body is not available."
+        );
+
+        return 0;
     }
 
 
