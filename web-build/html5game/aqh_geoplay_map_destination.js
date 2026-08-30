@@ -1190,7 +1190,7 @@ function geoplayMapUISetDestinationCollapsed(
     {
         card.setAttribute(
             "data-pointer-side",
-            "bottom"
+            "top"
         );
     }
 
@@ -2305,613 +2305,171 @@ function geoplayMapUIPositionVisibleDestination(
     height
 )
 {
-    window.geoplayDestinationOffscreen =
-        false;
-
-
-    indicator.classList.remove(
-        "visible"
-    );
-
-
-    card.classList.add(
-        "visible"
-    );
-
-
     // ==================================================
-    // CARD DIMENSIONS
+    // SIMPLE DESTINATION RULE
+    // ==================================================
+    // The casino card has ONE permanent home:
+    // directly above the casino marker.
+    //
+    // If the marker is not in view, OR there is not
+    // enough room for the complete card above it,
+    // use the separate off-screen indicator instead.
+    //
+    // The card never moves to the sides or below the
+    // marker.
     // ==================================================
 
     var cardWidth =
         card.offsetWidth;
 
-
     var cardHeight =
         card.offsetHeight;
-
 
     var margin =
         geoplayDestinationViewportMargin;
 
-
     var markerGap =
         geoplayDestinationMarkerGap;
 
-
-    var sideGap =
-        geoplayDestinationSideGap;
-
-
     // ==================================================
-    // AVAILABLE SPACE
+    // REQUIRED VISIBLE AREA
     // ==================================================
 
-    var spaceTop =
-        point.y -
-        margin;
-
-
-    var spaceBottom =
-        height -
-        point.y -
-        margin;
-
-
-    var spaceLeft =
+    var cardLeft =
         point.x -
-        margin;
+        (
+            cardWidth /
+            2
+        );
 
+    var cardTop =
+        point.y -
+        markerGap -
+        cardHeight;
 
-    var spaceRight =
-        width -
-        point.x -
-        margin;
+    var cardRight =
+        cardLeft +
+        cardWidth;
 
-
-    // ==================================================
-    // CHECK WHICH SIDES CAN FIT THE FULL CARD
-    // ==================================================
-
-    var canFitTop =
-        spaceTop >=
-        cardHeight +
-        markerGap;
-
-
-    var canFitBottom =
-        spaceBottom >=
-        cardHeight +
-        markerGap;
-
-
-    var canFitLeft =
-        spaceLeft >=
-        cardWidth +
-        sideGap;
-
-
-    var canFitRight =
-        spaceRight >=
-        cardWidth +
-        sideGap;
-
+    var cardBottom =
+        cardTop +
+        cardHeight;
 
     // ==================================================
-    // DETERMINE PREFERRED SIDE
+    // CARD MUST FIT COMPLETELY IN VIEW
     // ==================================================
 
-    var side =
-        null;
-
-
-    if (
-        canFitTop
-    )
-    {
-        side =
-            "top";
-    }
-    else if (
-        canFitBottom
-    )
-    {
-        side =
-            "bottom";
-    }
-    else if (
-        canFitRight
-    )
-    {
-        side =
-            "right";
-    }
-    else if (
-        canFitLeft
-    )
-    {
-        side =
-            "left";
-    }
-
+    var cardFitsViewport =
+        cardLeft >= margin &&
+        cardRight <=
+            width -
+            margin &&
+        cardTop >= margin &&
+        cardBottom <=
+            height -
+            margin;
 
     // ==================================================
-    // IF NOTHING FITS PERFECTLY
+    // IF CARD CANNOT FIT ABOVE MARKER:
+    // SHOW THE SEPARATE OFF-SCREEN INDICATOR.
     // ==================================================
 
     if (
-        !side
+        !cardFitsViewport
     )
     {
-        var largestSpace =
-            Math.max(
-                spaceTop,
-                spaceBottom,
-                spaceLeft,
-                spaceRight
-            );
-
+        card.classList.remove(
+            "visible"
+        );
 
         if (
-            largestSpace ===
-            spaceTop
+            window.geoplayDestinationIndicatorEnabled
         )
         {
-            side =
-                "top";
-        }
-        else if (
-            largestSpace ===
-            spaceBottom
-        )
-        {
-            side =
-                "bottom";
-        }
-        else if (
-            largestSpace ===
-            spaceRight
-        )
-        {
-            side =
-                "right";
+            geoplayMapUIPositionOffscreenDestination(
+                card,
+                indicator,
+                point,
+                width,
+                height
+            );
         }
         else
         {
-            side =
-                "left";
+            indicator.classList.remove(
+                "visible"
+            );
+
+            window.geoplayDestinationOffscreen =
+                false;
         }
+
+        return;
     }
 
+    // ==================================================
+    // DESTINATION IS FULLY PRESENTABLE
+    // ==================================================
+
+    indicator.classList.remove(
+        "visible"
+    );
+
+    window.geoplayDestinationOffscreen =
+        false;
+
+    card.classList.add(
+        "visible"
+    );
+
+    card.style.zIndex =
+        geoplayDestinationSceneZIndex;
 
     // ==================================================
-    // APPLY POINTER SIDE
+    // ALWAYS POINT DOWN FROM THE CARD
     // ==================================================
 
     card.setAttribute(
         "data-pointer-side",
-        side
+        "top"
     );
 
+    // The pointer is horizontally aligned with the
+    // casino marker, which remains the center anchor.
+    card.style.setProperty(
+        "--geoplay-pointer-left",
+        "50%"
+    );
+
+    // Not used by the top/bottom pointer, but keep it
+    // deterministic so no stale side-positioning values
+    // can affect the card.
+    card.style.setProperty(
+        "--geoplay-pointer-top",
+        "50%"
+    );
 
     // ==================================================
-    // POSITION VARIABLES
-    // ==================================================
-
-    var left =
-        point.x;
-
-
-    var top =
-        point.y;
-
-
-    // ==================================================
-    // POSITION ABOVE
-    // ==================================================
-
-    if (
-        side ===
-        "top"
-    )
-    {
-        left =
-            point.x;
-
-
-        top =
-            point.y -
-            markerGap;
-
-
-        card.style.transform =
-            "translate(-50%,-100%)";
-    }
-
-
-    // ==================================================
-    // POSITION BELOW
-    // ==================================================
-
-    else if (
-        side ===
-        "bottom"
-    )
-    {
-        left =
-            point.x;
-
-
-        top =
-            point.y +
-            markerGap;
-
-
-        card.style.transform =
-            "translate(-50%,0)";
-    }
-
-
-    // ==================================================
-    // POSITION LEFT
-    // ==================================================
-
-    else if (
-        side ===
-        "left"
-    )
-    {
-        left =
-            point.x -
-            sideGap;
-
-
-        top =
-            point.y;
-
-
-        card.style.transform =
-            "translate(-100%,-50%)";
-    }
-
-
-    // ==================================================
-    // POSITION RIGHT
-    // ==================================================
-
-    else if (
-        side ===
-        "right"
-    )
-    {
-        left =
-            point.x +
-            sideGap;
-
-
-        top =
-            point.y;
-
-
-        card.style.transform =
-            "translate(0,-50%)";
-    }
-
-
-    // ==================================================
-    // CALCULATE ACTUAL CARD EDGES
-    // ==================================================
-
-    var actualLeft =
-        left;
-
-
-    var actualTop =
-        top;
-
-
-    if (
-        side ===
-        "top" ||
-        side ===
-        "bottom"
-    )
-    {
-        actualLeft =
-            left -
-            (
-                cardWidth /
-                2
-            );
-    }
-
-
-    if (
-        side ===
-        "top"
-    )
-    {
-        actualTop =
-            top -
-            cardHeight;
-    }
-
-
-    else if (
-        side ===
-        "bottom"
-    )
-    {
-        actualTop =
-            top;
-    }
-
-
-    else if (
-        side ===
-        "left" ||
-        side ===
-        "right"
-    )
-    {
-        actualTop =
-            top -
-            (
-                cardHeight /
-                2
-            );
-    }
-
-
-    if (
-        side ===
-        "left"
-    )
-    {
-        actualLeft =
-            left -
-            cardWidth;
-    }
-
-
-    if (
-        side ===
-        "right"
-    )
-    {
-        actualLeft =
-            left;
-    }
-
-
-    // ==================================================
-    // CLAMP HORIZONTALLY
-    // ==================================================
-
-    var clampedLeft =
-        Math.max(
-            margin,
-            Math.min(
-                width -
-                cardWidth -
-                margin,
-                actualLeft
-            )
-        );
-
-
-    // ==================================================
-    // CLAMP VERTICALLY
-    // ==================================================
-
-    var clampedTop =
-        Math.max(
-            margin,
-            Math.min(
-                height -
-                cardHeight -
-                margin,
-                actualTop
-            )
-        );
-
-
-    // ==================================================
-    // RECONSTRUCT TRANSFORM ANCHOR
-    // ==================================================
-
-    if (
-        side ===
-        "top"
-    )
-    {
-        left =
-            clampedLeft +
-            (
-                cardWidth /
-                2
-            );
-
-
-        top =
-            clampedTop +
-            cardHeight;
-
-
-        card.style.transform =
-            "translate(-50%,-100%)";
-    }
-
-
-    else if (
-        side ===
-        "bottom"
-    )
-    {
-        left =
-            clampedLeft +
-            (
-                cardWidth /
-                2
-            );
-
-
-        top =
-            clampedTop;
-
-
-        card.style.transform =
-            "translate(-50%,0)";
-    }
-
-
-    else if (
-        side ===
-        "left"
-    )
-    {
-        left =
-            clampedLeft +
-            cardWidth;
-
-
-        top =
-            clampedTop +
-            (
-                cardHeight /
-                2
-            );
-
-
-        card.style.transform =
-            "translate(-100%,-50%)";
-    }
-
-
-    else
-    {
-        left =
-            clampedLeft;
-
-
-        top =
-            clampedTop +
-            (
-                cardHeight /
-                2
-            );
-
-
-        card.style.transform =
-            "translate(0,-50%)";
-    }
-
-
-    // ==================================================
-    // APPLY CARD POSITION
+    // FIXED CARD POSITION:
+    // CENTERED DIRECTLY ABOVE THE CASINO MARKER.
     // ==================================================
 
     card.style.left =
-        left +
+        point.x +
         "px";
-
 
     card.style.top =
-        top +
+        (
+            point.y -
+            markerGap
+        ) +
         "px";
 
-
-    // ==================================================
-    // POINTER POSITION
-    // ==================================================
-
-    if (
-        side ===
-        "top" ||
-        side ===
-        "bottom"
-    )
-    {
-        var pointerX =
-            point.x -
-            clampedLeft;
-
-
-        var pointerPadding =
-            16;
-
-
-        pointerX =
-            Math.max(
-                pointerPadding,
-                Math.min(
-                    cardWidth -
-                    pointerPadding,
-                    pointerX
-                )
-            );
-
-
-        var pointerPercent =
-            (
-                pointerX /
-                cardWidth
-            )
-            *
-            100;
-
-
-        card.style.setProperty(
-            "--geoplay-pointer-left",
-            pointerPercent +
-            "%"
-        );
-    }
-
-
-    else
-    {
-        var pointerY =
-            point.y -
-            clampedTop;
-
-
-        var verticalPointerPadding =
-            14;
-
-
-        pointerY =
-            Math.max(
-                verticalPointerPadding,
-                Math.min(
-                    cardHeight -
-                    verticalPointerPadding,
-                    pointerY
-                )
-            );
-
-
-        var pointerVerticalPercent =
-            (
-                pointerY /
-                cardHeight
-            )
-            *
-            100;
-
-
-        card.style.setProperty(
-            "--geoplay-pointer-top",
-            pointerVerticalPercent +
-            "%"
-        );
-    }
-
+    card.style.transform =
+        "translate(-50%,-100%)";
 
     console.log(
-        "GEOPLAY UI: Destination card positioned " +
-        side +
-        " of casino marker."
+        "GEOPLAY UI: Destination card positioned directly above casino marker."
     );
 }
 
@@ -3195,7 +2753,7 @@ function geoplayMapUIHideDestination()
 
         card.setAttribute(
             "data-pointer-side",
-            "bottom"
+            "top"
         );
 
 
@@ -3392,7 +2950,7 @@ function geoplayMapUIGoToDestination()
         ],
 
         zoom:
-            15.2,
+            14.7,
 
         bearing:
             0,
