@@ -48,48 +48,82 @@
         10px 24px;
 
     border-radius:
-        20px;
+        15px;
 
+    /*
+     * Geoplay glass interior + gradient border
+     *
+     * Matches the Pine Ridge casino card
+     * and off-screen indicator.
+     */
     background:
         linear-gradient(
-            135deg,
             rgba(
-                18,
-                8,
-                42,
+                14,
+                9,
+                39,
                 .97
             ),
             rgba(
-                11,
-                5,
-                29,
+                14,
+                9,
+                39,
                 .97
             )
-        );
+        )
+        padding-box,
+
+        linear-gradient(
+            90deg,
+            #8b3dff 0%,
+            #d52cff 48%,
+            #ff9d00 100%
+        )
+        border-box;
 
     border:
-        1px solid
-        rgba(
-            173,
-            78,
-            255,
-            .78
-        );
+        1.5px solid
+        transparent;
 
+    /*
+     * Matching Geoplay UI glow.
+     *
+     * Kept subtle so the dialogue remains readable
+     * and does not overpower the robot.
+     */
     box-shadow:
-        0 0 14px
+        0 7px 20px
         rgba(
-            155,
-            65,
-            230,
+            0,
+            0,
+            0,
             .32
         ),
-        0 8px 24px
+
+        0 0 15px
         rgba(
+            151,
+            65,
+            255,
+            .18
+        ),
+
+        0 0 22px
+        rgba(
+            255,
+            132,
             0,
-            0,
-            0,
-            .30
+            .07
+        );
+
+    backdrop-filter:
+        blur(
+            10px
+        );
+
+    -webkit-backdrop-filter:
+        blur(
+            10px
         );
 
     display:
@@ -121,8 +155,19 @@
 
     z-index:
         100;
+
+    /*
+     * Prevent the dialogue itself from creating
+     * unwanted interaction behavior.
+     */
+    -webkit-tap-highlight-color:
+        transparent;
 }
 
+
+/* ==================================================
+   DIALOGUE VISIBLE
+   ================================================== */
 
 .geoplay-dialogue.visible
 {
@@ -192,6 +237,9 @@
     opacity:
         0;
 
+    /*
+     * Match the dialogue/card purple glow.
+     */
     filter:
         drop-shadow(
             0 0 7px
@@ -335,7 +383,45 @@
             9px 16px;
 
         border-radius:
-            18px;
+            14px;
+
+        /*
+         * Slightly reduced glow for mobile.
+         */
+        box-shadow:
+            0 6px 18px
+            rgba(
+                0,
+                0,
+                0,
+                .32
+            ),
+
+            0 0 13px
+            rgba(
+                151,
+                65,
+                255,
+                .18
+            ),
+
+            0 0 19px
+            rgba(
+                255,
+                132,
+                0,
+                .06
+            );
+
+        backdrop-filter:
+            blur(
+                9px
+            );
+
+        -webkit-backdrop-filter:
+            blur(
+                9px
+            );
     }
 
 
@@ -405,6 +491,9 @@
 
         padding:
             13px 24px;
+
+        border-radius:
+            15px;
     }
 
 

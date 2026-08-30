@@ -1369,12 +1369,6 @@ function geoplayMapUIShowDestinationCard(
     }
 
 
-    // ==================================================
-    // IMPORTANT:
-    // If the card is already visible, DO NOT restart
-    // the pop animation.
-    // ==================================================
-
     if (
         card.classList.contains(
             "visible"
@@ -2315,6 +2309,15 @@ function geoplayMapUIAttachDestinationMapListeners()
             }
 
 
+            // ==================================================
+            // IMPORTANT:
+            // Once the user manually moves the map,
+            // return to normal marker-based positioning.
+            //
+            // This means the final presentation state no
+            // longer forces the casino card to remain visible.
+            // ==================================================
+
             window.geoplayDestinationFinalPresentation =
                 false;
         }
@@ -2379,6 +2382,13 @@ function geoplayMapUIAttachDestinationMapListeners()
                 return;
             }
 
+
+            // ==================================================
+            // NORMAL MAP MOVEMENT
+            //
+            // Always recalculate from the casino MARKER.
+            // The card itself never determines visibility.
+            // ==================================================
 
             geoplayMapUIPositionDestination();
         }
@@ -2585,6 +2595,15 @@ function geoplayMapUIPositionDestination()
         mapContainer.clientHeight;
 
 
+    if (
+        width <= 0 ||
+        height <= 0
+    )
+    {
+        return;
+    }
+
+
     // ==================================================
     // CONTROLLED CAMERA TRANSITION
     // ==================================================
@@ -2609,6 +2628,15 @@ function geoplayMapUIPositionDestination()
 
     // ==================================================
     // FINAL DESTINATION PRESENTATION
+    // ==================================================
+    //
+    // The first frame after the controlled camera movement
+    // should present the casino card.
+    //
+    // Once the user manually moves the map,
+    // movestart clears this flag and normal marker-based
+    // visibility takes over.
+    //
     // ==================================================
 
     if (
@@ -2635,8 +2663,11 @@ function geoplayMapUIPositionDestination()
     // MARKER-ONLY VISIBILITY TEST
     // ==================================================
     //
-    // Only the casino MARKER position determines
-    // whether the card or indicator is shown.
+    // ONLY the casino MARKER determines whether the
+    // casino card or the off-screen indicator appears.
+    //
+    // The card touching an edge does NOT trigger the
+    // indicator.
     //
     // ==================================================
 
@@ -2749,11 +2780,16 @@ function geoplayMapUIPositionVisibleDestination(
     // SIMPLE DESTINATION RULE
     // ==================================================
     //
-    // The casino card has ONE permanent home:
-    // directly above the casino marker.
+    // The casino card has ONE permanent relationship
+    // to the casino marker:
     //
-    // The card itself does NOT determine whether
-    // the destination is considered visible.
+    //          CASINO MARKER
+    //                ▲
+    //                │
+    //             CARD
+    //
+    // The card is always positioned directly above the
+    // marker when the marker itself is visible.
     //
     // ==================================================
 
@@ -2844,7 +2880,7 @@ function geoplayMapUIPositionOffscreenDestination(
 )
 {
     // ==================================================
-    // HIDE ONLY IF CURRENTLY VISIBLE
+    // HIDE CARD
     // ==================================================
 
     geoplayMapUIHideDestinationCard(
@@ -2868,6 +2904,10 @@ function geoplayMapUIPositionOffscreenDestination(
         return;
     }
 
+
+    // ==================================================
+    // SHOW INDICATOR
+    // ==================================================
 
     indicator.classList.add(
         "visible"
@@ -2898,6 +2938,15 @@ function geoplayMapUIPositionOffscreenDestination(
         centerY;
 
 
+    // ==================================================
+    // CALCULATE EDGE POSITION
+    // ==================================================
+    //
+    // The indicator is positioned using the destination
+    // MARKER position, never the card position.
+    //
+    // ==================================================
+
     var edge =
         geoplayMapUICalculateDestinationEdge(
             centerX,
@@ -2918,6 +2967,10 @@ function geoplayMapUIPositionOffscreenDestination(
         edge.y +
         "px";
 
+
+    // ==================================================
+    // POINT ARROW TOWARD ACTUAL DESTINATION
+    // ==================================================
 
     var angle =
         Math.atan2(
@@ -2944,6 +2997,14 @@ function geoplayMapUIPositionOffscreenDestination(
 // ==================================================
 // CALCULATE OFF-SCREEN EDGE
 // ==================================================
+//
+// This version explicitly handles the four major
+// directions and uses the map viewport as the boundary.
+//
+// This is particularly important for the NORTH case,
+// where the casino marker can move above the viewport.
+//
+// ==================================================
 
 function geoplayMapUICalculateDestinationEdge(
     centerX,
@@ -2954,85 +3015,376 @@ function geoplayMapUICalculateDestinationEdge(
     height
 )
 {
-    var edgeX =
-        centerX;
+    // ==================================================
+    // INDICATOR HALF-DIMENSIONS
+    // ==================================================
+    //
+    // Approximate half-size of the indicator so its
+    // visual center stays safely inside the viewport.
+    //
+    // ==================================================
+
+    var indicatorHalfWidth =
+        58;
 
 
-    var edgeY =
-        centerY;
+    var indicatorHalfHeight =
+        16;
 
 
-    var padding =
-        24;
+    // ==================================================
+    // EDGE PADDING
+    // ==================================================
+
+    var horizontalPadding =
+        12;
+
+
+    var verticalPadding =
+        12;
+
+
+    // ==================================================
+    // SAFE EDGES
+    // ==================================================
+
+    var leftEdge =
+        indicatorHalfWidth +
+        horizontalPadding;
+
+
+    var rightEdge =
+        width -
+        indicatorHalfWidth -
+        horizontalPadding;
+
+
+    var topEdge =
+        indicatorHalfHeight +
+        verticalPadding;
+
+
+    var bottomEdge =
+        height -
+        indicatorHalfHeight -
+        verticalPadding;
+
+
+    // ==================================================
+    // SAFETY FOR SMALL VIEWPORTS
+    // ==================================================
+
+    if (
+        rightEdge <
+        leftEdge
+    )
+    {
+        leftEdge =
+            width /
+            2;
+
+        rightEdge =
+            width /
+            2;
+    }
 
 
     if (
-        Math.abs(dx) >
-        Math.abs(dy)
+        bottomEdge <
+        topEdge
     )
     {
-        edgeX =
-            dx > 0
-                ?
-            width -
-            padding
-                :
-            padding;
+        topEdge =
+            height /
+            2;
 
-
-        var ratioX =
-            dx !== 0
-                ?
-            (
-                edgeX -
-                centerX
-            ) /
-            dx
-                :
-            1;
-
-
-        edgeY =
-            centerY +
-            dy *
-            ratioX;
+        bottomEdge =
+            height /
+            2;
     }
-    else
+
+
+    // ==================================================
+    // DESTINATION DIRECTLY ABOVE
+    // ==================================================
+    //
+    // This is the important NORTH case.
+    //
+    // If the marker is above the viewport and its
+    // horizontal position is reasonably within the
+    // viewport, place the indicator directly at the
+    // TOP edge.
+    //
+    // ==================================================
+
+    if (
+        dy < 0 &&
+        Math.abs(dx) <=
+            Math.abs(dy)
+    )
     {
-        edgeY =
-            dy > 0
-                ?
-            height -
-            padding
-                :
-            padding;
-
-
-        var ratioY =
+        var northRatio =
             dy !== 0
                 ?
-            (
-                edgeY -
-                centerY
-            ) /
-            dy
+                (
+                    topEdge -
+                    centerY
+                ) /
+                dy
                 :
-            1;
+                0;
 
 
-        edgeX =
+        var northX =
             centerX +
             dx *
-            ratioY;
+            northRatio;
+
+
+        northX =
+            Math.max(
+                leftEdge,
+                Math.min(
+                    rightEdge,
+                    northX
+                )
+            );
+
+
+        return {
+            x:
+                northX,
+
+            y:
+                topEdge
+        };
     }
+
+
+    // ==================================================
+    // DESTINATION DIRECTLY BELOW
+    // ==================================================
+
+    if (
+        dy > 0 &&
+        Math.abs(dx) <=
+            Math.abs(dy)
+    )
+    {
+        var southRatio =
+            dy !== 0
+                ?
+                (
+                    bottomEdge -
+                    centerY
+                ) /
+                dy
+                :
+                0;
+
+
+        var southX =
+            centerX +
+            dx *
+            southRatio;
+
+
+        southX =
+            Math.max(
+                leftEdge,
+                Math.min(
+                    rightEdge,
+                    southX
+                )
+            );
+
+
+        return {
+            x:
+                southX,
+
+            y:
+                bottomEdge
+        };
+    }
+
+
+    // ==================================================
+    // DESTINATION TO THE LEFT
+    // ==================================================
+
+    if (
+        dx < 0 &&
+        Math.abs(dx) >
+            Math.abs(dy)
+    )
+    {
+        var westRatio =
+            dx !== 0
+                ?
+                (
+                    leftEdge -
+                    centerX
+                ) /
+                dx
+                :
+                0;
+
+
+        var westY =
+            centerY +
+            dy *
+            westRatio;
+
+
+        westY =
+            Math.max(
+                topEdge,
+                Math.min(
+                    bottomEdge,
+                    westY
+                )
+            );
+
+
+        return {
+            x:
+                leftEdge,
+
+            y:
+                westY
+        };
+    }
+
+
+    // ==================================================
+    // DESTINATION TO THE RIGHT
+    // ==================================================
+
+    if (
+        dx > 0 &&
+        Math.abs(dx) >
+            Math.abs(dy)
+    )
+    {
+        var eastRatio =
+            dx !== 0
+                ?
+                (
+                    rightEdge -
+                    centerX
+                ) /
+                dx
+                :
+                0;
+
+
+        var eastY =
+            centerY +
+            dy *
+            eastRatio;
+
+
+        eastY =
+            Math.max(
+                topEdge,
+                Math.min(
+                    bottomEdge,
+                    eastY
+                )
+            );
+
+
+        return {
+            x:
+                rightEdge,
+
+            y:
+                eastY
+        };
+    }
+
+
+    // ==================================================
+    // DIAGONAL / CORNER CASES
+    // ==================================================
+    //
+    // For diagonal destinations, calculate the actual
+    // intersection with the viewport boundary.
+    //
+    // ==================================================
+
+    var scaleX =
+        dx !== 0
+            ?
+            Math.abs(
+                (
+                    dx > 0
+                        ?
+                        rightEdge -
+                        centerX
+                        :
+                        leftEdge -
+                        centerX
+                ) /
+                dx
+            )
+            :
+            Infinity;
+
+
+    var scaleY =
+        dy !== 0
+            ?
+            Math.abs(
+                (
+                    dy > 0
+                        ?
+                        bottomEdge -
+                        centerY
+                        :
+                        topEdge -
+                        centerY
+                ) /
+                dy
+            )
+            :
+            Infinity;
+
+
+    var scale =
+        Math.min(
+            scaleX,
+            scaleY
+        );
+
+
+    if (
+        !isFinite(scale)
+    )
+    {
+        scale =
+            1;
+    }
+
+
+    var edgeX =
+        centerX +
+        dx *
+        scale;
+
+
+    var edgeY =
+        centerY +
+        dy *
+        scale;
 
 
     edgeX =
         Math.max(
-            60,
+            leftEdge,
             Math.min(
-                width -
-                60,
+                rightEdge,
                 edgeX
             )
         );
@@ -3040,10 +3392,9 @@ function geoplayMapUICalculateDestinationEdge(
 
     edgeY =
         Math.max(
-            40,
+            topEdge,
             Math.min(
-                height -
-                40,
+                bottomEdge,
                 edgeY
             )
         );
