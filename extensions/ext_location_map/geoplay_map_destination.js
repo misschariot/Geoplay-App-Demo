@@ -247,6 +247,217 @@ function geoplayMapUIDestinationEnsureStyles()
     style.textContent =
 
         // ==================================================
+        // OFF-SCREEN DESTINATION INDICATOR
+        // ==================================================
+        //
+        // Matches the Pine Ridge casino card:
+        // - Deep purple glass interior
+        // - Purple -> magenta -> orange gradient border
+        // - Soft matching glow
+        // - Rounded/polished UI treatment
+        // - No hover movement or visual change
+        //
+        ".geoplay-destination-offscreen {" +
+
+            "box-sizing: border-box;" +
+
+            "position: absolute;" +
+
+            "display: flex;" +
+
+            "align-items: center;" +
+
+            "justify-content: center;" +
+
+            "gap: 7px;" +
+
+            "min-width: 126px;" +
+
+            "height: 34px;" +
+
+            "padding: 0 12px;" +
+
+            "border-radius: 17px;" +
+
+            "background: linear-gradient(rgba(14,9,39,0.96), rgba(14,9,39,0.96)) padding-box, linear-gradient(90deg, #8b3dff 0%, #d52cff 48%, #ff9d00 100%) border-box;" +
+
+            "border: 1.5px solid transparent;" +
+
+            "box-shadow: 0 5px 16px rgba(0,0,0,0.30), 0 0 13px rgba(151,65,255,0.20), 0 0 18px rgba(255,132,0,0.07);" +
+
+            "backdrop-filter: blur(10px);" +
+
+            "-webkit-backdrop-filter: blur(10px);" +
+
+            "color: rgba(255,255,255,0.98);" +
+
+            "cursor: pointer;" +
+
+            "transform: translate(-50%,-50%);" +
+
+            "z-index: 111;" +
+
+            "opacity: 0;" +
+
+            "visibility: hidden;" +
+
+            "pointer-events: none;" +
+
+            "transition: none !important;" +
+
+        "}" +
+
+
+        ".geoplay-destination-offscreen.visible {" +
+
+            "opacity: 1;" +
+
+            "visibility: visible;" +
+
+            "pointer-events: auto;" +
+
+        "}" +
+
+
+        // ==================================================
+        // INDICATOR - NO HOVER EFFECT
+        // ==================================================
+
+        ".geoplay-destination-offscreen:hover," +
+
+        ".geoplay-destination-offscreen:focus," +
+
+        ".geoplay-destination-offscreen:focus-visible," +
+
+        ".geoplay-destination-offscreen:active {" +
+
+            "background: linear-gradient(rgba(14,9,39,0.96), rgba(14,9,39,0.96)) padding-box, linear-gradient(90deg, #8b3dff 0%, #d52cff 48%, #ff9d00 100%) border-box !important;" +
+
+            "border-color: transparent !important;" +
+
+            "box-shadow: 0 5px 16px rgba(0,0,0,0.30), 0 0 13px rgba(151,65,255,0.20), 0 0 18px rgba(255,132,0,0.07) !important;" +
+
+            "color: rgba(255,255,255,0.98) !important;" +
+
+            "transform: translate(-50%,-50%) !important;" +
+
+            "filter: none !important;" +
+
+            "opacity: 1 !important;" +
+
+            "transition: none !important;" +
+
+        "}" +
+
+
+        // ==================================================
+        // INDICATOR ARROW
+        // ==================================================
+
+        ".geoplay-destination-offscreen-arrow {" +
+
+            "width: 20px;" +
+
+            "height: 20px;" +
+
+            "flex-shrink: 0;" +
+
+            "display: flex;" +
+
+            "align-items: center;" +
+
+            "justify-content: center;" +
+
+            "font-family: Arial, sans-serif;" +
+
+            "font-size: 17px;" +
+
+            "font-weight: 400;" +
+
+            "line-height: 1;" +
+
+            "color: rgba(255,255,255,0.98);" +
+
+            "text-shadow: 0 0 8px rgba(213,44,255,0.35);" +
+
+            "transform-origin: center center;" +
+
+            "transition: none !important;" +
+
+            "animation: none !important;" +
+
+        "}" +
+
+
+        // ==================================================
+        // INDICATOR NAME
+        // ==================================================
+
+        ".geoplay-destination-offscreen-name {" +
+
+            "display: block;" +
+
+            "font-family: Arial, sans-serif;" +
+
+            "font-size: 9px;" +
+
+            "font-weight: 700;" +
+
+            "letter-spacing: 0.55px;" +
+
+            "line-height: 1;" +
+
+            "white-space: nowrap;" +
+
+            "color: rgba(255,255,255,0.96);" +
+
+        "}" +
+
+
+        // ==================================================
+        // MOBILE INDICATOR
+        // ==================================================
+
+        "@media (max-width: 480px) {" +
+
+            ".geoplay-destination-offscreen {" +
+
+                "min-width: 116px;" +
+
+                "height: 32px;" +
+
+                "padding: 0 10px;" +
+
+                "gap: 6px;" +
+
+                "border-radius: 16px;" +
+
+            "}" +
+
+
+            ".geoplay-destination-offscreen-arrow {" +
+
+                "width: 19px;" +
+
+                "height: 19px;" +
+
+                "font-size: 16px;" +
+
+            "}" +
+
+
+            ".geoplay-destination-offscreen-name {" +
+
+                "font-size: 8.5px;" +
+
+                "letter-spacing: 0.5px;" +
+
+            "}" +
+
+        "}" +
+
+
+        // ==================================================
         // BASE DESTINATION CALLOUT
         // ==================================================
 
@@ -281,6 +492,78 @@ function geoplayMapUIDestinationEnsureStyles()
             "--geoplay-pointer-left: 50%;" +
 
             "--geoplay-pointer-top: 50%;" +
+
+        "}" +
+
+
+        // ==================================================
+        // BALLOON-LIKE POP ANIMATION
+        // ==================================================
+
+        "@keyframes geoplayDestinationPopIn {" +
+
+            "0% {" +
+
+                "opacity: 0;" +
+
+                "scale: 0.82;" +
+
+            "}" +
+
+            "68% {" +
+
+                "opacity: 1;" +
+
+                "scale: 1.045;" +
+
+            "}" +
+
+            "100% {" +
+
+                "opacity: 1;" +
+
+                "scale: 1;" +
+
+            "}" +
+
+        "}" +
+
+
+        "@keyframes geoplayDestinationPopOut {" +
+
+            "0% {" +
+
+                "opacity: 1;" +
+
+                "scale: 1;" +
+
+            "}" +
+
+            "100% {" +
+
+                "opacity: 0;" +
+
+                "scale: 0.84;" +
+
+            "}" +
+
+        "}" +
+
+
+        ".geoplay-destination.geoplay-destination-pop-in {" +
+
+            "animation: geoplayDestinationPopIn 260ms cubic-bezier(0.22, 1, 0.36, 1) both;" +
+
+            "transition: none !important;" +
+
+        "}" +
+
+
+        ".geoplay-destination.geoplay-destination-pop-out {" +
+
+            "animation: geoplayDestinationPopOut 170ms cubic-bezier(0.4, 0, 1, 1) both;" +
+
+            "transition: none !important;" +
 
         "}" +
 
@@ -1071,6 +1354,161 @@ function geoplayMapUIDestinationEventIsInternal(
 
 
 // ==================================================
+// SHOW DESTINATION CARD WITH POP ANIMATION
+// ==================================================
+
+function geoplayMapUIShowDestinationCard(
+    card
+)
+{
+    if (
+        !card
+    )
+    {
+        return;
+    }
+
+
+    // ==================================================
+    // IMPORTANT:
+    // If the card is already visible, DO NOT restart
+    // the pop animation.
+    // ==================================================
+
+    if (
+        card.classList.contains(
+            "visible"
+        ) &&
+
+        !card.classList.contains(
+            "geoplay-destination-pop-out"
+        )
+    )
+    {
+        return;
+    }
+
+
+    card.classList.remove(
+        "geoplay-destination-pop-out"
+    );
+
+
+    card.classList.remove(
+        "geoplay-destination-pop-in"
+    );
+
+
+    void card.offsetWidth;
+
+
+    card.classList.add(
+        "visible"
+    );
+
+
+    card.classList.add(
+        "geoplay-destination-pop-in"
+    );
+
+
+    window.setTimeout(
+        function()
+        {
+            if (
+                card
+            )
+            {
+                card.classList.remove(
+                    "geoplay-destination-pop-in"
+                );
+            }
+        },
+        280
+    );
+}
+
+
+// ==================================================
+// HIDE DESTINATION CARD WITH POP ANIMATION
+// ==================================================
+
+function geoplayMapUIHideDestinationCard(
+    card
+)
+{
+    if (
+        !card
+    )
+    {
+        return;
+    }
+
+
+    if (
+        !card.classList.contains(
+            "visible"
+        )
+    )
+    {
+        return;
+    }
+
+
+    if (
+        card.classList.contains(
+            "geoplay-destination-pop-out"
+        )
+    )
+    {
+        return;
+    }
+
+
+    card.classList.remove(
+        "geoplay-destination-pop-in"
+    );
+
+
+    card.classList.remove(
+        "geoplay-destination-pop-out"
+    );
+
+
+    void card.offsetWidth;
+
+
+    card.classList.add(
+        "geoplay-destination-pop-out"
+    );
+
+
+    window.setTimeout(
+        function()
+        {
+            if (
+                card &&
+                card.classList.contains(
+                    "geoplay-destination-pop-out"
+                )
+            )
+            {
+                card.classList.remove(
+                    "visible"
+                );
+
+
+                card.classList.remove(
+                    "geoplay-destination-pop-out"
+                );
+            }
+        },
+        180
+    );
+}
+
+
+// ==================================================
 // SET COLLAPSED DESTINATION CALLOUT
 // ==================================================
 
@@ -1097,6 +1535,16 @@ function geoplayMapUISetDestinationCollapsed(
 
 
     card.classList.remove(
+        "geoplay-destination-pop-in"
+    );
+
+
+    card.classList.remove(
+        "geoplay-destination-pop-out"
+    );
+
+
+    card.classList.remove(
         "visible"
     );
 
@@ -1116,10 +1564,6 @@ function geoplayMapUISetDestinationCollapsed(
     var distanceReady =
         geoplayMapUIDestinationDistanceReady();
 
-
-    // ==================================================
-    // DISTANCE ROW
-    // ==================================================
 
     var distanceMarkup =
         "";
@@ -1142,10 +1586,6 @@ function geoplayMapUISetDestinationCollapsed(
             "</div>";
     }
 
-
-    // ==================================================
-    // CALLOUT CONTENT
-    // ==================================================
 
     card.innerHTML =
 
@@ -1177,10 +1617,6 @@ function geoplayMapUISetDestinationCollapsed(
 
         "</div>";
 
-
-    // ==================================================
-    // DEFAULT POINTER STATE
-    // ==================================================
 
     if (
         !card.getAttribute(
@@ -1964,11 +2400,6 @@ function geoplayMapUIAttachDestinationMapListeners()
                 geoplayMapUIShowDestination();
 
 
-                // "There it is!" removed.
-                // The casino card now appears silently
-                // when the camera reaches the destination.
-
-
                 return;
             }
 
@@ -2200,7 +2631,16 @@ function geoplayMapUIPositionDestination()
         geoplayDestinationVisibilityMargin;
 
 
-    var visible =
+    // ==================================================
+    // MARKER-ONLY VISIBILITY TEST
+    // ==================================================
+    //
+    // Only the casino MARKER position determines
+    // whether the card or indicator is shown.
+    //
+    // ==================================================
+
+    var markerVisible =
         point.x >= margin &&
 
         point.x <=
@@ -2215,7 +2655,7 @@ function geoplayMapUIPositionDestination()
 
 
     if (
-        visible
+        markerVisible
     )
     {
         geoplayMapUIPositionVisibleDestination(
@@ -2308,125 +2748,47 @@ function geoplayMapUIPositionVisibleDestination(
     // ==================================================
     // SIMPLE DESTINATION RULE
     // ==================================================
+    //
     // The casino card has ONE permanent home:
     // directly above the casino marker.
     //
-    // If the marker is not in view, OR there is not
-    // enough room for the complete card above it,
-    // use the separate off-screen indicator instead.
+    // The card itself does NOT determine whether
+    // the destination is considered visible.
     //
-    // The card never moves to the sides or below the
-    // marker.
     // ==================================================
-
-    var cardWidth =
-        card.offsetWidth;
-
-    var cardHeight =
-        card.offsetHeight;
-
-    var margin =
-        geoplayDestinationViewportMargin;
 
     var markerGap =
         geoplayDestinationMarkerGap;
 
-    // ==================================================
-    // REQUIRED VISIBLE AREA
-    // ==================================================
-
-    var cardLeft =
-        point.x -
-        (
-            cardWidth /
-            2
-        );
-
-    var cardTop =
-        point.y -
-        markerGap -
-        cardHeight;
-
-    var cardRight =
-        cardLeft +
-        cardWidth;
-
-    var cardBottom =
-        cardTop +
-        cardHeight;
 
     // ==================================================
-    // CARD MUST FIT COMPLETELY IN VIEW
-    // ==================================================
-
-    var cardFitsViewport =
-        cardLeft >= margin &&
-        cardRight <=
-            width -
-            margin &&
-        cardTop >= margin &&
-        cardBottom <=
-            height -
-            margin;
-
-    // ==================================================
-    // IF CARD CANNOT FIT ABOVE MARKER:
-    // SHOW THE SEPARATE OFF-SCREEN INDICATOR.
-    // ==================================================
-
-    if (
-        !cardFitsViewport
-    )
-    {
-        card.classList.remove(
-            "visible"
-        );
-
-        if (
-            window.geoplayDestinationIndicatorEnabled
-        )
-        {
-            geoplayMapUIPositionOffscreenDestination(
-                card,
-                indicator,
-                point,
-                width,
-                height
-            );
-        }
-        else
-        {
-            indicator.classList.remove(
-                "visible"
-            );
-
-            window.geoplayDestinationOffscreen =
-                false;
-        }
-
-        return;
-    }
-
-    // ==================================================
-    // DESTINATION IS FULLY PRESENTABLE
+    // DESTINATION IS IN VIEW
     // ==================================================
 
     indicator.classList.remove(
         "visible"
     );
 
+
     window.geoplayDestinationOffscreen =
         false;
 
-    card.classList.add(
-        "visible"
+
+    // ==================================================
+    // SHOW ONLY IF NOT ALREADY VISIBLE
+    // ==================================================
+
+    geoplayMapUIShowDestinationCard(
+        card
     );
+
 
     card.style.zIndex =
         geoplayDestinationSceneZIndex;
 
+
     // ==================================================
-    // ALWAYS POINT DOWN FROM THE CARD
+    // ALWAYS POINT DOWN FROM CARD
     // ==================================================
 
     card.setAttribute(
@@ -2434,29 +2796,27 @@ function geoplayMapUIPositionVisibleDestination(
         "top"
     );
 
-    // The pointer is horizontally aligned with the
-    // casino marker, which remains the center anchor.
+
     card.style.setProperty(
         "--geoplay-pointer-left",
         "50%"
     );
 
-    // Not used by the top/bottom pointer, but keep it
-    // deterministic so no stale side-positioning values
-    // can affect the card.
+
     card.style.setProperty(
         "--geoplay-pointer-top",
         "50%"
     );
 
+
     // ==================================================
-    // FIXED CARD POSITION:
-    // CENTERED DIRECTLY ABOVE THE CASINO MARKER.
+    // CARD ANCHORED TO MARKER
     // ==================================================
 
     card.style.left =
         point.x +
         "px";
+
 
     card.style.top =
         (
@@ -2465,12 +2825,9 @@ function geoplayMapUIPositionVisibleDestination(
         ) +
         "px";
 
+
     card.style.transform =
         "translate(-50%,-100%)";
-
-    console.log(
-        "GEOPLAY UI: Destination card positioned directly above casino marker."
-    );
 }
 
 
@@ -2486,8 +2843,12 @@ function geoplayMapUIPositionOffscreenDestination(
     height
 )
 {
-    card.classList.remove(
-        "visible"
+    // ==================================================
+    // HIDE ONLY IF CURRENTLY VISIBLE
+    // ==================================================
+
+    geoplayMapUIHideDestinationCard(
+        card
     );
 
 
@@ -2720,8 +3081,8 @@ function geoplayMapUIHideDestination()
         card
     )
     {
-        card.classList.remove(
-            "visible"
+        geoplayMapUIHideDestinationCard(
+            card
         );
 
 
@@ -2918,8 +3279,8 @@ function geoplayMapUIGoToDestination()
         card
     )
     {
-        card.classList.remove(
-            "visible"
+        geoplayMapUIHideDestinationCard(
+            card
         );
     }
 
@@ -2936,8 +3297,6 @@ function geoplayMapUIGoToDestination()
         true;
 
 
-    // Make sure the movement listeners are available before
-    // starting the controlled camera flight.
     geoplayMapUIAttachDestinationMapListeners();
 
 
