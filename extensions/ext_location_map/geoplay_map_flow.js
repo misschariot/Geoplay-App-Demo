@@ -1201,15 +1201,37 @@ function geoplayMapFlowSearchComplete()
     geoplayMapFlowGenerateNearbyCasino();
 
 
+    // ==================================================
+    // SHOW THE CASINO CARD AT THE DISCOVERY MOMENT
+    // ==================================================
+    //
+    // The card is intentionally visible during the
+    // "I found one!" moment so the player immediately
+    // knows what was discovered.
+    //
+    // It will be hidden after the discovery dialogue
+    // finishes, before the camera travels to the casino.
+    //
+    // ==================================================
+
+    geoplayMapShowDestinationMarker();
+
+
+    geoplayMapUIShowDestination();
+
+
     geoplayMapUISay(
         "Oh! I found one!",
         function()
         {
             // ==================================================
-            // HIDE DIALOGUE BEFORE CASINO PRESENTATION
+            // HIDE DISCOVERY PRESENTATION BEFORE TRAVEL
             // ==================================================
 
             geoplayMapUIHideDialogue();
+
+
+            geoplayMapUIHideDestination();
 
 
             geoplayMapFlowShowDiscoveredCasino();
@@ -1225,18 +1247,21 @@ function geoplayMapFlowSearchComplete()
 function geoplayMapFlowShowDiscoveredCasino()
 {
     // ==================================================
-    // SHOW ONLY THE CASINO MARKER
+    // KEEP ONLY THE CASINO MARKER DURING TRAVEL
     // ==================================================
     //
-    // IMPORTANT:
-    // The casino information card intentionally does NOT
-    // appear here.
+    // The discovery card was already shown during
+    // "I found one!" and is now hidden.
     //
-    // The camera needs to travel to the destination first.
+    // The card will not return until the camera has
+    // completed its destination movement.
     //
     // ==================================================
 
     geoplayMapShowDestinationMarker();
+
+
+    geoplayMapUIHideDestination();
 
 
     // ==================================================
@@ -1970,10 +1995,91 @@ function geoplayMapFlowFinish()
     geoplayMapFlowHideSearchIndicator();
 
 
+    // ==================================================
+    // FINAL DESTINATION PRESENTATION
+    // ==================================================
+    //
+    // The story now ends by bringing the camera back
+    // onto the casino itself. The card stays hidden
+    // during the movement and is revealed only after
+    // the camera reaches the destination.
+    //
+    // ==================================================
+
     window.geoplayDestinationIndicatorEnabled =
         true;
 
 
+    if (
+        window.geoplayMap &&
+        typeof geoplayDestinationLongitude ===
+        "number" &&
+        typeof geoplayDestinationLatitude ===
+        "number"
+    )
+    {
+        window.geoplayDestinationControlledTransition =
+            true;
+
+
+        geoplayMapUIHideDestination();
+
+
+        window.geoplayMap.once(
+            "moveend",
+            function()
+            {
+                window.geoplayDestinationControlledTransition =
+                    false;
+
+
+                geoplayMapUIShowDestination();
+
+
+                geoplayMapFlowCompleteAfterFinalPresentation();
+            }
+        );
+
+
+        window.geoplayMap.easeTo(
+        {
+            center:
+            [
+                geoplayDestinationLongitude,
+                geoplayDestinationLatitude
+            ],
+
+            zoom:
+                15.2,
+
+            bearing:
+                0,
+
+            pitch:
+                0,
+
+            duration:
+                1100,
+
+            essential:
+                true
+        });
+
+
+        return;
+    }
+
+
+    geoplayMapFlowCompleteAfterFinalPresentation();
+}
+
+
+// ==================================================
+// COMPLETE AFTER FINAL DESTINATION PRESENTATION
+// ==================================================
+
+function geoplayMapFlowCompleteAfterFinalPresentation()
+{
     if (
         typeof geoplayMapUIUpdatePositions ===
         "function"
@@ -1984,7 +2090,7 @@ function geoplayMapFlowFinish()
 
 
     console.log(
-        "GEOPLAY FLOW: Story complete."
+        "GEOPLAY FLOW: Story complete. Final casino presentation is visible."
     );
 
 
