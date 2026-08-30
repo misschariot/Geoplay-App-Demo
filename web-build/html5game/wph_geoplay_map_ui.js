@@ -6,13 +6,13 @@
 // - General map UI initialization
 // - External stylesheet loading
 // - Story actions
-// - FIND ANOTHER initialization
+// - FIND ANOTHER / SEARCH initialization
 //
 // MODULES CREATED HERE:
 // - Dialogue
 // - Destination
 // - Story Actions
-// - FIND ANOTHER
+// - FIND ANOTHER / SEARCH
 //
 // DIALOGUE:
 // geoplay_map_dialogue.js
@@ -20,7 +20,7 @@
 // DESTINATION:
 // geoplay_map_destination.js
 //
-// FIND ANOTHER:
+// FIND ANOTHER / SEARCH:
 // geoplay_map_find_another.js
 //
 // MODAL:
@@ -231,12 +231,12 @@ function geoplayMapUICreate()
 
 
     // ==================================================
-    // CREATE FIND ANOTHER
+    // CREATE FIND ANOTHER / SEARCH
     // ==================================================
     //
     // The Search popup is created during UI
     // initialization but remains hidden until
-    // FIND ANOTHER is selected.
+    // SEARCH is selected.
     //
     // ==================================================
 
@@ -250,7 +250,7 @@ function geoplayMapUICreate()
     else
     {
         console.error(
-            "GEOPLAY UI: FIND ANOTHER module is not available."
+            "GEOPLAY UI: SEARCH module is not available."
         );
     }
 
@@ -281,7 +281,6 @@ function geoplayMapUICreate()
 // GameMaker exports the Included File into:
 //
 // html5game/
-//
 // ==================================================
 
 function geoplayMapUILoadStylesheet()
@@ -369,11 +368,6 @@ function geoplayMapUILoadStylesheet()
     // ==================================================
     // FAIL SAFE
     // ==================================================
-    //
-    // The UI should still become visible if the
-    // stylesheet fails to load.
-    //
-    // ==================================================
 
     link.onerror =
         function()
@@ -409,12 +403,12 @@ function geoplayMapUILoadStylesheet()
 // These are the two actions shown after the initial
 // robot story:
 //
-// FIND ANOTHER
-// BROWSE
+// SEARCH
+// HOME
 //
-// FIND ANOTHER opens the Search module.
+// SEARCH opens the existing Search module.
 //
-// BROWSE is currently visual-only.
+// HOME is intentionally visual-only for now.
 //
 // ==================================================
 
@@ -466,32 +460,72 @@ function geoplayMapUICreateStoryActions()
 
 
     // ==================================================
-    // FIND ANOTHER BUTTON
+    // SEARCH BUTTON
     // ==================================================
 
-    var findAnother =
+    var searchButton =
         document.createElement(
             "button"
         );
 
 
-    findAnother.type =
+    searchButton.type =
         "button";
 
 
-    findAnother.className =
-        "geoplay-story-action";
+    searchButton.className =
+        "geoplay-story-action geoplay-story-action-search";
 
 
-    findAnother.textContent =
-        "FIND ANOTHER";
+    searchButton.setAttribute(
+        "aria-label",
+        "Search"
+    );
+
+
+    searchButton.setAttribute(
+        "title",
+        "Search"
+    );
 
 
     // ==================================================
-    // FIND ANOTHER ACTION
+    // SEARCH ICON
     // ==================================================
 
-    findAnother.addEventListener(
+    searchButton.innerHTML =
+        "<svg " +
+        "class='geoplay-story-action-icon' " +
+        "width='22' " +
+        "height='22' " +
+        "viewBox='0 0 24 24' " +
+        "fill='none' " +
+        "xmlns='http://www.w3.org/2000/svg' " +
+        "aria-hidden='true'>" +
+
+        "<circle " +
+        "cx='10.8' " +
+        "cy='10.8' " +
+        "r='6.2' " +
+        "stroke='currentColor' " +
+        "stroke-width='2' " +
+        "stroke-linecap='round' " +
+        "stroke-linejoin='round'/>" +
+
+        "<path " +
+        "d='M15.4 15.4L20.5 20.5' " +
+        "stroke='currentColor' " +
+        "stroke-width='2' " +
+        "stroke-linecap='round'/>" +
+
+        "</svg>";
+
+
+    // ==================================================
+    // SEARCH ACTION
+    // ==================================================
+
+    searchButton.addEventListener(
         "click",
         function(event)
         {
@@ -510,7 +544,7 @@ function geoplayMapUICreateStoryActions()
             else
             {
                 console.error(
-                    "GEOPLAY FIND ANOTHER: Open function not available."
+                    "GEOPLAY SEARCH: Open function not available."
                 );
             }
         }
@@ -518,46 +552,96 @@ function geoplayMapUICreateStoryActions()
 
 
     // ==================================================
-    // BROWSE BUTTON
+    // HOME BUTTON
     // ==================================================
 
-    var browse =
+    var homeButton =
         document.createElement(
             "button"
         );
 
 
-    browse.type =
+    homeButton.type =
         "button";
 
 
-    browse.className =
-        "geoplay-story-action " +
-        "geoplay-story-action-browse";
+    homeButton.className =
+        "geoplay-story-action geoplay-story-action-home";
 
 
-    browse.textContent =
-        "BROWSE";
+    homeButton.setAttribute(
+        "aria-label",
+        "Home"
+    );
+
+
+    homeButton.setAttribute(
+        "title",
+        "Home"
+    );
 
 
     // ==================================================
-    // BROWSE
+    // HOME ICON
+    // ==================================================
+
+    homeButton.innerHTML =
+        "<svg " +
+        "class='geoplay-story-action-icon' " +
+        "width='22' " +
+        "height='22' " +
+        "viewBox='0 0 24 24' " +
+        "fill='none' " +
+        "xmlns='http://www.w3.org/2000/svg' " +
+        "aria-hidden='true'>" +
+
+        "<path " +
+        "d='M3.5 10.7L12 3.7L20.5 10.7' " +
+        "stroke='currentColor' " +
+        "stroke-width='2' " +
+        "stroke-linecap='round' " +
+        "stroke-linejoin='round'/>" +
+
+        "<path " +
+        "d='M5.5 9.8V20H18.5V9.8' " +
+        "stroke='currentColor' " +
+        "stroke-width='2' " +
+        "stroke-linecap='round' " +
+        "stroke-linejoin='round'/>" +
+
+        "<path " +
+        "d='M9.5 20V14H14.5V20' " +
+        "stroke='currentColor' " +
+        "stroke-width='2' " +
+        "stroke-linecap='round' " +
+        "stroke-linejoin='round'/>" +
+
+        "</svg>";
+
+
+    // ==================================================
+    // HOME ACTION
     // ==================================================
     //
-    // Currently visual-only.
+    // Intentionally visual-only for now.
     //
-    // The click handler intentionally prevents the
-    // event from reaching the map.
+    // We are NOT deciding which GameMaker room
+    // HOME should eventually open.
     //
     // ==================================================
 
-    browse.addEventListener(
+    homeButton.addEventListener(
         "click",
         function(event)
         {
             event.preventDefault();
 
             event.stopPropagation();
+
+
+            console.log(
+                "GEOPLAY HOME: Button selected. Destination not assigned yet."
+            );
         }
     );
 
@@ -567,12 +651,12 @@ function geoplayMapUICreateStoryActions()
     // ==================================================
 
     actions.appendChild(
-        findAnother
+        searchButton
     );
 
 
     actions.appendChild(
-        browse
+        homeButton
     );
 
 
@@ -600,7 +684,6 @@ function geoplayMapUICreateStoryActions()
 //
 // Called when the introductory robot story has
 // finished.
-//
 // ==================================================
 
 function geoplayMapUIShowStoryActions()
@@ -651,7 +734,6 @@ function geoplayMapUIShowStoryActions()
 //
 // Used when the story needs to hide the bottom
 // actions again.
-//
 // ==================================================
 
 function geoplayMapUIHideStoryActions()

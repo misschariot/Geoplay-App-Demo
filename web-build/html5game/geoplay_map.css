@@ -37,6 +37,10 @@
 
 /* ==================================================
    STORY ACTIONS
+   ==================================================
+   These controls appear after the story finishes.
+   They are intentionally positioned as compact
+   floating map controls in the bottom-right.
    ================================================== */
 
 .geoplay-story-actions
@@ -44,33 +48,34 @@
     position:
         absolute;
 
-    left:
-        50%;
+    right:
+        clamp(
+            18px,
+            3vw,
+            28px
+        );
 
     bottom:
         clamp(
-            70px,
-            9vh,
-            90px
+            22px,
+            3vh,
+            32px
         );
 
     width:
-        min(
-            88vw,
-            360px
-        );
+        auto;
 
     display:
         flex;
 
     flex-direction:
-        row;
+        column;
 
     align-items:
         center;
 
     justify-content:
-        center;
+        flex-end;
 
     gap:
         10px;
@@ -82,9 +87,6 @@
         hidden;
 
     transform:
-        translateX(
-            -50%
-        )
         translateY(
             8px
         );
@@ -101,6 +103,10 @@
 }
 
 
+/* ==================================================
+   HIDDEN STATE
+   ================================================== */
+
 .geoplay-story-actions.story-hidden
 {
     opacity:
@@ -114,6 +120,10 @@
 }
 
 
+/* ==================================================
+   VISIBLE STATE
+   ================================================== */
+
 .geoplay-story-actions.visible
 {
     opacity:
@@ -123,9 +133,6 @@
         visible;
 
     transform:
-        translateX(
-            -50%
-        )
         translateY(
             0
         );
@@ -136,8 +143,9 @@
 
 
 /* ==================================================
-   FIND ANOTHER
-   GEOPLAY SECONDARY / MODAL STYLE
+   CIRCULAR STORY ACTION
+   ==================================================
+   Shared Geoplay glass / neon treatment.
    ================================================== */
 
 .geoplay-story-action
@@ -151,24 +159,27 @@
     isolation:
         isolate;
 
-    flex:
-        1 1 0;
+    width:
+        54px;
+
+    height:
+        54px;
 
     min-width:
-        0;
+        54px;
 
     min-height:
-        44px;
+        54px;
 
     padding:
-        10px 18px;
+        0;
 
     border:
         1px solid
         transparent;
 
     border-radius:
-        23px;
+        50%;
 
     background:
         linear-gradient(
@@ -205,19 +216,6 @@
         Arial,
         sans-serif;
 
-    font-size:
-        clamp(
-            12px,
-            3vw,
-            15px
-        );
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        .2px;
-
     display:
         flex;
 
@@ -232,6 +230,12 @@
 
     pointer-events:
         auto;
+
+    box-sizing:
+        border-box;
+
+    -webkit-tap-highlight-color:
+        transparent;
 
     box-shadow:
         0 0 8px
@@ -263,7 +267,7 @@
             255,
             255,
             255,
-            .07
+            .08
         );
 
     text-shadow:
@@ -275,9 +279,6 @@
             .18
         );
 
-    -webkit-tap-highlight-color:
-        transparent;
-
     transition:
         transform .15s ease,
         filter .2s ease,
@@ -286,7 +287,7 @@
 
 
 /* ==================================================
-   FIND ANOTHER — SUBTLE GLASS HIGHLIGHT
+   SUBTLE GLASS HIGHLIGHT
    ================================================== */
 
 .geoplay-story-action::before
@@ -304,27 +305,30 @@
         0;
 
     width:
-        42%;
+        100%;
 
     height:
         100%;
 
+    border-radius:
+        50%;
+
     background:
-        linear-gradient(
-            90deg,
+        radial-gradient(
+            circle at 30% 24%,
             rgba(
                 255,
                 155,
                 24,
-                .08
+                .13
             ),
             rgba(
                 179,
                 76,
                 255,
-                .04
-            ),
-            transparent
+                .06
+            ) 38%,
+            transparent 70%
         );
 
     pointer-events:
@@ -335,27 +339,67 @@
 }
 
 
-/* Keep button text above highlight */
+/* ==================================================
+   ICON
+   ================================================== */
 
-.geoplay-story-action
-{
-    line-height:
-        1;
-}
-
-
-.geoplay-story-action span
+.geoplay-story-action-icon
 {
     position:
         relative;
 
     z-index:
         2;
+
+    display:
+        block;
+
+    width:
+        22px;
+
+    height:
+        22px;
+
+    color:
+        #ffffff;
+
+    filter:
+        drop-shadow(
+            0 0 5px
+            rgba(
+                255,
+                255,
+                255,
+                .20
+            )
+        );
 }
 
 
 /* ==================================================
-   FIND ANOTHER — HOVER / PRESS
+   SEARCH ICON
+   ================================================== */
+
+.geoplay-story-action-search
+{
+    color:
+        #ffffff;
+}
+
+
+/* ==================================================
+   HOME ICON
+   ================================================== */
+
+.geoplay-story-action-home
+{
+    color:
+        #ffffff;
+}
+
+
+/* ==================================================
+   HOVER
    ================================================== */
 
 .geoplay-story-action:hover
@@ -400,11 +444,15 @@
 }
 
 
+/* ==================================================
+   PRESS
+   ================================================== */
+
 .geoplay-story-action:active
 {
     transform:
         scale(
-            .97
+            .94
         );
 
     filter:
@@ -415,181 +463,37 @@
 
 
 /* ==================================================
-   BROWSE
-   GOLD PRIMARY ACTION
+   FOCUS
    ================================================== */
 
-.geoplay-story-action-browse
+.geoplay-story-action:focus-visible
 {
-    position:
-        relative;
-
-    overflow:
-        hidden;
-
-    isolation:
-        isolate;
-
-    background:
-        linear-gradient(
-            105deg,
-            #b87500 0%,
-            #e6a719 18%,
-            #ffd45a 42%,
-            #fff0a3 55%,
-            #f8c63e 70%,
-            #d8950d 88%,
-            #b87300 100%
-        );
-
-    color:
-        #2a1600;
-
-    border:
-        1px solid
-        rgba(
-            255,
-            239,
-            163,
-            .95
-        );
-
-    box-shadow:
-        0 6px 18px
-        rgba(
-            218,
-            155,
-            25,
-            .38
-        ),
-
-        0 0 15px
-        rgba(
-            255,
-            205,
-            72,
-            .22
-        ),
-
-        inset 0 1px 0
-        rgba(
-            255,
-            255,
-            255,
-            .78
-        ),
-
-        inset 0 -2px 0
-        rgba(
-            116,
-            69,
-            0,
-            .20
-        );
-
-    text-shadow:
-        0 1px 0
-        rgba(
-            255,
-            244,
-            190,
-            .38
-        );
-}
-
-
-/* ==================================================
-   BROWSE — SHINE
-   ================================================== */
-
-.geoplay-story-action-browse::before
-{
-    content:
-        "";
-
-    position:
-        absolute;
-
-    left:
-        -35%;
-
-    top:
-        0;
-
-    width:
-        26%;
-
-    height:
-        100%;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(
-                255,
-                255,
-                255,
-                .18
-            ),
-            transparent
-        );
-
-    transform:
-        skewX(
-            -20deg
-        );
-
-    pointer-events:
+    outline:
         none;
 
-    z-index:
-        1;
-
-    animation:
-        geoplayBrowseButtonShine
-        4s
-        ease-in-out
-        infinite;
-}
-
-
-.geoplay-story-action-browse span
-{
-    position:
-        relative;
-
-    z-index:
-        2;
-}
-
-
-/* ==================================================
-   BROWSE — HOVER / PRESS
-   ================================================== */
-
-.geoplay-story-action-browse:hover
-{
-    filter:
-        brightness(
-            1.06
-        );
-
     box-shadow:
-        0 6px 18px
-        rgba(
-            218,
-            155,
-            25,
-            .38
-        ),
-
-        0 0 15px
+        0 0 0 2px
         rgba(
             255,
-            205,
-            72,
-            .22
+            255,
+            255,
+            .18
+        ),
+
+        0 0 10px
+        rgba(
+            255,
+            155,
+            24,
+            .24
+        ),
+
+        0 0 20px
+        rgba(
+            139,
+            61,
+            255,
+            .20
         ),
 
         inset 0 1px 0
@@ -597,126 +501,111 @@
             255,
             255,
             255,
-            .78
-        ),
-
-        inset 0 -2px 0
-        rgba(
-            116,
-            69,
-            0,
-            .20
-        );
-}
-
-
-.geoplay-story-action-browse:active
-{
-    transform:
-        scale(
-            .96
-        );
-
-    filter:
-        brightness(
-            .98
+            .10
         );
 }
 
 
 /* ==================================================
-   BROWSE SHINE ANIMATION
-   ================================================== */
-
-@keyframes geoplayBrowseButtonShine
-{
-    0%,
-    58%
-    {
-        left:
-            -35%;
-
-        opacity:
-            0;
-    }
-
-    64%
-    {
-        opacity:
-            1;
-    }
-
-    78%
-    {
-        left:
-            120%;
-
-        opacity:
-            1;
-    }
-
-    84%,
-    100%
-    {
-        left:
-            120%;
-
-        opacity:
-            0;
-    }
-}
-
-
-/* ==================================================
-   STORY ACTIONS — RESPONSIVE
+   RESPONSIVE — SMALL PHONES
    ================================================== */
 
 @media (max-width:430px)
 {
     .geoplay-story-actions
     {
-        width:
-            calc(
-                100vw -
-                32px
-            );
-
-        max-width:
-            360px;
+        right:
+            18px;
 
         bottom:
-            120px;
+            22px;
 
         gap:
-            8px;
+            9px;
     }
 
 
     .geoplay-story-action
     {
+        width:
+            52px;
+
+        height:
+            52px;
+
+        min-width:
+            52px;
+
         min-height:
-            43px;
+            52px;
+    }
 
-        padding:
-            10px 10px;
 
-        font-size:
-            11px;
+    .geoplay-story-action-icon
+    {
+        width:
+            21px;
+
+        height:
+            21px;
     }
 }
 
+
+/* ==================================================
+   RESPONSIVE — TABLETS / LARGER SCREENS
+   ================================================== */
 
 @media (min-width:431px)
 {
     .geoplay-story-actions
     {
-        width:
-            min(
-                68vw,
-                300px
+        right:
+            clamp(
+                20px,
+                3vw,
+                30px
             );
 
         bottom:
-            95px;
+            clamp(
+                24px,
+                3vh,
+                34px
+            );
+
+        gap:
+            10px;
+    }
+
+
+    .geoplay-story-action
+    {
+        width:
+            56px;
+
+        height:
+            56px;
+
+        min-width:
+            56px;
+
+        min-height:
+            56px;
+    }
+
+
+    .geoplay-story-action-icon
+    {
+        width:
+            23px;
+
+        height:
+            23px;
     }
 }
+
+
+/* ==================================================
+   END STORY ACTIONS
+   ================================================== */
