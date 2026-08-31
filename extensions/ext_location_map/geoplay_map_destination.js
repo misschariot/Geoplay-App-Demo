@@ -107,6 +107,28 @@ function geoplayMapUIDestinationName()
 
 
 // ==================================================
+// DESTINATION MARKETING CAROUSEL
+// ==================================================
+
+window.geoplayDestinationCarouselImages =
+[
+    "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine1.png",
+    "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine2.png",
+    "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine3.png",
+    "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine4.png"
+];
+
+window.geoplayDestinationCarouselIndex =
+    0;
+
+window.geoplayDestinationCarouselTouchStartX =
+    null;
+
+window.geoplayDestinationCarouselTouchStartY =
+    null;
+
+
+// ==================================================
 // DESTINATION DISTANCE
 // ==================================================
 
@@ -936,6 +958,509 @@ function geoplayMapUIDestinationEnsureStyles()
 
 
         // ==================================================
+        // EXPANDED DESTINATION MARKETING CARD
+        // ==================================================
+
+        ".geoplay-destination.expanded {" +
+
+            "width: min(350px, calc(100vw - 28px));" +
+
+            "max-width: calc(100vw - 28px);" +
+
+            "padding: 0;" +
+
+            "overflow: hidden;" +
+
+            "border-radius: 18px;" +
+
+            "background: linear-gradient(rgba(14,9,39,0.985), rgba(14,9,39,0.985)) padding-box, linear-gradient(105deg, #8b3dff 0%, #d52cff 48%, #ff9d00 100%) border-box;" +
+
+            "box-shadow: 0 12px 34px rgba(0,0,0,0.42), 0 0 20px rgba(151,65,255,0.22), 0 0 26px rgba(255,132,0,0.08);" +
+
+            "cursor: default;" +
+
+        "}" +
+
+        ".geoplay-destination.expanded::after {" +
+
+            "display: none;" +
+
+        "}" +
+
+        ".geoplay-destination-expanded-header {" +
+
+            "height: 46px;" +
+
+            "padding: 0 14px 0 16px;" +
+
+            "display: flex;" +
+
+            "align-items: center;" +
+
+            "justify-content: space-between;" +
+
+            "box-sizing: border-box;" +
+
+        "}" +
+
+        ".geoplay-destination-expanded-title {" +
+
+            "font-family: Arial, sans-serif;" +
+
+            "font-size: 13px;" +
+
+            "font-weight: 700;" +
+
+            "letter-spacing: 0.8px;" +
+
+            "line-height: 1;" +
+
+            "color: rgba(255,255,255,0.98);" +
+
+            "white-space: nowrap;" +
+
+        "}" +
+
+        ".geoplay-destination-close {" +
+
+            "width: 30px;" +
+
+            "height: 30px;" +
+
+            "padding: 0;" +
+
+            "display: flex;" +
+
+            "align-items: center;" +
+
+            "justify-content: center;" +
+
+            "border: 0;" +
+
+            "background: transparent;" +
+
+            "color: rgba(255,255,255,0.82);" +
+
+            "font-family: Arial, sans-serif;" +
+
+            "font-size: 25px;" +
+
+            "font-weight: 300;" +
+
+            "line-height: 1;" +
+
+            "cursor: pointer;" +
+
+            "appearance: none;" +
+
+            "-webkit-appearance: none;" +
+
+        "}" +
+
+        ".geoplay-destination-close:hover," +
+
+        ".geoplay-destination-close:focus," +
+
+        ".geoplay-destination-close:focus-visible," +
+
+        ".geoplay-destination-close:active {" +
+
+            "background: transparent;" +
+
+            "color: rgba(255,255,255,0.82);" +
+
+            "border: 0;" +
+
+            "outline: 0;" +
+
+            "box-shadow: none;" +
+
+        "}" +
+
+        ".geoplay-destination-carousel {" +
+
+            "position: relative;" +
+
+            "width: 100%;" +
+
+            "height: 178px;" +
+
+            "overflow: hidden;" +
+
+            "background: #09051c;" +
+
+            "touch-action: pan-y;" +
+
+            "user-select: none;" +
+
+            "-webkit-user-select: none;" +
+
+        "}" +
+
+        ".geoplay-destination-carousel-track {" +
+
+            "width: 100%;" +
+
+            "height: 100%;" +
+
+            "position: relative;" +
+
+        "}" +
+
+        ".geoplay-destination-carousel-image {" +
+
+            "position: absolute;" +
+
+            "inset: 0;" +
+
+            "width: 100%;" +
+
+            "height: 100%;" +
+
+            "display: block;" +
+
+            "object-fit: cover;" +
+
+            "object-position: center;" +
+
+            "opacity: 1;" +
+
+            "transition: opacity 220ms ease;" +
+
+            "pointer-events: none;" +
+
+        "}" +
+
+        ".geoplay-destination-carousel-arrow {" +
+
+            "position: absolute;" +
+
+            "top: 50%;" +
+
+            "width: 30px;" +
+
+            "height: 30px;" +
+
+            "margin: 0;" +
+
+            "padding: 0;" +
+
+            "display: flex;" +
+
+            "align-items: center;" +
+
+            "justify-content: center;" +
+
+            "transform: translateY(-50%);" +
+
+            "border: 1px solid rgba(255,255,255,0.22);" +
+
+            "border-radius: 50%;" +
+
+            "background: rgba(9,5,28,0.62);" +
+
+            "color: rgba(255,255,255,0.96);" +
+
+            "font-family: Arial, sans-serif;" +
+
+            "font-size: 21px;" +
+
+            "font-weight: 300;" +
+
+            "line-height: 1;" +
+
+            "cursor: pointer;" +
+
+            "z-index: 3;" +
+
+            "appearance: none;" +
+
+            "-webkit-appearance: none;" +
+
+            "backdrop-filter: blur(5px);" +
+
+            "-webkit-backdrop-filter: blur(5px);" +
+
+        "}" +
+
+        ".geoplay-destination-carousel-arrow-left {" +
+
+            "left: 10px;" +
+
+        "}" +
+
+        ".geoplay-destination-carousel-arrow-right {" +
+
+            "right: 10px;" +
+
+        "}" +
+
+        ".geoplay-destination-carousel-arrow:hover," +
+
+        ".geoplay-destination-carousel-arrow:focus," +
+
+        ".geoplay-destination-carousel-arrow:focus-visible," +
+
+        ".geoplay-destination-carousel-arrow:active {" +
+
+            "background: rgba(9,5,28,0.62);" +
+
+            "color: rgba(255,255,255,0.96);" +
+
+            "border-color: rgba(255,255,255,0.22);" +
+
+            "outline: 0;" +
+
+            "box-shadow: none;" +
+
+            "transform: translateY(-50%);" +
+
+        "}" +
+
+        ".geoplay-destination-carousel-dots {" +
+
+            "position: absolute;" +
+
+            "left: 50%;" +
+
+            "bottom: 10px;" +
+
+            "transform: translateX(-50%);" +
+
+            "display: flex;" +
+
+            "align-items: center;" +
+
+            "justify-content: center;" +
+
+            "gap: 6px;" +
+
+            "z-index: 3;" +
+
+        "}" +
+
+        ".geoplay-destination-carousel-dot {" +
+
+            "width: 5px;" +
+
+            "height: 5px;" +
+
+            "padding: 0;" +
+
+            "border: 0;" +
+
+            "border-radius: 50%;" +
+
+            "background: rgba(255,255,255,0.42);" +
+
+            "box-shadow: none;" +
+
+            "cursor: pointer;" +
+
+            "appearance: none;" +
+
+            "-webkit-appearance: none;" +
+
+        "}" +
+
+        ".geoplay-destination-carousel-dot.active {" +
+
+            "width: 7px;" +
+
+            "height: 7px;" +
+
+            "background: rgba(255,255,255,0.96);" +
+
+        "}" +
+
+        ".geoplay-destination-marketing {" +
+
+            "padding: 15px 17px 0 17px;" +
+
+            "box-sizing: border-box;" +
+
+        "}" +
+
+        ".geoplay-destination-tagline {" +
+
+            "font-family: Arial, sans-serif;" +
+
+            "font-size: 16px;" +
+
+            "font-weight: 700;" +
+
+            "letter-spacing: 0.1px;" +
+
+            "line-height: 1.25;" +
+
+            "color: rgba(255,255,255,0.98);" +
+
+        "}" +
+
+        ".geoplay-destination-marketing-copy {" +
+
+            "margin-top: 4px;" +
+
+            "font-family: Arial, sans-serif;" +
+
+            "font-size: 10.5px;" +
+
+            "font-weight: 400;" +
+
+            "letter-spacing: 0.15px;" +
+
+            "line-height: 1.45;" +
+
+            "color: rgba(207,229,255,0.76);" +
+
+        "}" +
+
+        ".geoplay-destination-expanded-divider {" +
+
+            "height: 1px;" +
+
+            "margin: 13px 17px 0 17px;" +
+
+            "background: linear-gradient(90deg, rgba(139,61,255,0.38), rgba(213,44,255,0.24), rgba(255,157,0,0.30));" +
+
+        "}" +
+
+        ".geoplay-destination-expanded-details {" +
+
+            "padding: 12px 17px 14px 17px;" +
+
+            "display: flex;" +
+
+            "flex-direction: column;" +
+
+            "gap: 9px;" +
+
+            "box-sizing: border-box;" +
+
+        "}" +
+
+        ".geoplay-destination-expanded-distance," +
+
+        ".geoplay-destination-expanded-address {" +
+
+            "display: flex;" +
+
+            "align-items: center;" +
+
+            "gap: 8px;" +
+
+            "font-family: Arial, sans-serif;" +
+
+            "font-size: 10px;" +
+
+            "font-weight: 700;" +
+
+            "letter-spacing: 0.45px;" +
+
+            "line-height: 1.25;" +
+
+            "color: rgba(255,255,255,0.88);" +
+
+        "}" +
+
+        ".geoplay-destination-distance-icon," +
+
+        ".geoplay-destination-address-icon {" +
+
+            "width: 20px;" +
+
+            "height: 20px;" +
+
+            "flex-shrink: 0;" +
+
+            "display: flex;" +
+
+            "align-items: center;" +
+
+            "justify-content: center;" +
+
+            "font-family: Arial, sans-serif;" +
+
+            "font-size: 14px;" +
+
+            "font-weight: 400;" +
+
+            "line-height: 1;" +
+
+            "color: rgba(255,255,255,0.92);" +
+
+        "}" +
+
+        ".geoplay-destination-address-text {" +
+
+            "font-weight: 400;" +
+
+            "letter-spacing: 0.1px;" +
+
+            "line-height: 1.35;" +
+
+            "color: rgba(207,229,255,0.82);" +
+
+        "}" +
+
+        ".geoplay-destination-play {" +
+
+            "width: calc(100% - 34px);" +
+
+            "height: 42px;" +
+
+            "margin: 0 17px 17px 17px;" +
+
+            "padding: 0;" +
+
+            "display: flex;" +
+
+            "align-items: center;" +
+
+            "justify-content: center;" +
+
+            "border: 1px solid transparent;" +
+
+            "border-radius: 11px;" +
+
+            "background: linear-gradient(90deg, #7138ff 0%, #a43cff 48%, #ff7d24 100%) padding-box, linear-gradient(90deg, #9f6bff 0%, #f05cff 55%, #ffad43 100%) border-box;" +
+
+            "box-shadow: 0 7px 18px rgba(113,56,255,0.24);" +
+
+            "color: rgba(255,255,255,0.98);" +
+
+            "font-family: Arial, sans-serif;" +
+
+            "font-size: 11px;" +
+
+            "font-weight: 800;" +
+
+            "letter-spacing: 1.25px;" +
+
+            "cursor: pointer;" +
+
+            "appearance: none;" +
+
+            "-webkit-appearance: none;" +
+
+        "}" +
+
+        ".geoplay-destination-play:hover," +
+
+        ".geoplay-destination-play:focus," +
+
+        ".geoplay-destination-play:focus-visible," +
+
+        ".geoplay-destination-play:active {" +
+
+            "color: rgba(255,255,255,0.98);" +
+
+            "outline: 0;" +
+
+        "}" +
+
+
+        // ==================================================
         // MOBILE
         // ==================================================
 
@@ -1011,6 +1536,43 @@ function geoplayMapUIDestinationEnsureStyles()
                 "right: 11px;" +
 
                 "font-size: 17px;" +
+
+            "}" +
+
+        "}" +
+
+
+        // ==================================================
+        // EXPANDED CARD MOBILE OVERRIDES
+        // ==================================================
+
+        "@media (max-width: 480px) {" +
+
+            ".geoplay-destination.expanded {" +
+
+                "width: min(332px, calc(100vw - 24px));" +
+
+                "max-width: calc(100vw - 24px);" +
+
+                "border-radius: 17px;" +
+
+            "}" +
+
+            ".geoplay-destination-carousel {" +
+
+                "height: 168px;" +
+
+            "}" +
+
+            ".geoplay-destination-expanded-title {" +
+
+                "font-size: 12px;" +
+
+            "}" +
+
+            ".geoplay-destination-tagline {" +
+
+                "font-size: 15px;" +
 
             "}" +
 
@@ -1741,19 +2303,83 @@ function geoplayMapUISetDestinationExpanded(
         "</div>" +
 
 
-        "<img " +
+        "<div " +
 
-            "class='geoplay-destination-image' " +
+            "class='geoplay-destination-carousel' " +
 
-            "src='https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine_ridge_casino_image.png' " +
+            "aria-label='Pine Ridge Casino photos'>" +
 
-            "alt='" +
+            
 
-                destinationName +
+            "<div class='geoplay-destination-carousel-track'>" +
 
-            "' " +
+                "<img " +
 
-            "draggable='false'>" +
+                    "class='geoplay-destination-carousel-image' " +
+
+                    "src='" +
+
+                        window.geoplayDestinationCarouselImages[0] +
+
+                    "' " +
+
+                    "alt='" +
+
+                        destinationName +
+
+                    "' " +
+
+                    "draggable='false'>" +
+
+            "</div>" +
+
+
+            "<button " +
+
+                "type='button' " +
+
+                "class='geoplay-destination-carousel-arrow geoplay-destination-carousel-arrow-left' " +
+
+                "aria-label='Previous image'>" +
+
+                "‹" +
+
+            "</button>" +
+
+
+            "<button " +
+
+                "type='button' " +
+
+                "class='geoplay-destination-carousel-arrow geoplay-destination-carousel-arrow-right' " +
+
+                "aria-label='Next image'>" +
+
+                "›" +
+
+            "</button>" +
+
+
+            "<div class='geoplay-destination-carousel-dots'></div>" +
+
+        "</div>" +
+
+
+        "<div class='geoplay-destination-marketing'>" +
+
+            "<div class='geoplay-destination-tagline'>" +
+
+                "Your night starts here." +
+
+            "</div>" +
+
+            "<div class='geoplay-destination-marketing-copy'>" +
+
+                "Big games. Great food. Unforgettable nights." +
+
+            "</div>" +
+
+        "</div>" +
 
 
         "<div class='geoplay-destination-expanded-divider'></div>" +
@@ -1768,7 +2394,7 @@ function geoplayMapUISetDestinationExpanded(
 
                 "<span class='geoplay-destination-address-icon'>" +
 
-                    "📍" +
+                    "⌖" +
 
                 "</span>" +
 
@@ -1804,6 +2430,15 @@ function geoplayMapUISetDestinationExpanded(
         true;
 
 
+    window.geoplayDestinationCarouselIndex =
+        0;
+
+
+    geoplayMapUIAttachDestinationCarousel(
+        card
+    );
+
+
     geoplayMapUIAttachDestinationClose(
         card
     );
@@ -1814,6 +2449,555 @@ function geoplayMapUISetDestinationExpanded(
     );
 }
 
+
+// ==================================================
+// ATTACH DESTINATION CAROUSEL
+// ==================================================
+
+function geoplayMapUIAttachDestinationCarousel(
+    card
+)
+{
+    if (
+        !card
+    )
+    {
+        return;
+    }
+
+
+    var carousel =
+        card.querySelector(
+            ".geoplay-destination-carousel"
+        );
+
+
+    var image =
+        card.querySelector(
+            ".geoplay-destination-carousel-image"
+        );
+
+
+    var previousButton =
+        card.querySelector(
+            ".geoplay-destination-carousel-arrow-left"
+        );
+
+
+    var nextButton =
+        card.querySelector(
+            ".geoplay-destination-carousel-arrow-right"
+        );
+
+
+    var dots =
+        card.querySelector(
+            ".geoplay-destination-carousel-dots"
+        );
+
+
+    if (
+        !carousel ||
+        !image ||
+        !previousButton ||
+        !nextButton ||
+        !dots
+    )
+    {
+        return;
+    }
+
+
+    var images =
+        window.geoplayDestinationCarouselImages ||
+        [];
+
+
+    if (
+        images.length === 0
+    )
+    {
+        return;
+    }
+
+
+    // ==================================================
+    // CREATE DOTS
+    // ==================================================
+
+    dots.innerHTML =
+        "";
+
+
+    for (
+        var i = 0;
+        i < images.length;
+        i++
+    )
+    {
+        var dot =
+            document.createElement(
+                "button"
+            );
+
+
+        dot.type =
+            "button";
+
+
+        dot.className =
+            "geoplay-destination-carousel-dot";
+
+
+        dot.setAttribute(
+            "aria-label",
+            "Show image " +
+            (
+                i + 1
+            )
+        );
+
+
+        dot.dataset.index =
+            i;
+
+
+        dot.addEventListener(
+            "click",
+            function(event)
+            {
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                geoplayMapUIDestinationCarouselShow(
+                    card,
+                    parseInt(
+                        event.currentTarget.dataset.index,
+                        10
+                    )
+                );
+            }
+        );
+
+
+        dots.appendChild(
+            dot
+        );
+    }
+
+
+    // ==================================================
+    // UPDATE CAROUSEL
+    // ==================================================
+
+    function updateCarousel(
+        index
+    )
+    {
+        var total =
+            images.length;
+
+
+        if (
+            total === 0
+        )
+        {
+            return;
+        }
+
+
+        index =
+            (
+                index %
+                total
+            ) +
+            total;
+
+
+        index =
+            index %
+            total;
+
+
+        window.geoplayDestinationCarouselIndex =
+            index;
+
+
+        image.style.opacity =
+            "0";
+
+
+        window.setTimeout(
+            function()
+            {
+                image.src =
+                    images[index];
+
+
+                image.onload =
+                    function()
+                    {
+                        image.style.opacity =
+                            "1";
+                    };
+
+
+                image.onerror =
+                    function()
+                    {
+                        image.style.opacity =
+                            "1";
+                    };
+
+
+                if (
+                    image.complete
+                )
+                {
+                    image.style.opacity =
+                        "1";
+                }
+            },
+            90
+        );
+
+
+        var dotButtons =
+            dots.querySelectorAll(
+                ".geoplay-destination-carousel-dot"
+            );
+
+
+        dotButtons.forEach(
+            function(
+                dotButton,
+                dotIndex
+            )
+            {
+                if (
+                    dotIndex ===
+                    index
+                )
+                {
+                    dotButton.classList.add(
+                        "active"
+                    );
+                }
+                else
+                {
+                    dotButton.classList.remove(
+                        "active"
+                    );
+                }
+            }
+        );
+    }
+
+
+    previousButton.addEventListener(
+        "click",
+        function(event)
+        {
+            event.preventDefault();
+
+            event.stopPropagation();
+
+
+            updateCarousel(
+                window.geoplayDestinationCarouselIndex -
+                1
+            );
+        }
+    );
+
+
+    nextButton.addEventListener(
+        "click",
+        function(event)
+        {
+            event.preventDefault();
+
+            event.stopPropagation();
+
+
+            updateCarousel(
+                window.geoplayDestinationCarouselIndex +
+                1
+            );
+        }
+    );
+
+
+    carousel.addEventListener(
+        "touchstart",
+        function(event)
+        {
+            if (
+                !event.touches ||
+                !event.touches.length
+            )
+            {
+                return;
+            }
+
+
+            window.geoplayDestinationCarouselTouchStartX =
+                event.touches[0].clientX;
+
+
+            window.geoplayDestinationCarouselTouchStartY =
+                event.touches[0].clientY;
+        },
+        {
+            passive:
+                true
+        }
+    );
+
+
+    carousel.addEventListener(
+        "touchend",
+        function(event)
+        {
+            if (
+                window.geoplayDestinationCarouselTouchStartX ===
+                null
+            )
+            {
+                return;
+            }
+
+
+            if (
+                !event.changedTouches ||
+                !event.changedTouches.length
+            )
+            {
+                return;
+            }
+
+
+            var endX =
+                event.changedTouches[0].clientX;
+
+
+            var endY =
+                event.changedTouches[0].clientY;
+
+
+            var deltaX =
+                endX -
+                window.geoplayDestinationCarouselTouchStartX;
+
+
+            var deltaY =
+                endY -
+                window.geoplayDestinationCarouselTouchStartY;
+
+
+            window.geoplayDestinationCarouselTouchStartX =
+                null;
+
+
+            window.geoplayDestinationCarouselTouchStartY =
+                null;
+
+
+            if (
+                Math.abs(deltaX) <
+                35
+            )
+            {
+                return;
+            }
+
+
+            if (
+                Math.abs(deltaX) <
+                Math.abs(deltaY)
+            )
+            {
+                return;
+            }
+
+
+            if (
+                deltaX < 0
+            )
+            {
+                updateCarousel(
+                    window.geoplayDestinationCarouselIndex +
+                    1
+                );
+            }
+            else
+            {
+                updateCarousel(
+                    window.geoplayDestinationCarouselIndex -
+                    1
+                );
+            }
+        },
+        {
+            passive:
+                true
+        }
+    );
+
+
+    // ==================================================
+    // PRELOAD ALL IMAGES
+    // ==================================================
+
+    images.forEach(
+        function(
+            imageUrl
+        )
+        {
+            var preload =
+                new Image();
+
+            preload.src =
+                imageUrl;
+        }
+    );
+
+
+    updateCarousel(
+        0
+    );
+}
+
+
+// ==================================================
+// SHOW DESTINATION CAROUSEL IMAGE
+// ==================================================
+
+function geoplayMapUIDestinationCarouselShow(
+    card,
+    index
+)
+{
+    if (
+        !card
+    )
+    {
+        return;
+    }
+
+
+    var images =
+        window.geoplayDestinationCarouselImages ||
+        [];
+
+
+    if (
+        images.length === 0
+    )
+    {
+        return;
+    }
+
+
+    index =
+        (
+            index %
+            images.length
+        ) +
+        images.length;
+
+
+    index =
+        index %
+        images.length;
+
+
+    window.geoplayDestinationCarouselIndex =
+        index;
+
+
+    var image =
+        card.querySelector(
+            ".geoplay-destination-carousel-image"
+        );
+
+
+    if (
+        image
+    )
+    {
+        image.style.opacity =
+            "0";
+
+
+        window.setTimeout(
+            function()
+            {
+                image.src =
+                    images[index];
+
+
+                image.onload =
+                    function()
+                    {
+                        image.style.opacity =
+                            "1";
+                    };
+
+
+                image.onerror =
+                    function()
+                    {
+                        image.style.opacity =
+                            "1";
+                    };
+
+
+                if (
+                    image.complete
+                )
+                {
+                    image.style.opacity =
+                        "1";
+                }
+            },
+            90
+        );
+    }
+
+
+    var dots =
+        card.querySelectorAll(
+            ".geoplay-destination-carousel-dot"
+        );
+
+
+    dots.forEach(
+        function(
+            dot,
+            dotIndex
+        )
+        {
+            if (
+                dotIndex ===
+                index
+            )
+            {
+                dot.classList.add(
+                    "active"
+                );
+            }
+            else
+            {
+                dot.classList.remove(
+                    "active"
+                );
+            }
+        }
+    );
+}
 
 // ==================================================
 // ATTACH CLOSE BUTTON
