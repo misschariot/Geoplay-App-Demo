@@ -2811,21 +2811,20 @@ function geoplayMapUIPositionVisibleDestination(
 
 
     // ==================================================
-    // SHOW ONLY IF NOT ALREADY VISIBLE
+    // IMPORTANT:
+    // POSITION THE CARD BEFORE MAKING IT VISIBLE.
+    //
+    // Previously, the pop-in animation could begin while
+    // the card still had no left/top position. The browser
+    // could therefore render one frame at its default
+    // position — the top-left corner of the map.
+    //
+    // We now establish the complete position first.
     // ==================================================
-
-    geoplayMapUIShowDestinationCard(
-        card
-    );
-
 
     card.style.zIndex =
         geoplayDestinationSceneZIndex;
 
-
-    // ==================================================
-    // ALWAYS POINT DOWN FROM CARD
-    // ==================================================
 
     card.setAttribute(
         "data-pointer-side",
@@ -2848,6 +2847,12 @@ function geoplayMapUIPositionVisibleDestination(
     // ==================================================
     // CARD ANCHORED TO MARKER
     // ==================================================
+    //
+    // Set these BEFORE geoplayMapUIShowDestinationCard()
+    // so the very first animation frame is already in the
+    // correct location.
+    //
+    // ==================================================
 
     card.style.left =
         point.x +
@@ -2864,6 +2869,21 @@ function geoplayMapUIPositionVisibleDestination(
 
     card.style.transform =
         "translate(-50%,-100%)";
+
+
+    // ==================================================
+    // NOW SHOW THE CARD
+    // ==================================================
+    //
+    // The card is already positioned correctly, so the
+    // browser cannot briefly display it in the top-left
+    // corner before the pop-in animation starts.
+    //
+    // ==================================================
+
+    geoplayMapUIShowDestinationCard(
+        card
+    );
 }
 
 

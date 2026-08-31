@@ -1579,22 +1579,29 @@ function geoplayMapFlowSearchComplete()
 
 
     // ==================================================
-    // SHOW THE CASINO CARD AT THE DISCOVERY MOMENT
+    // SHOW CASINO MARKER ONLY
     // ==================================================
     //
-    // The card is intentionally visible during the
-    // "I found one!" moment so the player immediately
-    // knows what was discovered.
+    // IMPORTANT:
+    // The destination card is NOT shown here.
     //
-    // It will be hidden after the discovery dialogue
-    // finishes, before the camera travels to the casino.
+    // Previously the flow called:
+    //
+    //     geoplayMapUIShowDestination();
+    //
+    // immediately after the casino was generated.
+    //
+    // That caused the card to briefly appear during the
+    // discovery sequence and then disappear when the
+    // dialogue completed.
+    //
+    // The marker is still created at discovery time, but
+    // the destination card waits until the camera actually
+    // arrives at the casino.
     //
     // ==================================================
 
     geoplayMapShowDestinationMarker();
-
-
-    geoplayMapUIShowDestination();
 
 
     geoplayMapUISay(
@@ -1602,13 +1609,10 @@ function geoplayMapFlowSearchComplete()
         function()
         {
             // ==================================================
-            // HIDE DISCOVERY PRESENTATION BEFORE TRAVEL
+            // HIDE DISCOVERY DIALOGUE
             // ==================================================
 
             geoplayMapUIHideDialogue();
-
-
-            geoplayMapUIHideDestination();
 
 
             geoplayMapFlowShowDiscoveredCasino();
@@ -1627,11 +1631,10 @@ function geoplayMapFlowShowDiscoveredCasino()
     // KEEP ONLY THE CASINO MARKER DURING TRAVEL
     // ==================================================
     //
-    // The discovery card was already shown during
-    // "I found one!" and is now hidden.
+    // The casino card has NOT been shown yet.
     //
-    // The card will not return until the camera has
-    // completed its destination movement.
+    // It will appear only after the destination camera
+    // completes its movement.
     //
     // ==================================================
 
