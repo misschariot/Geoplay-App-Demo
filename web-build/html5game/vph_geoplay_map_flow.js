@@ -13,23 +13,12 @@
 // ROUTING:
 // - geoplay_map_route.js
 //
-// STORY INTERACTION:
-// - Player interaction is locked when the story begins.
-// - Scripted camera movement continues normally.
-// - Player interaction remains locked during the story.
-// - Player interaction is unlocked when the story finishes.
-//
 // IMPORTANT:
 // - This file does NOT calculate route geometry.
 // - This file does NOT animate the route.
 // - This file does NOT control route camera movement.
 // - Those responsibilities belong to geoplay_map_route.js.
 //
-// FLOW PHILOSOPHY:
-// - Real map events drive the story whenever possible.
-// - Dialogue completion drives transitions where appropriate.
-// - Timers are reserved for actual visual/map pauses.
-// - Dialogue hides when the map needs visual attention.
 // ==================================================
 
 
@@ -37,57 +26,33 @@
 // STORY STATE
 // ==================================================
 
-window.geoplayMapFlowStarted =
-    false;
-
-
-window.geoplayMapFlowFinished =
-    false;
+window.geoplayMapFlowStarted = false;
+window.geoplayMapFlowFinished = false;
 
 
 // ==================================================
 // SEARCH VISUAL STATE
 // ==================================================
 
-window.geoplayMapFlowSearchIndicator =
-    null;
-
-
-window.geoplayMapFlowLocationIndicator =
-    null;
+window.geoplayMapFlowSearchIndicator = null;
+window.geoplayMapFlowLocationIndicator = null;
 
 
 // ==================================================
-// ROUTE STORY SYNCHRONIZATION STATE
+// ROUTE SYNCHRONIZATION STATE
 // ==================================================
 
-window.geoplayMapFlowDistanceCameraFinished =
-    false;
-
-
-window.geoplayMapFlowRouteReady =
-    false;
-
-
-window.geoplayMapFlowRouteStarted =
-    false;
-
-
-window.geoplayMapFlowRouteGeometry =
-    null;
+window.geoplayMapFlowDistanceCameraFinished = false;
+window.geoplayMapFlowRouteReady = false;
+window.geoplayMapFlowRouteStarted = false;
+window.geoplayMapFlowRouteGeometry = null;
 
 
 // ==================================================
-// CALCULATED ROUTE DISTANCE
+// DESTINATION STATE
 // ==================================================
 
-window.geoplayDestinationDistanceMiles =
-    null;
-
-
-// ==================================================
-// DESTINATION
-// ==================================================
+window.geoplayDestinationDistanceMiles = null;
 
 window.geoplayDestinationName =
     "Pine Ridge Casino";
@@ -96,29 +61,11 @@ window.geoplayDestinationName =
 // ==================================================
 // STORY TIMING
 // ==================================================
-//
-// These are intentionally kept short so the demo has
-// good momentum without feeling rushed.
-//
-// Dialogue pacing is handled by the dialogue system.
-// These values control actual map/visual transitions.
-//
-// ==================================================
 
-var geoplayFlowOpeningPause =
-    600;
-
-
-var geoplayFlowFindPlayerPause =
-    450;
-
-
-var geoplayFlowSearchDuration =
-    3200;
-
-
-var geoplayFlowDestinationPause =
-    500;
+var geoplayFlowOpeningPause = 600;
+var geoplayFlowFindPlayerPause = 450;
+var geoplayFlowSearchDuration = 3200;
+var geoplayFlowDestinationPause = 500;
 
 
 // ==================================================
@@ -127,70 +74,32 @@ var geoplayFlowDestinationPause =
 
 function geoplayMapFlowStart()
 {
-    if (
-        window.geoplayMapFlowStarted
-    )
+    if (window.geoplayMapFlowStarted)
     {
         return;
     }
 
-
-    window.geoplayMapFlowStarted =
-        true;
-
-
-    window.geoplayMapFlowFinished =
-        false;
-
-
-    // ==================================================
-    // RESET SEARCH / LOCATION VISUALS
-    // ==================================================
+    window.geoplayMapFlowStarted = true;
+    window.geoplayMapFlowFinished = false;
 
     geoplayMapFlowHideAllStatusIndicators();
 
+    // Reset route state.
+    window.geoplayMapFlowDistanceCameraFinished = false;
+    window.geoplayMapFlowRouteReady = false;
+    window.geoplayMapFlowRouteStarted = false;
+    window.geoplayMapFlowRouteGeometry = null;
 
-    // ==================================================
-    // RESET ROUTE STATE
-    // ==================================================
+    window.geoplayDestinationDistanceMiles = null;
 
-    window.geoplayMapFlowDistanceCameraFinished =
-        false;
-
-
-    window.geoplayMapFlowRouteReady =
-        false;
-
-
-    window.geoplayMapFlowRouteStarted =
-        false;
-
-
-    window.geoplayMapFlowRouteGeometry =
-        null;
-
-
-    window.geoplayDestinationDistanceMiles =
-        null;
-
-
-    // ==================================================
-    // KEEP DESTINATION INDICATOR HIDDEN
-    // ==================================================
-
-    window.geoplayDestinationIndicatorEnabled =
-        false;
-
+    // Keep destination indicator hidden until appropriate.
+    window.geoplayDestinationIndicatorEnabled = false;
 
     console.log(
         "GEOPLAY FLOW: Story beginning."
     );
 
-
-    // ==================================================
-    // LOCK PLAYER MAP INTERACTION
-    // ==================================================
-
+    // Lock player interaction during the story.
     if (
         typeof geoplayMapLockInteraction ===
         "function"
@@ -199,18 +108,11 @@ function geoplayMapFlowStart()
         geoplayMapLockInteraction();
     }
 
-
-    // ==================================================
-    // CREATE MAP UI
-    // ==================================================
-
+    // Create the map UI.
     geoplayMapUICreate();
 
-
-    // ==================================================
-    // OPENING BREATHING ROOM
-    // ==================================================
-
+    // Give the map a short breathing period before
+    // beginning the location sequence.
     setTimeout(
         function()
         {
@@ -222,24 +124,16 @@ function geoplayMapFlowStart()
 
 
 // ==================================================
-// STATUS VISUAL
+// CREATE STATUS INDICATOR
 // ==================================================
 //
-// Used for both:
+// Shared visual used by:
 //
 // - FINDING YOUR LOCATION
 // - SEARCHING NEARBY
 //
-// The panel remains centered while the search animation
-// uses a stable magnifying glass and moving scan elements.
-//
-// Visual language:
-// - Deep Geoplay glass background
-// - Purple / cyan search glow
-// - Geoplay glass / neon edge treatment
-// - Static magnifying glass
-// - Rotating scan point
-// - Rotating search sweep
+// The magnifying glass remains stable while the
+// surrounding scan elements provide the motion.
 //
 // ==================================================
 
@@ -248,120 +142,50 @@ function geoplayMapFlowCreateStatusIndicator(
     labelText
 )
 {
-    // ==================================================
-    // ALREADY EXISTS
-    // ==================================================
-
     var existingIndicator =
-        document.getElementById(
-            indicatorId
-        );
+        document.getElementById(indicatorId);
 
-
-    if (
-        existingIndicator
-    )
+    if (existingIndicator)
     {
         return existingIndicator;
     }
 
-
-    // ==================================================
-    // FIND MAP UI CONTAINER
-    // ==================================================
-
-    if (
-        !window.geoplayMapUI
-    )
+    if (!window.geoplayMapUI)
     {
         return null;
     }
 
-
-    // ==================================================
-    // CREATE STATUS INDICATOR
-    // ==================================================
-
     var indicator =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
+    indicator.id = indicatorId;
 
-    indicator.id =
-        indicatorId;
+    // --------------------------------------------------
+    // CARD
+    // --------------------------------------------------
 
-
-    indicator.style.position =
-        "absolute";
-
-
-    indicator.style.left =
-        "50%";
-
-
-    indicator.style.top =
-        "50%";
-
-
+    indicator.style.position = "absolute";
+    indicator.style.left = "50%";
+    indicator.style.top = "50%";
     indicator.style.transform =
         "translate(-50%, -50%)";
 
+    indicator.style.width = "248px";
+    indicator.style.minHeight = "142px";
+    indicator.style.boxSizing = "border-box";
 
-    // ==================================================
-    // STATUS CARD SIZE
-    // ==================================================
+    indicator.style.display = "flex";
+    indicator.style.flexDirection = "column";
+    indicator.style.alignItems = "center";
+    indicator.style.justifyContent = "center";
 
-    indicator.style.width =
-        "248px";
+    indicator.style.gap = "10px";
+    indicator.style.padding = "20px 24px";
+    indicator.style.borderRadius = "16px";
 
-
-    indicator.style.minHeight =
-        "142px";
-
-
-    indicator.style.boxSizing =
-        "border-box";
-
-
-    indicator.style.display =
-        "flex";
-
-
-    indicator.style.flexDirection =
-        "column";
-
-
-    indicator.style.alignItems =
-        "center";
-
-
-    indicator.style.justifyContent =
-        "center";
-
-
-    indicator.style.gap =
-        "10px";
-
-
-    indicator.style.padding =
-        "20px 24px";
-
-
-    indicator.style.borderRadius =
-        "16px";
-
-
-    // ==================================================
-    // GEOPLAY GLASS BACKGROUND
-    // ==================================================
-    //
-    // Match the Pine Ridge destination card:
-    // - Deep purple glass interior
-    // - Same diagonal depth treatment
-    // - Same polished Geoplay visual language
-    //
-    // ==================================================
+    // --------------------------------------------------
+    // GEOPLAY GLASS / GRADIENT
+    // --------------------------------------------------
 
     indicator.style.background =
         "linear-gradient(" +
@@ -378,23 +202,8 @@ function geoplayMapFlowCreateStatusIndicator(
             "#7138ff 100%" +
         ") border-box";
 
-
-    // ==================================================
-    // GEOPLAY GRADIENT BORDER
-    // ==================================================
-    //
-    // This is the same orange -> pink -> purple
-    // gradient used by the Pine Ridge destination card.
-    //
-    // ==================================================
-
     indicator.style.border =
         "1px solid transparent";
-
-
-    // ==================================================
-    // GEOPLAY GLASS GLOW
-    // ==================================================
 
     indicator.style.boxShadow =
         "0 0 12px rgba(255, 155, 24, 0.22)," +
@@ -403,408 +212,210 @@ function geoplayMapFlowCreateStatusIndicator(
         "inset 0 1px 0 rgba(255, 255, 255, 0.08)," +
         "inset 0 0 20px rgba(139, 92, 255, 0.05)";
 
-
-    // ==================================================
-    // GEOPLAY GLASS EFFECT
-    // ==================================================
-
     indicator.style.backdropFilter =
         "blur(10px)";
-
 
     indicator.style.webkitBackdropFilter =
         "blur(10px)";
 
+    indicator.style.pointerEvents = "none";
+    indicator.style.zIndex = "105";
 
-    indicator.style.pointerEvents =
-        "none";
-
-
-    indicator.style.zIndex =
-        "105";
-
-
-    indicator.style.opacity =
-        "0";
-
-
-    indicator.style.visibility =
-        "hidden";
-
+    indicator.style.opacity = "0";
+    indicator.style.visibility = "hidden";
 
     indicator.style.transition =
         "opacity 250ms ease, visibility 250ms ease";
 
 
-    // ==================================================
-    // SEARCH ICON WRAPPER
-    // ==================================================
-    //
-    // The magnifying glass stays stable while the
-    // surrounding scan elements provide the motion.
-    //
-    // ==================================================
+    // --------------------------------------------------
+    // SEARCH ICON
+    // --------------------------------------------------
 
     var icon =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
+    icon.style.position = "relative";
+    icon.style.width = "56px";
+    icon.style.height = "56px";
+    icon.style.boxSizing = "border-box";
+    icon.style.flexShrink = "0";
 
-    icon.style.position =
-        "relative";
-
-
-    icon.style.width =
-        "56px";
-
-
-    icon.style.height =
-        "56px";
-
-
-    icon.style.boxSizing =
-        "border-box";
-
-
-    icon.style.flexShrink =
-        "0";
-
-
-    // ==================================================
-    // OUTER SEARCH RING
-    // ==================================================
-
+    // Outer ring.
     icon.style.border =
         "1.5px solid rgba(139, 92, 255, 0.65)";
 
-
-    icon.style.borderRadius =
-        "50%";
-
+    icon.style.borderRadius = "50%";
 
     icon.style.boxShadow =
         "0 0 12px rgba(139, 92, 255, 0.20)," +
         "inset 0 0 10px rgba(41, 200, 255, 0.06)";
 
-
     icon.style.animation =
         "geoplaySearchRingBreathe 1.8s ease-in-out infinite";
 
 
-    // ==================================================
-    // SEARCH SWEEP TRACK
-    // ==================================================
+    // --------------------------------------------------
+    // SEARCH SWEEP
+    // --------------------------------------------------
 
     var sweepTrack =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
+    sweepTrack.style.position = "absolute";
+    sweepTrack.style.left = "5px";
+    sweepTrack.style.top = "5px";
 
-    sweepTrack.style.position =
-        "absolute";
-
-
-    sweepTrack.style.left =
-        "5px";
-
-
-    sweepTrack.style.top =
-        "5px";
-
-
-    sweepTrack.style.width =
-        "46px";
-
-
-    sweepTrack.style.height =
-        "46px";
-
+    sweepTrack.style.width = "46px";
+    sweepTrack.style.height = "46px";
 
     sweepTrack.style.border =
         "1px solid transparent";
 
-
     sweepTrack.style.borderTop =
         "1.5px solid rgba(41, 200, 255, 0.55)";
-
 
     sweepTrack.style.borderRight =
         "1.5px solid rgba(139, 92, 255, 0.45)";
 
-
-    sweepTrack.style.borderRadius =
-        "50%";
-
-
-    sweepTrack.style.boxSizing =
-        "border-box";
-
+    sweepTrack.style.borderRadius = "50%";
+    sweepTrack.style.boxSizing = "border-box";
 
     sweepTrack.style.animation =
         "geoplaySearchSweepRotate 1.8s linear infinite";
 
 
-    // ==================================================
+    // --------------------------------------------------
     // SCAN POINT
-    // ==================================================
+    // --------------------------------------------------
 
     var scanPoint =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
+    scanPoint.style.position = "absolute";
 
-    scanPoint.style.position =
-        "absolute";
+    scanPoint.style.width = "6px";
+    scanPoint.style.height = "6px";
 
+    scanPoint.style.left = "25px";
+    scanPoint.style.top = "0px";
 
-    scanPoint.style.width =
-        "6px";
+    scanPoint.style.marginLeft = "-3px";
+    scanPoint.style.marginTop = "-3px";
 
+    scanPoint.style.borderRadius = "50%";
 
-    scanPoint.style.height =
-        "6px";
-
-
-    scanPoint.style.left =
-        "25px";
-
-
-    scanPoint.style.top =
-        "0px";
-
-
-    scanPoint.style.marginLeft =
-        "-3px";
-
-
-    scanPoint.style.marginTop =
-        "-3px";
-
-
-    scanPoint.style.borderRadius =
-        "50%";
-
-
-    scanPoint.style.background =
-        "#29C8FF";
-
+    scanPoint.style.background = "#29C8FF";
 
     scanPoint.style.boxShadow =
         "0 0 5px rgba(41, 200, 255, 0.95)," +
         "0 0 12px rgba(139, 92, 255, 0.65)";
 
-
     scanPoint.style.transformOrigin =
         "3px 31px";
-
 
     scanPoint.style.animation =
         "geoplaySearchScanPoint 1.8s linear infinite";
 
 
-    // ==================================================
-    // SEARCH GLASS
-    // ==================================================
-    //
-    // The magnifying glass itself stays completely
-    // stable. The surrounding scanner provides the motion.
-    //
-    // ==================================================
+    // --------------------------------------------------
+    // MAGNIFYING GLASS
+    // --------------------------------------------------
 
     var glass =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
+    glass.style.position = "absolute";
 
-    glass.style.position =
-        "absolute";
+    glass.style.left = "14px";
+    glass.style.top = "12px";
 
-
-    glass.style.left =
-        "14px";
-
-
-    glass.style.top =
-        "12px";
-
-
-    glass.style.width =
-        "24px";
-
-
-    glass.style.height =
-        "24px";
-
+    glass.style.width = "24px";
+    glass.style.height = "24px";
 
     glass.style.border =
         "2.5px solid rgba(255, 255, 255, 0.96)";
 
-
-    glass.style.borderRadius =
-        "50%";
-
-
-    glass.style.boxSizing =
-        "border-box";
-
+    glass.style.borderRadius = "50%";
+    glass.style.boxSizing = "border-box";
 
     glass.style.filter =
         "drop-shadow(0 0 5px rgba(41, 200, 255, 0.28))";
 
 
-    // ==================================================
-    // SEARCH HANDLE
-    // ==================================================
+    // --------------------------------------------------
+    // MAGNIFYING GLASS HANDLE
+    // --------------------------------------------------
 
     var handle =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
+    handle.style.position = "absolute";
 
-    handle.style.position =
-        "absolute";
+    handle.style.width = "14px";
+    handle.style.height = "2.5px";
 
+    handle.style.left = "31px";
+    handle.style.top = "34px";
 
-    handle.style.width =
-        "14px";
-
-
-    handle.style.height =
-        "2.5px";
-
-
-    handle.style.left =
-        "31px";
-
-
-    handle.style.top =
-        "34px";
-
-
-    handle.style.borderRadius =
-        "3px";
-
+    handle.style.borderRadius = "3px";
 
     handle.style.background =
         "rgba(255, 255, 255, 0.96)";
 
-
-    handle.style.transform =
-        "rotate(45deg)";
-
-
+    handle.style.transform = "rotate(45deg)";
     handle.style.transformOrigin =
         "left center";
 
 
-    // ==================================================
-    // BUILD SEARCH ICON
-    // ==================================================
+    // --------------------------------------------------
+    // BUILD ICON
+    // --------------------------------------------------
 
-    icon.appendChild(
-        sweepTrack
-    );
-
-
-    icon.appendChild(
-        scanPoint
-    );
+    icon.appendChild(sweepTrack);
+    icon.appendChild(scanPoint);
+    icon.appendChild(glass);
+    icon.appendChild(handle);
 
 
-    icon.appendChild(
-        glass
-    );
-
-
-    icon.appendChild(
-        handle
-    );
-
-
-    // ==================================================
-    // STATUS TEXT
-    // ==================================================
+    // --------------------------------------------------
+    // STATUS LABEL
+    // --------------------------------------------------
 
     var label =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     label.style.fontFamily =
         "'Poppins', Arial, sans-serif";
 
+    label.style.fontSize = "14px";
+    label.style.fontWeight = "700";
 
-    label.style.fontSize =
-        "14px";
-
-
-    label.style.fontWeight =
-        "700";
-
-
-    label.style.letterSpacing =
-        "1.4px";
-
-
-    label.style.textAlign =
-        "center";
-
+    label.style.letterSpacing = "1.4px";
+    label.style.textAlign = "center";
 
     label.style.color =
         "rgba(255, 255, 255, 0.96)";
 
-
-    label.style.lineHeight =
-        "1.2";
-
-
-    label.style.whiteSpace =
-        "nowrap";
-
+    label.style.lineHeight = "1.2";
+    label.style.whiteSpace = "nowrap";
 
     label.style.textShadow =
         "0 0 8px rgba(139, 92, 255, 0.30)";
 
-
-    label.textContent =
-        labelText;
+    label.textContent = labelText;
 
 
-    // ==================================================
+    // --------------------------------------------------
     // BUILD INDICATOR
-    // ==================================================
+    // --------------------------------------------------
 
-    indicator.appendChild(
-        icon
-    );
-
-
-    indicator.appendChild(
-        label
-    );
-
-
-    // ==================================================
-    // ADD ANIMATION KEYFRAMES
-    // ==================================================
+    indicator.appendChild(icon);
+    indicator.appendChild(label);
 
     geoplayMapFlowEnsureSearchAnimations();
 
-
-    // ==================================================
-    // ADD TO MAP UI
-    // ==================================================
-
-    window.geoplayMapUI.appendChild(
-        indicator
-    );
-
+    window.geoplayMapUI.appendChild(indicator);
 
     return indicator;
 }
@@ -822,10 +433,8 @@ function geoplayMapFlowCreateSearchIndicator()
             "SEARCHING NEARBY"
         );
 
-
     window.geoplayMapFlowSearchIndicator =
         indicator;
-
 
     return indicator;
 }
@@ -843,17 +452,15 @@ function geoplayMapFlowCreateLocationIndicator()
             "FINDING YOUR LOCATION"
         );
 
-
     window.geoplayMapFlowLocationIndicator =
         indicator;
-
 
     return indicator;
 }
 
 
 // ==================================================
-// CREATE SEARCH ANIMATIONS
+// SEARCH ANIMATIONS
 // ==================================================
 
 function geoplayMapFlowEnsureSearchAnimations()
@@ -867,23 +474,15 @@ function geoplayMapFlowEnsureSearchAnimations()
         return;
     }
 
-
     var style =
-        document.createElement(
-            "style"
-        );
-
+        document.createElement("style");
 
     style.id =
         "geoplay-search-animation-style";
 
-
     style.textContent =
 
-        // ==================================================
-        // OUTER RING BREATHING
-        // ==================================================
-
+        // Outer ring breathing.
         "@keyframes geoplaySearchRingBreathe {" +
 
             "0%, 100% {" +
@@ -898,11 +497,7 @@ function geoplayMapFlowEnsureSearchAnimations()
 
         "}" +
 
-
-        // ==================================================
-        // ROTATING SWEEP TRACK
-        // ==================================================
-
+        // Rotating sweep.
         "@keyframes geoplaySearchSweepRotate {" +
 
             "0% {" +
@@ -921,11 +516,7 @@ function geoplayMapFlowEnsureSearchAnimations()
 
         "}" +
 
-
-        // ==================================================
-        // MOVING SCAN POINT
-        // ==================================================
-
+        // Moving scan point.
         "@keyframes geoplaySearchScanPoint {" +
 
             "0% {" +
@@ -938,10 +529,7 @@ function geoplayMapFlowEnsureSearchAnimations()
 
         "}";
 
-
-    document.head.appendChild(
-        style
-    );
+    document.head.appendChild(style);
 }
 
 
@@ -953,21 +541,13 @@ function geoplayMapFlowPositionStatusIndicator(
     indicator
 )
 {
-    if (
-        !indicator
-    )
+    if (!indicator)
     {
         return;
     }
 
-
-    indicator.style.left =
-        "50%";
-
-
-    indicator.style.top =
-        "50%";
-
+    indicator.style.left = "50%";
+    indicator.style.top = "50%";
 
     indicator.style.transform =
         "translate(-50%, -50%)";
@@ -983,32 +563,21 @@ function geoplayMapFlowShowSearchIndicator()
     var indicator =
         geoplayMapFlowCreateSearchIndicator();
 
-
-    if (
-        !indicator
-    )
+    if (!indicator)
     {
         return 0;
     }
-
 
     geoplayMapFlowPositionStatusIndicator(
         indicator
     );
 
-
-    indicator.style.visibility =
-        "visible";
-
-
-    indicator.style.opacity =
-        "1";
-
+    indicator.style.visibility = "visible";
+    indicator.style.opacity = "1";
 
     console.log(
         "GEOPLAY FLOW: Centered search indicator shown."
     );
-
 
     return 1;
 }
@@ -1023,19 +592,11 @@ function geoplayMapFlowHideSearchIndicator()
     var indicator =
         window.geoplayMapFlowSearchIndicator;
 
-
-    if (
-        indicator
-    )
+    if (indicator)
     {
-        indicator.style.opacity =
-            "0";
-
-
-        indicator.style.visibility =
-            "hidden";
+        indicator.style.opacity = "0";
+        indicator.style.visibility = "hidden";
     }
-
 
     console.log(
         "GEOPLAY FLOW: Search indicator hidden."
@@ -1052,32 +613,21 @@ function geoplayMapFlowShowLocationIndicator()
     var indicator =
         geoplayMapFlowCreateLocationIndicator();
 
-
-    if (
-        !indicator
-    )
+    if (!indicator)
     {
         return 0;
     }
-
 
     geoplayMapFlowPositionStatusIndicator(
         indicator
     );
 
-
-    indicator.style.visibility =
-        "visible";
-
-
-    indicator.style.opacity =
-        "1";
-
+    indicator.style.visibility = "visible";
+    indicator.style.opacity = "1";
 
     console.log(
         "GEOPLAY FLOW: Location indicator shown."
     );
-
 
     return 1;
 }
@@ -1092,19 +642,11 @@ function geoplayMapFlowHideLocationIndicator()
     var indicator =
         window.geoplayMapFlowLocationIndicator;
 
-
-    if (
-        indicator
-    )
+    if (indicator)
     {
-        indicator.style.opacity =
-            "0";
-
-
-        indicator.style.visibility =
-            "hidden";
+        indicator.style.opacity = "0";
+        indicator.style.visibility = "hidden";
     }
-
 
     console.log(
         "GEOPLAY FLOW: Location indicator hidden."
@@ -1113,7 +655,7 @@ function geoplayMapFlowHideLocationIndicator()
 
 
 // ==================================================
-// HIDE ALL SEARCH / LOCATION INDICATORS
+// HIDE ALL STATUS INDICATORS
 // ==================================================
 
 function geoplayMapFlowHideAllStatusIndicators()
@@ -1137,7 +679,6 @@ function geoplayMapFlowFindPlayer()
                 "GEOPLAY FLOW: Location dialogue finished."
             );
 
-
             geoplayMapFlowRequestPlayerLocation();
         }
     );
@@ -1157,19 +698,8 @@ function geoplayMapFlowRequestPlayerLocation()
                 "GEOPLAY FLOW: Requesting real player location."
             );
 
-
-            // ==================================================
-            // SHOW LIVE LOCATION FEEDBACK
-            // ==================================================
-            //
-            // This indicator stays visible for as long as
-            // the browser is actually trying to determine
-            // the player's position.
-            //
-            // ==================================================
-
+            // Show feedback for the actual location lookup.
             geoplayMapFlowShowLocationIndicator();
-
 
             if (
                 typeof geoplayMapGetRealPlayerLocation !==
@@ -1180,15 +710,11 @@ function geoplayMapFlowRequestPlayerLocation()
                     "GEOPLAY FLOW: Real location function unavailable. Using fallback location."
                 );
 
-
                 geoplayMapFlowHideLocationIndicator();
-
-
                 geoplayMapFlowPlayerFound();
 
                 return;
             }
-
 
             geoplayMapGetRealPlayerLocation(
                 function(
@@ -1200,17 +726,9 @@ function geoplayMapFlowRequestPlayerLocation()
                         "GEOPLAY FLOW: Real player location found."
                     );
 
-
-                    // ==================================================
-                    // LOCATION LOOKUP IS COMPLETE
-                    // ==================================================
-
                     geoplayMapFlowHideLocationIndicator();
 
-
-                    if (
-                        window.geoplayMap
-                    )
+                    if (window.geoplayMap)
                     {
                         window.geoplayMap.once(
                             "moveend",
@@ -1220,7 +738,6 @@ function geoplayMapFlowRequestPlayerLocation()
                             }
                         );
 
-
                         window.geoplayMap.easeTo(
                         {
                             center:
@@ -1229,30 +746,19 @@ function geoplayMapFlowRequestPlayerLocation()
                                 latitude
                             ],
 
-                            zoom:
-                                15.5,
+                            zoom: 15.5,
+                            bearing: 0,
+                            pitch: 0,
 
-                            bearing:
-                                0,
-
-                            pitch:
-                                0,
-
-                            duration:
-                                1400,
-
-                            essential:
-                                true
+                            duration: 1400,
+                            essential: true
                         });
-
 
                         return;
                     }
 
-
                     geoplayMapFlowPlayerFound();
                 },
-
 
                 function(error)
                 {
@@ -1261,10 +767,7 @@ function geoplayMapFlowRequestPlayerLocation()
                         error
                     );
 
-
                     geoplayMapFlowHideLocationIndicator();
-
-
                     geoplayMapFlowPlayerFound();
                 }
             );
@@ -1284,9 +787,7 @@ function geoplayMapFlowPlayerFound()
         "GEOPLAY FLOW: Player found."
     );
 
-
     geoplayMapShowPlayerMarker();
-
 
     if (
         typeof geoplayMapPlayerMarkerPop ===
@@ -1295,7 +796,6 @@ function geoplayMapFlowPlayerFound()
     {
         geoplayMapPlayerMarkerPop();
     }
-
 
     geoplayMapUISay(
         "There you are!",
@@ -1317,17 +817,7 @@ function geoplayMapFlowBeginSearch()
         "Alright... let's see what we can find nearby.",
         function()
         {
-            // ==================================================
-            // DIALOGUE GETS OUT OF THE WAY
-            // ==================================================
-
             geoplayMapUIHideDialogue();
-
-
-            // ==================================================
-            // BEGIN VISUAL SEARCH EVENT
-            // ==================================================
-
             geoplayMapFlowSearchArea();
         }
     );
@@ -1340,13 +830,8 @@ function geoplayMapFlowBeginSearch()
 
 function geoplayMapFlowGenerateNearbyCasino()
 {
-    var minimumMiles =
-        5;
-
-
-    var maximumMiles =
-        10;
-
+    var minimumMiles = 5;
+    var maximumMiles = 10;
 
     var distanceMiles =
         minimumMiles +
@@ -1358,38 +843,30 @@ function geoplayMapFlowGenerateNearbyCasino()
             )
         );
 
-
     var bearingDegrees =
-        Math.random() *
-        360;
-
+        Math.random() * 360;
 
     var earthRadiusMiles =
         3958.7613;
 
-
     var angularDistance =
         distanceMiles /
         earthRadiusMiles;
-
 
     var playerLatitudeRadians =
         geoplayMapLatitude *
         Math.PI /
         180;
 
-
     var playerLongitudeRadians =
         geoplayMapLongitude *
         Math.PI /
         180;
 
-
     var bearingRadians =
         bearingDegrees *
         Math.PI /
         180;
-
 
     var destinationLatitudeRadians =
         Math.asin(
@@ -1410,7 +887,6 @@ function geoplayMapFlowGenerateNearbyCasino()
                 bearingRadians
             )
         );
-
 
     var destinationLongitudeRadians =
         playerLongitudeRadians
@@ -1438,39 +914,31 @@ function geoplayMapFlowGenerateNearbyCasino()
             )
         );
 
-
     var destinationLatitude =
         destinationLatitudeRadians *
         180 /
         Math.PI;
-
 
     var destinationLongitude =
         destinationLongitudeRadians *
         180 /
         Math.PI;
 
-
     window.geoplayDestinationLongitude =
         destinationLongitude;
-
 
     window.geoplayDestinationLatitude =
         destinationLatitude;
 
-
     window.geoplayGeneratedDestinationDistanceMiles =
         distanceMiles;
-
 
     window.geoplayDestinationDistanceMiles =
         null;
 
-
     console.log(
         "GEOPLAY FLOW: Nearby casino generated."
     );
-
 
     console.log(
         "GEOPLAY FLOW: Generated distance = " +
@@ -1478,18 +946,15 @@ function geoplayMapFlowGenerateNearbyCasino()
         " miles."
     );
 
-
     console.log(
         "GEOPLAY FLOW: Casino longitude = " +
         destinationLongitude
     );
 
-
     console.log(
         "GEOPLAY FLOW: Casino latitude = " +
         destinationLatitude
     );
-
 
     return 1;
 }
@@ -1505,21 +970,9 @@ function geoplayMapFlowSearchArea()
         "GEOPLAY FLOW: Searching nearby."
     );
 
-
-    // ==================================================
-    // SHOW SEARCH VISUAL
-    // ==================================================
-
     geoplayMapFlowShowSearchIndicator();
 
-
-    // ==================================================
-    // PULL CAMERA BACK
-    // ==================================================
-
-    if (
-        window.geoplayMap
-    )
+    if (window.geoplayMap)
     {
         window.geoplayMap.easeTo(
         {
@@ -1529,27 +982,14 @@ function geoplayMapFlowSearchArea()
                 geoplayMapLatitude
             ],
 
-            zoom:
-                13.7,
+            zoom: 13.7,
+            bearing: 0,
+            pitch: 0,
 
-            bearing:
-                0,
-
-            pitch:
-                0,
-
-            duration:
-                1800,
-
-            essential:
-                true
+            duration: 1800,
+            essential: true
         });
     }
-
-
-    // ==================================================
-    // SEARCH COMPLETION
-    // ==================================================
 
     setTimeout(
         function()
@@ -1571,50 +1011,20 @@ function geoplayMapFlowSearchComplete()
         "GEOPLAY FLOW: Property discovered."
     );
 
-
     geoplayMapFlowHideSearchIndicator();
-
 
     geoplayMapFlowGenerateNearbyCasino();
 
-
-    // ==================================================
-    // SHOW CASINO MARKER ONLY
-    // ==================================================
-    //
-    // IMPORTANT:
-    // The destination card is NOT shown here.
-    //
-    // Previously the flow called:
-    //
-    //     geoplayMapUIShowDestination();
-    //
-    // immediately after the casino was generated.
-    //
-    // That caused the card to briefly appear during the
-    // discovery sequence and then disappear when the
-    // dialogue completed.
-    //
-    // The marker is still created at discovery time, but
-    // the destination card waits until the camera actually
-    // arrives at the casino.
-    //
-    // ==================================================
+    // Show the marker, but not the destination card.
+    // The card waits until the destination camera arrives.
 
     geoplayMapShowDestinationMarker();
-
 
     geoplayMapUISay(
         "Oh! I found one!",
         function()
         {
-            // ==================================================
-            // HIDE DISCOVERY DIALOGUE
-            // ==================================================
-
             geoplayMapUIHideDialogue();
-
-
             geoplayMapFlowShowDiscoveredCasino();
         }
     );
@@ -1627,26 +1037,12 @@ function geoplayMapFlowSearchComplete()
 
 function geoplayMapFlowShowDiscoveredCasino()
 {
-    // ==================================================
-    // KEEP ONLY THE CASINO MARKER DURING TRAVEL
-    // ==================================================
-    //
-    // The casino card has NOT been shown yet.
-    //
-    // It will appear only after the destination camera
-    // completes its movement.
-    //
-    // ==================================================
-
+    // Keep the casino marker visible during travel.
     geoplayMapShowDestinationMarker();
 
-
+    // Prevent the destination card from appearing
+    // before the destination camera reaches the casino.
     geoplayMapUIHideDestination();
-
-
-    // ==================================================
-    // SMALL VISUAL PAUSE
-    // ==================================================
 
     setTimeout(
         function()
@@ -1668,23 +1064,14 @@ function geoplayMapFlowTravelToDestination()
         "GEOPLAY FLOW: Moving camera to destination."
     );
 
-
-    // ==================================================
-    // DIALOGUE SHOULD NOT COVER CAMERA MOVEMENT
-    // ==================================================
-
     geoplayMapUIHideDialogue();
 
-
-    if (
-        !window.geoplayMap
-    )
+    if (!window.geoplayMap)
     {
         geoplayMapFlowDestinationArrived();
 
         return;
     }
-
 
     window.geoplayMap.once(
         "moveend",
@@ -1694,7 +1081,6 @@ function geoplayMapFlowTravelToDestination()
         }
     );
 
-
     window.geoplayMap.easeTo(
     {
         center:
@@ -1703,20 +1089,12 @@ function geoplayMapFlowTravelToDestination()
             geoplayDestinationLatitude
         ],
 
-        zoom:
-            15.2,
+        zoom: 15.2,
+        bearing: 0,
+        pitch: 0,
 
-        bearing:
-            0,
-
-        pitch:
-            0,
-
-        duration:
-            1400,
-
-        essential:
-            true
+        duration: 1400,
+        essential: true
     });
 }
 
@@ -1731,35 +1109,16 @@ function geoplayMapFlowDestinationArrived()
         "GEOPLAY FLOW: Destination reached."
     );
 
-
-    // ==================================================
-    // NOW SHOW THE DESTINATION CARD
-    // ==================================================
-    //
-    // The camera has completed its moveend event.
-    // This is the first point where the casino card
-    // should become visible.
-    //
-    // ==================================================
+    // The casino card is intentionally shown only
+    // after the destination camera finishes.
 
     geoplayMapUIShowDestination();
-
-
-    // ==================================================
-    // DESTINATION DIALOGUE
-    // ==================================================
 
     geoplayMapUISay(
         "There it is — Pine Ridge Casino!",
         function()
         {
-            // ==================================================
-            // HIDE BEFORE CAMERA REFRAMES
-            // ==================================================
-
             geoplayMapUIHideDialogue();
-
-
             geoplayMapFlowReturnToPlayer();
         }
     );
@@ -1776,79 +1135,51 @@ function geoplayMapFlowReturnToPlayer()
         "GEOPLAY FLOW: Framing player and destination."
     );
 
-
     window.geoplayMapFlowDistanceCameraFinished =
         false;
-
 
     window.geoplayMapFlowRouteReady =
         false;
 
-
     window.geoplayMapFlowRouteStarted =
         false;
-
 
     window.geoplayMapFlowRouteGeometry =
         null;
 
-
     window.geoplayDestinationDistanceMiles =
         null;
-
-
-    // ==================================================
-    // DISTANCE DIALOGUE
-    // ==================================================
 
     geoplayMapUISay(
         "Let's see how far away it is..."
     );
 
-
-    // ==================================================
-    // FAIL SAFE
-    // ==================================================
-
-    if (
-        !window.geoplayMap
-    )
+    if (!window.geoplayMap)
     {
         geoplayMapUIHideDialogue();
 
-
         window.geoplayMapFlowDistanceCameraFinished =
             true;
-
 
         geoplayMapFlowRequestRoute();
 
         return;
     }
 
-
-    // ==================================================
-    // VERIFY PLAYER + DESTINATION
-    // ==================================================
+    // --------------------------------------------------
+    // VERIFY COORDINATES
+    // --------------------------------------------------
 
     if (
-        typeof geoplayMapLongitude !==
-        "number" ||
-
-        typeof geoplayMapLatitude !==
-        "number" ||
-
-        typeof geoplayDestinationLongitude !==
-        "number" ||
-
-        typeof geoplayDestinationLatitude !==
-        "number"
+        typeof geoplayMapLongitude !== "number" ||
+        typeof geoplayMapLatitude !== "number" ||
+        typeof geoplayDestinationLongitude !== "number" ||
+        typeof geoplayDestinationLatitude !== "number"
     )
     {
         console.warn(
             "GEOPLAY FLOW: Player or destination coordinates unavailable. Falling back to player camera."
         );
-
 
         window.geoplayMap.once(
             "moveend",
@@ -1858,22 +1189,14 @@ function geoplayMapFlowReturnToPlayer()
                     "GEOPLAY FLOW: Fallback player camera movement finished."
                 );
 
-
                 window.geoplayMapFlowDistanceCameraFinished =
                     true;
 
-
-                // ==================================================
-                // HIDE DIALOGUE BEFORE ROUTE VISUAL
-                // ==================================================
-
                 geoplayMapUIHideDialogue();
-
 
                 geoplayMapFlowTryStartRoute();
             }
         );
-
 
         window.geoplayMap.easeTo(
         {
@@ -1883,36 +1206,25 @@ function geoplayMapFlowReturnToPlayer()
                 geoplayMapLatitude
             ],
 
-            zoom:
-                13.7,
+            zoom: 13.7,
+            bearing: 0,
+            pitch: 0,
 
-            bearing:
-                0,
-
-            pitch:
-                0,
-
-            duration:
-                1700,
-
-            essential:
-                true
+            duration: 1700,
+            essential: true
         });
-
 
         geoplayMapFlowRequestRoute();
 
         return;
     }
 
-
-    // ==================================================
-    // CREATE BOUNDS
-    // ==================================================
+    // --------------------------------------------------
+    // CREATE STORY BOUNDS
+    // --------------------------------------------------
 
     var storyBounds =
         new maplibregl.LngLatBounds();
-
 
     storyBounds.extend(
         [
@@ -1921,7 +1233,6 @@ function geoplayMapFlowReturnToPlayer()
         ]
     );
 
-
     storyBounds.extend(
         [
             geoplayDestinationLongitude,
@@ -1929,10 +1240,9 @@ function geoplayMapFlowReturnToPlayer()
         ]
     );
 
-
-    // ==================================================
+    // --------------------------------------------------
     // CAMERA COMPLETION
-    // ==================================================
+    // --------------------------------------------------
 
     window.geoplayMap.once(
         "moveend",
@@ -1942,69 +1252,40 @@ function geoplayMapFlowReturnToPlayer()
                 "GEOPLAY FLOW: Player + destination camera framing finished."
             );
 
-
             window.geoplayMapFlowDistanceCameraFinished =
                 true;
 
-
-            // ==================================================
-            // HIDE DIALOGUE BEFORE ROUTE STARTS
-            // ==================================================
-
             geoplayMapUIHideDialogue();
-
 
             geoplayMapFlowTryStartRoute();
         }
     );
 
-
-    // ==================================================
-    // FIT BOTH LOCATIONS
-    // ==================================================
+    // --------------------------------------------------
+    // FRAME BOTH LOCATIONS
+    // --------------------------------------------------
 
     window.geoplayMap.fitBounds(
         storyBounds,
         {
             padding:
             {
-                top:
-                    170,
-
-                bottom:
-                    240,
-
-                left:
-                    55,
-
-                right:
-                    55
+                top: 170,
+                bottom: 240,
+                left: 55,
+                right: 55
             },
 
-            // Slightly more zoomed out so the player
-            // gets a little more surrounding map context.
-            maxZoom:
-                13.2,
+            maxZoom: 13.2,
+            bearing: 0,
+            pitch: 0,
 
-            bearing:
-                0,
-
-            pitch:
-                0,
-
-            duration:
-                1700,
-
-            essential:
-                true
+            duration: 1700,
+            essential: true
         }
     );
 
-
-    // ==================================================
-    // REQUEST ROUTE IMMEDIATELY
-    // ==================================================
-
+    // Request the route while the camera is moving.
     geoplayMapFlowRequestRoute();
 }
 
@@ -2015,53 +1296,34 @@ function geoplayMapFlowReturnToPlayer()
 
 function geoplayMapFlowTryStartRoute()
 {
-    if (
-        window.geoplayMapFlowRouteStarted
-    )
+    if (window.geoplayMapFlowRouteStarted)
     {
         return;
     }
 
-
-    if (
-        !window.geoplayMapFlowDistanceCameraFinished
-    )
+    if (!window.geoplayMapFlowDistanceCameraFinished)
     {
         return;
     }
 
-
-    if (
-        !window.geoplayMapFlowRouteReady
-    )
+    if (!window.geoplayMapFlowRouteReady)
     {
         return;
     }
 
-
-    if (
-        !window.geoplayMapFlowRouteGeometry
-    )
+    if (!window.geoplayMapFlowRouteGeometry)
     {
         return;
     }
-
 
     window.geoplayMapFlowRouteStarted =
         true;
 
-
-    // ==================================================
-    // ROUTE IS NOW THE VISUAL FOCUS
-    // ==================================================
-
     geoplayMapUIHideDialogue();
-
 
     console.log(
         "GEOPLAY FLOW: Camera and route are ready. Starting route animation."
     );
-
 
     if (
         typeof geoplayMapRouteAnimate !==
@@ -2072,12 +1334,10 @@ function geoplayMapFlowTryStartRoute()
             "GEOPLAY ROUTING: Route animation module is not loaded."
         );
 
-
         geoplayMapFlowRouteArrived();
 
         return;
     }
-
 
     geoplayMapRouteAnimate(
         window.geoplayMapFlowRouteGeometry,
@@ -2103,7 +1363,6 @@ function geoplayMapFlowRequestRoute()
         "GEOPLAY ROUTING: Requesting road route."
     );
 
-
     if (
         typeof geoplayMapRouteRequest !==
         "function"
@@ -2113,12 +1372,10 @@ function geoplayMapFlowRequestRoute()
             "GEOPLAY ROUTING: Route module is not loaded."
         );
 
-
         geoplayMapFlowStartFallbackRoute();
 
         return;
     }
-
 
     geoplayMapRouteRequest(
         geoplayMapLongitude,
@@ -2169,29 +1426,20 @@ function geoplayMapFlowHandleRoute(
         return;
     }
 
-
     console.log(
         "GEOPLAY ROUTING: Real road route received."
     );
 
-
-    // ==================================================
-    // STORE ACTUAL ROAD DISTANCE
-    // ==================================================
-
+    // Store actual road distance.
     if (
-        typeof distance ===
-        "number" &&
-
+        typeof distance === "number" &&
         isFinite(distance) &&
-
         distance > 0
     )
     {
         window.geoplayDestinationDistanceMiles =
             distance /
             1609.344;
-
 
         console.log(
             "GEOPLAY ROUTING: Calculated road distance = " +
@@ -2200,11 +1448,7 @@ function geoplayMapFlowHandleRoute(
         );
     }
 
-
-    if (
-        typeof duration ===
-        "number"
-    )
+    if (typeof duration === "number")
     {
         console.log(
             "GEOPLAY ROUTING: Duration = " +
@@ -2213,14 +1457,11 @@ function geoplayMapFlowHandleRoute(
         );
     }
 
-
     window.geoplayMapFlowRouteGeometry =
         geometry;
 
-
     window.geoplayMapFlowRouteReady =
         true;
-
 
     geoplayMapFlowTryStartRoute();
 }
@@ -2236,7 +1477,6 @@ function geoplayMapFlowStartFallbackRoute()
         "GEOPLAY ROUTING: Using fallback route."
     );
 
-
     if (
         typeof geoplayMapRouteFallback !==
         "function"
@@ -2246,17 +1486,14 @@ function geoplayMapFlowStartFallbackRoute()
             "GEOPLAY ROUTING: Route fallback module is not loaded."
         );
 
-
         geoplayMapFlowRouteArrived();
 
         return;
     }
 
-
     var fallbackGeometry =
     {
-        type:
-            "LineString",
+        type: "LineString",
 
         coordinates:
         [
@@ -2272,7 +1509,6 @@ function geoplayMapFlowStartFallbackRoute()
         ]
     };
 
-
     if (
         typeof window.geoplayGeneratedDestinationDistanceMiles ===
         "number"
@@ -2282,14 +1518,11 @@ function geoplayMapFlowStartFallbackRoute()
             window.geoplayGeneratedDestinationDistanceMiles;
     }
 
-
     window.geoplayMapFlowRouteGeometry =
         fallbackGeometry;
 
-
     window.geoplayMapFlowRouteReady =
         true;
-
 
     geoplayMapFlowTryStartRoute();
 }
@@ -2298,22 +1531,12 @@ function geoplayMapFlowStartFallbackRoute()
 // ==================================================
 // 14. ROUTE ARRIVED
 // ==================================================
-//
-// This function is called by the route engine at the
-// exact moment the dotted route finishes.
-//
-// ==================================================
 
 function geoplayMapFlowRouteArrived()
 {
     console.log(
         "GEOPLAY FLOW: Route arrived."
     );
-
-
-    // ==================================================
-    // REVEAL CALCULATED DISTANCE
-    // ==================================================
 
     if (
         typeof geoplayMapUIRefreshDestinationDistance ===
@@ -2322,11 +1545,6 @@ function geoplayMapFlowRouteArrived()
     {
         geoplayMapUIRefreshDestinationDistance();
     }
-
-
-    // ==================================================
-    // DIALOGUE RETURNS AFTER ROUTE
-    // ==================================================
 
     geoplayMapUISay(
         "There we go!",
@@ -2360,35 +1578,18 @@ function geoplayMapFlowPropertyReveal()
 
 function geoplayMapFlowFinish()
 {
-    if (
-        window.geoplayMapFlowFinished
-    )
+    if (window.geoplayMapFlowFinished)
     {
         return;
     }
 
-
     window.geoplayMapFlowFinished =
         true;
 
-
     geoplayMapFlowHideAllStatusIndicators();
-
-
-    // ==================================================
-    // FINAL DESTINATION PRESENTATION
-    // ==================================================
-    //
-    // The story now ends by bringing the camera back
-    // onto the casino itself. The card stays hidden
-    // during the movement and is revealed only after
-    // the camera reaches the destination.
-    //
-    // ==================================================
 
     window.geoplayDestinationIndicatorEnabled =
         true;
-
 
     if (
         window.geoplayMap &&
@@ -2401,9 +1602,7 @@ function geoplayMapFlowFinish()
         window.geoplayDestinationControlledTransition =
             true;
 
-
         geoplayMapUIHideDestination();
-
 
         window.geoplayMap.once(
             "moveend",
@@ -2412,14 +1611,11 @@ function geoplayMapFlowFinish()
                 window.geoplayDestinationControlledTransition =
                     false;
 
-
                 geoplayMapUIShowDestination();
-
 
                 geoplayMapFlowCompleteAfterFinalPresentation();
             }
         );
-
 
         window.geoplayMap.easeTo(
         {
@@ -2429,33 +1625,23 @@ function geoplayMapFlowFinish()
                 geoplayDestinationLatitude
             ],
 
-            zoom:
-                15.2,
+            zoom: 15.2,
+            bearing: 0,
+            pitch: 0,
 
-            bearing:
-                0,
-
-            pitch:
-                0,
-
-            duration:
-                1100,
-
-            essential:
-                true
+            duration: 1100,
+            essential: true
         });
-
 
         return;
     }
-
 
     geoplayMapFlowCompleteAfterFinalPresentation();
 }
 
 
 // ==================================================
-// COMPLETE AFTER FINAL DESTINATION PRESENTATION
+// COMPLETE AFTER FINAL PRESENTATION
 // ==================================================
 
 function geoplayMapFlowCompleteAfterFinalPresentation()
@@ -2468,11 +1654,9 @@ function geoplayMapFlowCompleteAfterFinalPresentation()
         geoplayMapUIUpdatePositions();
     }
 
-
     console.log(
         "GEOPLAY FLOW: Story complete. Final casino presentation is visible."
     );
-
 
     if (
         typeof geoplayMapUnlockInteraction ===
@@ -2482,15 +1666,8 @@ function geoplayMapFlowCompleteAfterFinalPresentation()
         geoplayMapUnlockInteraction();
     }
 
-
-    // ==================================================
-    // CLEAR ROBOT DIALOGUE
-    // ==================================================
-
-    geoplayMapUISay(
-        ""
-    );
-
+    // Clear robot dialogue.
+    geoplayMapUISay("");
 
     if (
         typeof geoplayMapUIShowStoryActions ===
@@ -2535,7 +1712,6 @@ function gmcallback_geoplay_location_continue()
     console.log(
         "GEOPLAY FLOW: Legacy Continue selected."
     );
-
 
     if (
         typeof geoplayMapUIShowStoryActions ===

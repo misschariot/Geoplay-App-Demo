@@ -35,8 +35,50 @@
 // SEARCH STATE
 // ==================================================
 
-window.geoplayFindAnotherUI =
-    null;
+window.geoplayFindAnotherUI = null;
+
+
+// ==================================================
+// EVENT HELPERS
+// ==================================================
+//
+// Keeps click/touch behavior consistent without
+// duplicating the same event code throughout the file.
+// ==================================================
+
+function geoplayMapUISearchStopEvent(event)
+{
+    event.preventDefault();
+    event.stopPropagation();
+}
+
+
+function geoplayMapUISearchAddTouchClick(
+    element,
+    callback
+)
+{
+    element.addEventListener(
+        "click",
+        function(event)
+        {
+            geoplayMapUISearchStopEvent(event);
+            callback();
+        }
+    );
+
+    element.addEventListener(
+        "touchend",
+        function(event)
+        {
+            geoplayMapUISearchStopEvent(event);
+            callback();
+        },
+        {
+            passive: false
+        }
+    );
+}
 
 
 // ==================================================
@@ -45,25 +87,12 @@ window.geoplayFindAnotherUI =
 
 function geoplayMapUICreateFindAnother()
 {
-    // ==================================================
-    // PREVENT DUPLICATE CREATION
-    // ==================================================
-
-    if (
-        window.geoplayFindAnotherUI
-    )
+    if (window.geoplayFindAnotherUI)
     {
         return 1;
     }
 
-
-    // ==================================================
-    // MAP UI REQUIRED
-    // ==================================================
-
-    if (
-        !window.geoplayMapUI
-    )
+    if (!window.geoplayMapUI)
     {
         console.error(
             "GEOPLAY SEARCH: Map UI not found."
@@ -72,138 +101,68 @@ function geoplayMapUICreateFindAnother()
         return 0;
     }
 
-
-    // ==================================================
+    // --------------------------------------------------
     // CREATE OVERLAY
-    // ==================================================
+    // --------------------------------------------------
 
     var overlay =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     overlay.id =
         "geoplay-find-another-overlay";
 
-
     overlay.className =
         "geoplay-find-another-overlay";
-
-
-    // ==================================================
-    // INITIAL HIDDEN STATE
-    // ==================================================
 
     geoplayMapUISearchConfigureOverlay(
         overlay
     );
 
-
-    // ==================================================
-    // BLOCK MAP INTERACTION
-    // ==================================================
-
     geoplayMapUISearchProtectOverlay(
         overlay
     );
 
-
-    // ==================================================
-    // CREATE POPUP PANEL
-    // ==================================================
+    // --------------------------------------------------
+    // CREATE PANEL
+    // --------------------------------------------------
 
     var panel =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     panel.className =
         "geoplay-find-another";
 
-
-    panel.style.position =
-        "relative";
-
-
-    panel.style.zIndex =
-        "501";
-
-
-    panel.style.pointerEvents =
-        "auto";
-
-
-    // ==================================================
-    // BLOCK PANEL INTERACTION FROM MAP
-    // ==================================================
+    panel.style.position = "relative";
+    panel.style.zIndex = "501";
+    panel.style.pointerEvents = "auto";
 
     geoplayMapUISearchProtectPanel(
         panel
     );
 
+    // --------------------------------------------------
+    // BUILD CONTENT
+    // --------------------------------------------------
 
-    // ==================================================
-    // BUILD SEARCH CONTENT
-    // ==================================================
+    geoplayMapUISearchBuildHeader(panel);
+    geoplayMapUISearchBuildSubtitle(panel);
+    geoplayMapUISearchBuildSearchSection(panel);
+    geoplayMapUISearchBuildDivider(panel);
+    geoplayMapUISearchBuildLocationButton(panel);
+    geoplayMapUISearchBuildFooter(panel);
 
-    geoplayMapUISearchBuildHeader(
-        panel
-    );
+    // --------------------------------------------------
+    // ADD TO MAP UI
+    // --------------------------------------------------
 
+    overlay.appendChild(panel);
+    window.geoplayMapUI.appendChild(overlay);
 
-    geoplayMapUISearchBuildSubtitle(
-        panel
-    );
-
-
-    geoplayMapUISearchBuildSearchSection(
-        panel
-    );
-
-
-    geoplayMapUISearchBuildDivider(
-        panel
-    );
-
-
-    geoplayMapUISearchBuildLocationButton(
-        panel
-    );
-
-
-    geoplayMapUISearchBuildFooter(
-        panel
-    );
-
-
-    // ==================================================
-    // ADD PANEL TO OVERLAY
-    // ==================================================
-
-    overlay.appendChild(
-        panel
-    );
-
-
-    // ==================================================
-    // ADD OVERLAY TO MAP UI
-    // ==================================================
-
-    window.geoplayMapUI.appendChild(
-        overlay
-    );
-
-
-    window.geoplayFindAnotherUI =
-        overlay;
-
+    window.geoplayFindAnotherUI = overlay;
 
     console.log(
         "GEOPLAY SEARCH: UI created."
     );
-
 
     return 1;
 }
@@ -217,56 +176,23 @@ function geoplayMapUISearchConfigureOverlay(
     overlay
 )
 {
-    overlay.style.position =
-        "absolute";
+    overlay.style.position = "absolute";
+    overlay.style.left = "0";
+    overlay.style.top = "0";
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
 
+    overlay.style.display = "flex";
+    overlay.style.alignItems = "center";
+    overlay.style.justifyContent = "center";
 
-    overlay.style.left =
-        "0";
+    overlay.style.boxSizing = "border-box";
 
+    overlay.style.opacity = "0";
+    overlay.style.visibility = "hidden";
+    overlay.style.pointerEvents = "none";
 
-    overlay.style.top =
-        "0";
-
-
-    overlay.style.width =
-        "100%";
-
-
-    overlay.style.height =
-        "100%";
-
-
-    overlay.style.display =
-        "flex";
-
-
-    overlay.style.alignItems =
-        "center";
-
-
-    overlay.style.justifyContent =
-        "center";
-
-
-    overlay.style.boxSizing =
-        "border-box";
-
-
-    overlay.style.opacity =
-        "0";
-
-
-    overlay.style.visibility =
-        "hidden";
-
-
-    overlay.style.pointerEvents =
-        "none";
-
-
-    overlay.style.zIndex =
-        "500";
+    overlay.style.zIndex = "500";
 }
 
 
@@ -286,7 +212,6 @@ function geoplayMapUISearchProtectOverlay(
         }
     );
 
-
     overlay.addEventListener(
         "mousedown",
         function(event)
@@ -294,7 +219,6 @@ function geoplayMapUISearchProtectOverlay(
             event.stopPropagation();
         }
     );
-
 
     overlay.addEventListener(
         "mouseup",
@@ -304,7 +228,6 @@ function geoplayMapUISearchProtectOverlay(
         }
     );
 
-
     overlay.addEventListener(
         "touchstart",
         function(event)
@@ -312,11 +235,9 @@ function geoplayMapUISearchProtectOverlay(
             event.stopPropagation();
         },
         {
-            passive:
-                true
+            passive: true
         }
     );
-
 
     overlay.addEventListener(
         "touchmove",
@@ -325,11 +246,9 @@ function geoplayMapUISearchProtectOverlay(
             event.stopPropagation();
         },
         {
-            passive:
-                true
+            passive: true
         }
     );
-
 
     overlay.addEventListener(
         "touchend",
@@ -338,8 +257,7 @@ function geoplayMapUISearchProtectOverlay(
             event.stopPropagation();
         },
         {
-            passive:
-                true
+            passive: true
         }
     );
 }
@@ -361,7 +279,6 @@ function geoplayMapUISearchProtectPanel(
         }
     );
 
-
     panel.addEventListener(
         "mousedown",
         function(event)
@@ -370,7 +287,6 @@ function geoplayMapUISearchProtectPanel(
         }
     );
 
-
     panel.addEventListener(
         "touchstart",
         function(event)
@@ -378,8 +294,7 @@ function geoplayMapUISearchProtectPanel(
             event.stopPropagation();
         },
         {
-            passive:
-                true
+            passive: true
         }
     );
 }
@@ -394,106 +309,49 @@ function geoplayMapUISearchBuildHeader(
 )
 {
     var header =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     header.className =
         "geoplay-find-another-header";
 
-
     var title =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     title.className =
         "geoplay-find-another-title";
 
-
     title.textContent =
         "SEARCH";
 
-
     var close =
-        document.createElement(
-            "button"
-        );
+        document.createElement("button");
 
-
-    close.type =
-        "button";
-
+    close.type = "button";
 
     close.className =
         "geoplay-find-another-close";
 
-
-    close.textContent =
-        "×";
-
+    close.textContent = "×";
 
     close.setAttribute(
         "aria-label",
         "Close search"
     );
 
+    close.style.pointerEvents = "auto";
 
-    close.style.pointerEvents =
-        "auto";
-
-
-    // ==================================================
-    // CLOSE EVENTS
-    // ==================================================
-
-    close.addEventListener(
-        "click",
-        function(event)
+    geoplayMapUISearchAddTouchClick(
+        close,
+        function()
         {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
             geoplayMapUICloseFindAnother();
         }
     );
 
+    header.appendChild(title);
+    header.appendChild(close);
 
-    close.addEventListener(
-        "touchend",
-        function(event)
-        {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
-            geoplayMapUICloseFindAnother();
-        },
-        {
-            passive:
-                false
-        }
-    );
-
-
-    header.appendChild(
-        title
-    );
-
-
-    header.appendChild(
-        close
-    );
-
-
-    panel.appendChild(
-        header
-    );
+    panel.appendChild(header);
 }
 
 
@@ -506,22 +364,15 @@ function geoplayMapUISearchBuildSubtitle(
 )
 {
     var subtitle =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     subtitle.className =
         "geoplay-find-another-subtitle";
 
-
     subtitle.textContent =
         "Where do you want to play?";
 
-
-    panel.appendChild(
-        subtitle
-    );
+    panel.appendChild(subtitle);
 }
 
 
@@ -534,80 +385,40 @@ function geoplayMapUISearchBuildSearchSection(
 )
 {
     var searchSection =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     searchSection.className =
         "geoplay-find-another-section";
 
-
-    // ==================================================
-    // LABEL
-    // ==================================================
-
     var searchLabel =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     searchLabel.className =
         "geoplay-find-another-label";
 
-
     searchLabel.textContent =
         "CASINO OR LOCATION";
 
-
-    searchSection.appendChild(
-        searchLabel
-    );
-
-
-    // ==================================================
-    // SEARCH ROW
-    // ==================================================
+    searchSection.appendChild(searchLabel);
 
     var searchRow =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     searchRow.className =
         "geoplay-find-another-search-row";
-
-
-    // ==================================================
-    // INPUT
-    // ==================================================
 
     var inputWrapper =
         geoplayMapUISearchCreateInput(
             searchRow
         );
 
-
-    // ==================================================
-    // SEARCH BUTTON
-    // ==================================================
-
     geoplayMapUISearchCreateSearchButton(
         searchRow,
         inputWrapper
     );
 
-
-    searchSection.appendChild(
-        searchRow
-    );
-
-
-    panel.appendChild(
-        searchSection
-    );
+    searchSection.appendChild(searchRow);
+    panel.appendChild(searchSection);
 }
 
 
@@ -620,28 +431,20 @@ function geoplayMapUISearchCreateInput(
 )
 {
     var inputWrapper =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     inputWrapper.className =
         "geoplay-find-another-input-wrapper";
 
-
-    // ==================================================
+    // --------------------------------------------------
     // SEARCH ICON
-    // ==================================================
+    // --------------------------------------------------
 
     var searchIcon =
-        document.createElement(
-            "span"
-        );
-
+        document.createElement("span");
 
     searchIcon.className =
         "geoplay-find-another-input-icon";
-
 
     searchIcon.innerHTML =
         "<svg " +
@@ -666,63 +469,42 @@ function geoplayMapUISearchCreateInput(
 
         "</svg>";
 
+    inputWrapper.appendChild(searchIcon);
 
-    inputWrapper.appendChild(
-        searchIcon
-    );
-
-
-    // ==================================================
+    // --------------------------------------------------
     // INPUT
-    // ==================================================
+    // --------------------------------------------------
 
     var input =
-        document.createElement(
-            "input"
-        );
+        document.createElement("input");
 
-
-    input.type =
-        "text";
-
+    input.type = "text";
 
     input.className =
         "geoplay-find-another-input";
 
-
     input.placeholder =
         "Search casino name or address";
-
 
     input.setAttribute(
         "aria-label",
         "Search casino name or address"
     );
 
+    input.style.pointerEvents = "auto";
 
-    input.style.pointerEvents =
-        "auto";
-
-
-    // ==================================================
+    // --------------------------------------------------
     // IMPORTANT:
     // DO NOT AUTO-FOCUS INPUT
-    // ==================================================
+    // --------------------------------------------------
     //
     // The mobile keyboard should only appear when
     // the player deliberately taps the input.
     //
-    // ==================================================
+    // --------------------------------------------------
 
-    inputWrapper.appendChild(
-        input
-    );
-
-
-    searchRow.appendChild(
-        inputWrapper
-    );
-
+    inputWrapper.appendChild(input);
+    searchRow.appendChild(inputWrapper);
 
     return inputWrapper;
 }
@@ -738,76 +520,32 @@ function geoplayMapUISearchCreateSearchButton(
 )
 {
     var searchButton =
-        document.createElement(
-            "button"
-        );
+        document.createElement("button");
 
-
-    searchButton.type =
-        "button";
-
+    searchButton.type = "button";
 
     searchButton.className =
         "geoplay-find-another-search";
 
-
     searchButton.innerHTML =
         "<span>SEARCH</span>";
 
-
-    searchButton.style.pointerEvents =
-        "auto";
-
-
-    // ==================================================
-    // SEARCH BUTTON EVENTS
-    // ==================================================
+    searchButton.style.pointerEvents = "auto";
 
     var input =
         inputWrapper.querySelector(
             ".geoplay-find-another-input"
         );
 
-
-    searchButton.addEventListener(
-        "click",
-        function(event)
+    geoplayMapUISearchAddTouchClick(
+        searchButton,
+        function()
         {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
-            geoplayMapUISearchSubmit(
-                input
-            );
+            geoplayMapUISearchSubmit(input);
         }
     );
 
-
-    searchButton.addEventListener(
-        "touchend",
-        function(event)
-        {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
-            geoplayMapUISearchSubmit(
-                input
-            );
-        },
-        {
-            passive:
-                false
-        }
-    );
-
-
-    searchRow.appendChild(
-        searchButton
-    );
+    searchRow.appendChild(searchButton);
 }
 
 
@@ -832,11 +570,8 @@ function geoplayMapUISearchSubmit(
 {
     var value =
         input
-            ?
-        input.value
-            :
-        "";
-
+            ? input.value
+            : "";
 
     console.log(
         "GEOPLAY SEARCH: Manual search selected.",
@@ -854,59 +589,30 @@ function geoplayMapUISearchBuildDivider(
 )
 {
     var orDivider =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     orDivider.className =
         "geoplay-find-another-or";
 
-
     var orLeft =
-        document.createElement(
-            "span"
-        );
-
+        document.createElement("span");
 
     var orText =
-        document.createElement(
-            "span"
-        );
-
+        document.createElement("span");
 
     orText.className =
         "geoplay-find-another-or-text";
 
-
-    orText.textContent =
-        "OR";
-
+    orText.textContent = "OR";
 
     var orRight =
-        document.createElement(
-            "span"
-        );
+        document.createElement("span");
 
+    orDivider.appendChild(orLeft);
+    orDivider.appendChild(orText);
+    orDivider.appendChild(orRight);
 
-    orDivider.appendChild(
-        orLeft
-    );
-
-
-    orDivider.appendChild(
-        orText
-    );
-
-
-    orDivider.appendChild(
-        orRight
-    );
-
-
-    panel.appendChild(
-        orDivider
-    );
+    panel.appendChild(orDivider);
 }
 
 
@@ -923,36 +629,24 @@ function geoplayMapUISearchBuildLocationButton(
 )
 {
     var locationButton =
-        document.createElement(
-            "button"
-        );
+        document.createElement("button");
 
-
-    locationButton.type =
-        "button";
-
+    locationButton.type = "button";
 
     locationButton.className =
         "geoplay-find-another-location";
 
+    locationButton.style.pointerEvents = "auto";
 
-    locationButton.style.pointerEvents =
-        "auto";
-
-
-    // ==================================================
+    // --------------------------------------------------
     // LOCATION ICON
-    // ==================================================
+    // --------------------------------------------------
 
     var locationIcon =
-        document.createElement(
-            "span"
-        );
-
+        document.createElement("span");
 
     locationIcon.className =
         "geoplay-find-another-location-icon";
-
 
     locationIcon.innerHTML =
         "<svg " +
@@ -995,131 +689,68 @@ function geoplayMapUISearchBuildLocationButton(
 
         "</svg>";
 
+    locationButton.appendChild(locationIcon);
 
-    locationButton.appendChild(
-        locationIcon
-    );
-
-
-    // ==================================================
+    // --------------------------------------------------
     // LOCATION TEXT
-    // ==================================================
+    // --------------------------------------------------
 
     var locationText =
-        document.createElement(
-            "span"
-        );
-
+        document.createElement("span");
 
     locationText.className =
         "geoplay-find-another-location-text";
 
-
     var locationTitle =
-        document.createElement(
-            "span"
-        );
-
+        document.createElement("span");
 
     locationTitle.className =
         "geoplay-find-another-location-title";
 
-
     locationTitle.textContent =
         "USE MY LOCATION";
 
-
     var locationSubtitle =
-        document.createElement(
-            "span"
-        );
-
+        document.createElement("span");
 
     locationSubtitle.className =
         "geoplay-find-another-location-subtitle";
 
-
     locationSubtitle.textContent =
         "Find casinos near you";
 
+    locationText.appendChild(locationTitle);
+    locationText.appendChild(locationSubtitle);
 
-    locationText.appendChild(
-        locationTitle
-    );
+    locationButton.appendChild(locationText);
 
-
-    locationText.appendChild(
-        locationSubtitle
-    );
-
-
-    locationButton.appendChild(
-        locationText
-    );
-
-
-    // ==================================================
+    // --------------------------------------------------
     // LOCATION ARROW
-    // ==================================================
+    // --------------------------------------------------
 
     var locationArrow =
-        document.createElement(
-            "span"
-        );
-
+        document.createElement("span");
 
     locationArrow.className =
         "geoplay-find-another-location-arrow";
 
+    locationArrow.textContent = "›";
 
-    locationArrow.textContent =
-        "›";
+    locationButton.appendChild(locationArrow);
 
-
-    locationButton.appendChild(
-        locationArrow
-    );
-
-
-    // ==================================================
+    // --------------------------------------------------
     // LOCATION BUTTON EVENTS
-    // ==================================================
+    // --------------------------------------------------
 
-    locationButton.addEventListener(
-        "click",
-        function(event)
+    geoplayMapUISearchAddTouchClick(
+        locationButton,
+        function()
         {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
             geoplayMapUISearchUseMyLocation();
         }
     );
 
-
-    locationButton.addEventListener(
-        "touchend",
-        function(event)
-        {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
-            geoplayMapUISearchUseMyLocation();
-        },
-        {
-            passive:
-                false
-        }
-    );
-
-
-    panel.appendChild(
-        locationButton
-    );
+    panel.appendChild(locationButton);
 }
 
 
@@ -1148,37 +779,22 @@ function geoplayMapUISearchBuildFooter(
 )
 {
     var footer =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     footer.className =
         "geoplay-find-another-footer";
 
-
     var footerText =
-        document.createElement(
-            "span"
-        );
-
+        document.createElement("span");
 
     footerText.className =
         "geoplay-find-another-footer-text";
 
-
     footerText.textContent =
         "You can search by casino name, city, or address.";
 
-
-    footer.appendChild(
-        footerText
-    );
-
-
-    panel.appendChild(
-        footer
-    );
+    footer.appendChild(footerText);
+    panel.appendChild(footer);
 }
 
 
@@ -1188,25 +804,20 @@ function geoplayMapUISearchBuildFooter(
 
 function geoplayMapUIOpenFindAnother()
 {
-    // ==================================================
+    // --------------------------------------------------
     // CREATE UI IF NEEDED
-    // ==================================================
+    // --------------------------------------------------
 
-    if (
-        !window.geoplayFindAnotherUI
-    )
+    if (!window.geoplayFindAnotherUI)
     {
         geoplayMapUICreateFindAnother();
     }
 
+    // --------------------------------------------------
+    // VERIFY UI
+    // --------------------------------------------------
 
-    // ==================================================
-    // VERIFY UI EXISTS
-    // ==================================================
-
-    if (
-        !window.geoplayFindAnotherUI
-    )
+    if (!window.geoplayFindAnotherUI)
     {
         console.error(
             "GEOPLAY SEARCH: Unable to create popup."
@@ -1215,20 +826,16 @@ function geoplayMapUIOpenFindAnother()
         return 0;
     }
 
-
-    // ==================================================
-    // FIND SEARCH PANEL
-    // ==================================================
+    // --------------------------------------------------
+    // FIND PANEL
+    // --------------------------------------------------
 
     var panel =
         window.geoplayFindAnotherUI.querySelector(
             ".geoplay-find-another"
         );
 
-
-    if (
-        !panel
-    )
+    if (!panel)
     {
         console.error(
             "GEOPLAY SEARCH: Popup panel not found."
@@ -1237,10 +844,9 @@ function geoplayMapUIOpenFindAnother()
         return 0;
     }
 
-
-    // ==================================================
-    // USE SHARED GEOPLAY MODAL SYSTEM
-    // ==================================================
+    // --------------------------------------------------
+    // SHARED MODAL SYSTEM
+    // --------------------------------------------------
 
     if (
         typeof geoplayMapUIOpenModal !==
@@ -1254,32 +860,24 @@ function geoplayMapUIOpenFindAnother()
         return 0;
     }
 
-
     geoplayMapUIOpenModal(
         window.geoplayFindAnotherUI,
         panel
     );
 
-
-    // ==================================================
+    // --------------------------------------------------
     // IMPORTANT:
     // DO NOT HIDE STORY ACTIONS.
     //
     // FIND ANOTHER / BROWSE remain visible underneath
     // the transparent modal backdrop.
-    // ==================================================
-
-
-    // ==================================================
-    // IMPORTANT:
+    //
     // DO NOT AUTO-FOCUS SEARCH INPUT.
-    // ==================================================
-
+    // --------------------------------------------------
 
     console.log(
         "GEOPLAY SEARCH: Opened using shared modal system."
     );
-
 
     return 1;
 }
@@ -1291,35 +889,28 @@ function geoplayMapUIOpenFindAnother()
 
 function geoplayMapUICloseFindAnother()
 {
-    if (
-        !window.geoplayFindAnotherUI
-    )
+    if (!window.geoplayFindAnotherUI)
     {
         return 1;
     }
 
-
-    // ==================================================
-    // FIND SEARCH PANEL
-    // ==================================================
+    // --------------------------------------------------
+    // FIND PANEL
+    // --------------------------------------------------
 
     var panel =
         window.geoplayFindAnotherUI.querySelector(
             ".geoplay-find-another"
         );
 
-
-    if (
-        !panel
-    )
+    if (!panel)
     {
         return 0;
     }
 
-
-    // ==================================================
-    // USE SHARED GEOPLAY MODAL SYSTEM
-    // ==================================================
+    // --------------------------------------------------
+    // SHARED MODAL SYSTEM
+    // --------------------------------------------------
 
     if (
         typeof geoplayMapUICloseModal !==
@@ -1333,7 +924,6 @@ function geoplayMapUICloseFindAnother()
         return 0;
     }
 
-
     geoplayMapUICloseModal(
         window.geoplayFindAnotherUI,
         panel,
@@ -1345,15 +935,13 @@ function geoplayMapUICloseFindAnother()
         }
     );
 
-
-    // ==================================================
+    // --------------------------------------------------
     // IMPORTANT:
     // DO NOT SHOW/HIDE STORY ACTIONS HERE.
     //
     // FIND ANOTHER / BROWSE were never hidden when
     // SEARCH opened.
-    // ==================================================
-
+    // --------------------------------------------------
 
     return 1;
 }

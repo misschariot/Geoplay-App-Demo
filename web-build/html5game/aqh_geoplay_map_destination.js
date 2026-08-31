@@ -26,84 +26,27 @@
 // DESTINATION STATE
 // ==================================================
 
-window.geoplayDestinationCard =
-    null;
-
-window.geoplayDestinationOffscreenArrow =
-    null;
-
-window.geoplayDestinationVisible =
-    false;
-
-window.geoplayDestinationOffscreen =
-    false;
-
-window.geoplayDestinationExpanded =
-    false;
-
-window.geoplayDestinationOverlay =
-    null;
-
-window.geoplayDestinationClosing =
-    false;
-
-window.geoplayDestinationFinalPresentation =
-    false;
-
-window.geoplayDestinationControlledTransition =
-    false;
-
-window.geoplayDestinationMapListenersAttached =
-    false;
+window.geoplayDestinationCard = null;
+window.geoplayDestinationOffscreenArrow = null;
+window.geoplayDestinationVisible = false;
+window.geoplayDestinationOffscreen = false;
+window.geoplayDestinationExpanded = false;
+window.geoplayDestinationOverlay = null;
+window.geoplayDestinationClosing = false;
+window.geoplayDestinationFinalPresentation = false;
+window.geoplayDestinationControlledTransition = false;
+window.geoplayDestinationMapListenersAttached = false;
 
 
 // ==================================================
 // DESTINATION CONSTANTS
 // ==================================================
 
-var geoplayDestinationModalZIndex =
-    501;
-
-var geoplayDestinationSceneZIndex =
-    110;
-
-var geoplayDestinationOverlayZIndex =
-    500;
-
-var geoplayDestinationViewportMargin =
-    10;
-
-var geoplayDestinationVisibilityMargin =
-    45;
-
-var geoplayDestinationCardGap =
-    12;
-
-var geoplayDestinationMarkerGap =
-    16;
-
-var geoplayDestinationSideGap =
-    18;
-
-var geoplayDestinationModalShift =
-    "-2vh";
-
-
-// ==================================================
-// DESTINATION NAME
-// ==================================================
-
-function geoplayMapUIDestinationName()
-{
-    if (
-        window.geoplayDestinationName
-    )
-    {
-        return window.geoplayDestinationName;
-    }
-
-    return "Pine Ridge Casino";
-}
+var geoplayDestinationModalZIndex = 501;
+var geoplayDestinationSceneZIndex = 110;
+var geoplayDestinationOverlayZIndex = 500;
+var geoplayDestinationVisibilityMargin = 45;
+var geoplayDestinationMarkerGap = 16;
 
 
 // ==================================================
@@ -118,44 +61,24 @@ window.geoplayDestinationCarouselImages =
     "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine4.png"
 ];
 
-window.geoplayDestinationCarouselIndex =
-    0;
-
-window.geoplayDestinationCarouselTouchStartX =
-    null;
-
-window.geoplayDestinationCarouselTouchStartY =
-    null;
+window.geoplayDestinationCarouselIndex = 0;
+window.geoplayDestinationCarouselTouchStartX = null;
+window.geoplayDestinationCarouselTouchStartY = null;
 
 
 // ==================================================
-// DESTINATION DISTANCE
+// DESTINATION NAME
 // ==================================================
 
-function geoplayMapUIDestinationDistance()
+function geoplayMapUIDestinationName()
 {
-    var distance =
-        window.geoplayDestinationDistanceMiles;
-
-    if (
-        typeof distance !==
-        "number" ||
-
-        !isFinite(distance) ||
-
-        distance <= 0
-    )
-    {
-        return "";
-    }
-
-    return distance.toFixed(1) +
-        " MI AWAY";
+    return window.geoplayDestinationName ||
+        "Pine Ridge Casino";
 }
 
 
 // ==================================================
-// DESTINATION DISTANCE IS READY
+// DESTINATION DISTANCE
 // ==================================================
 
 function geoplayMapUIDestinationDistanceReady()
@@ -164,12 +87,23 @@ function geoplayMapUIDestinationDistanceReady()
         window.geoplayDestinationDistanceMiles;
 
     return (
-        typeof distance ===
-        "number" &&
-
+        typeof distance === "number" &&
         isFinite(distance) &&
-
         distance > 0
+    );
+}
+
+
+function geoplayMapUIDestinationDistance()
+{
+    if (!geoplayMapUIDestinationDistanceReady())
+    {
+        return "";
+    }
+
+    return (
+        window.geoplayDestinationDistanceMiles.toFixed(1) +
+        " MI AWAY"
     );
 }
 
@@ -183,16 +117,8 @@ function geoplayMapUIRefreshDestinationDistance()
     var card =
         window.geoplayDestinationCard;
 
-    if (
-        !card
-    )
-    {
-        return 0;
-    }
-
-    if (
-        !geoplayMapUIDestinationDistanceReady()
-    )
+    if (!card ||
+        !geoplayMapUIDestinationDistanceReady())
     {
         return 0;
     }
@@ -201,18 +127,11 @@ function geoplayMapUIRefreshDestinationDistance()
         "GEOPLAY UI: Destination distance is ready."
     );
 
-
-    if (
-        !window.geoplayDestinationExpanded
-    )
+    if (!window.geoplayDestinationExpanded)
     {
-        geoplayMapUISetDestinationCollapsed(
-            card
-        );
+        geoplayMapUISetDestinationCollapsed(card);
 
-        if (
-            window.geoplayDestinationVisible
-        )
+        if (window.geoplayDestinationVisible)
         {
             geoplayMapUIPositionDestination();
         }
@@ -220,1368 +139,14 @@ function geoplayMapUIRefreshDestinationDistance()
         return 1;
     }
 
+    geoplayMapUISetDestinationExpanded(card);
 
-    geoplayMapUISetDestinationExpanded(
-        card
-    );
-
-
-    if (
-        typeof geoplayMapUICenterModal ===
-        "function"
-    )
+    if (typeof geoplayMapUICenterModal === "function")
     {
-        geoplayMapUICenterModal(
-            card
-        );
+        geoplayMapUICenterModal(card);
     }
 
     return 1;
-}
-
-
-// ==================================================
-// DESTINATION CALLOUT STYLES
-// ==================================================
-
-function geoplayMapUIDestinationEnsureStyles()
-{
-    if (
-        document.getElementById(
-            "geoplay-destination-card-styles"
-        )
-    )
-    {
-        return;
-    }
-
-
-    var style =
-        document.createElement(
-            "style"
-        );
-
-
-    style.id =
-        "geoplay-destination-card-styles";
-
-
-    style.textContent =
-
-        // ==================================================
-        // OFF-SCREEN DESTINATION INDICATOR
-        // ==================================================
-        //
-        // Matches the Pine Ridge casino card:
-        // - Deep purple glass interior
-        // - Purple -> magenta -> orange gradient border
-        // - Soft matching glow
-        // - Rounded/polished UI treatment
-        // - No hover movement or visual change
-        //
-        ".geoplay-destination-offscreen {" +
-
-            "box-sizing: border-box;" +
-
-            "position: absolute;" +
-
-            "display: flex;" +
-
-            "align-items: center;" +
-
-            "justify-content: center;" +
-
-            "gap: 7px;" +
-
-            "min-width: 126px;" +
-
-            "height: 34px;" +
-
-            "padding: 0 12px;" +
-
-            "border-radius: 17px;" +
-
-            "background: linear-gradient(rgba(14,9,39,0.96), rgba(14,9,39,0.96)) padding-box, linear-gradient(90deg, #8b3dff 0%, #d52cff 48%, #ff9d00 100%) border-box;" +
-
-            "border: 1.5px solid transparent;" +
-
-            "box-shadow: 0 5px 16px rgba(0,0,0,0.30), 0 0 13px rgba(151,65,255,0.20), 0 0 18px rgba(255,132,0,0.07);" +
-
-            "backdrop-filter: blur(10px);" +
-
-            "-webkit-backdrop-filter: blur(10px);" +
-
-            "color: rgba(255,255,255,0.98);" +
-
-            "cursor: pointer;" +
-
-            "transform: translate(-50%,-50%);" +
-
-            "z-index: 111;" +
-
-            "opacity: 0;" +
-
-            "visibility: hidden;" +
-
-            "pointer-events: none;" +
-
-            "transition: none !important;" +
-
-        "}" +
-
-
-        ".geoplay-destination-offscreen.visible {" +
-
-            "opacity: 1;" +
-
-            "visibility: visible;" +
-
-            "pointer-events: auto;" +
-
-        "}" +
-
-
-        // ==================================================
-        // INDICATOR - NO HOVER EFFECT
-        // ==================================================
-
-        ".geoplay-destination-offscreen:hover," +
-
-        ".geoplay-destination-offscreen:focus," +
-
-        ".geoplay-destination-offscreen:focus-visible," +
-
-        ".geoplay-destination-offscreen:active {" +
-
-            "background: linear-gradient(rgba(14,9,39,0.96), rgba(14,9,39,0.96)) padding-box, linear-gradient(90deg, #8b3dff 0%, #d52cff 48%, #ff9d00 100%) border-box !important;" +
-
-            "border-color: transparent !important;" +
-
-            "box-shadow: 0 5px 16px rgba(0,0,0,0.30), 0 0 13px rgba(151,65,255,0.20), 0 0 18px rgba(255,132,0,0.07) !important;" +
-
-            "color: rgba(255,255,255,0.98) !important;" +
-
-            "transform: translate(-50%,-50%) !important;" +
-
-            "filter: none !important;" +
-
-            "opacity: 1 !important;" +
-
-            "transition: none !important;" +
-
-        "}" +
-
-
-        // ==================================================
-        // INDICATOR ARROW
-        // ==================================================
-
-        ".geoplay-destination-offscreen-arrow {" +
-
-            "width: 20px;" +
-
-            "height: 20px;" +
-
-            "flex-shrink: 0;" +
-
-            "display: flex;" +
-
-            "align-items: center;" +
-
-            "justify-content: center;" +
-
-            "font-family: Arial, sans-serif;" +
-
-            "font-size: 17px;" +
-
-            "font-weight: 400;" +
-
-            "line-height: 1;" +
-
-            "color: rgba(255,255,255,0.98);" +
-
-            "text-shadow: 0 0 8px rgba(213,44,255,0.35);" +
-
-            "transform-origin: center center;" +
-
-            "transition: none !important;" +
-
-            "animation: none !important;" +
-
-        "}" +
-
-
-        // ==================================================
-        // INDICATOR NAME
-        // ==================================================
-
-        ".geoplay-destination-offscreen-name {" +
-
-            "display: block;" +
-
-            "font-family: Arial, sans-serif;" +
-
-            "font-size: 9px;" +
-
-            "font-weight: 700;" +
-
-            "letter-spacing: 0.55px;" +
-
-            "line-height: 1;" +
-
-            "white-space: nowrap;" +
-
-            "color: rgba(255,255,255,0.96);" +
-
-        "}" +
-
-
-        // ==================================================
-        // MOBILE INDICATOR
-        // ==================================================
-
-        "@media (max-width: 480px) {" +
-
-            ".geoplay-destination-offscreen {" +
-
-                "min-width: 116px;" +
-
-                "height: 32px;" +
-
-                "padding: 0 10px;" +
-
-                "gap: 6px;" +
-
-                "border-radius: 16px;" +
-
-            "}" +
-
-
-            ".geoplay-destination-offscreen-arrow {" +
-
-                "width: 19px;" +
-
-                "height: 19px;" +
-
-                "font-size: 16px;" +
-
-            "}" +
-
-
-            ".geoplay-destination-offscreen-name {" +
-
-                "font-size: 8.5px;" +
-
-                "letter-spacing: 0.5px;" +
-
-            "}" +
-
-        "}" +
-
-
-        // ==================================================
-        // BASE DESTINATION CALLOUT
-        // ==================================================
-
-        ".geoplay-destination {" +
-
-            "box-sizing: border-box;" +
-
-            "width: 218px;" +
-
-            "max-width: calc(100vw - 20px);" +
-
-            "border-radius: 14px;" +
-
-            "position: absolute;" +
-
-            "overflow: visible;" +
-
-            "background: linear-gradient(rgba(14,9,39,0.97), rgba(14,9,39,0.97)) padding-box, linear-gradient(90deg, #8b3dff 0%, #d52cff 48%, #ff9d00 100%) border-box;" +
-
-            "border: 1.5px solid transparent;" +
-
-            "box-shadow: 0 7px 20px rgba(0,0,0,0.32), 0 0 15px rgba(151,65,255,0.18), 0 0 22px rgba(255,132,0,0.07);" +
-
-            "backdrop-filter: blur(10px);" +
-
-            "-webkit-backdrop-filter: blur(10px);" +
-
-            "color: rgba(255,255,255,0.98);" +
-
-            "cursor: pointer;" +
-
-            "--geoplay-pointer-left: 50%;" +
-
-            "--geoplay-pointer-top: 50%;" +
-
-        "}" +
-
-
-        // ==================================================
-        // BALLOON-LIKE POP ANIMATION
-        // ==================================================
-
-        "@keyframes geoplayDestinationPopIn {" +
-
-            "0% {" +
-
-                "opacity: 0;" +
-
-                "scale: 0.82;" +
-
-            "}" +
-
-            "68% {" +
-
-                "opacity: 1;" +
-
-                "scale: 1.045;" +
-
-            "}" +
-
-            "100% {" +
-
-                "opacity: 1;" +
-
-                "scale: 1;" +
-
-            "}" +
-
-        "}" +
-
-
-        "@keyframes geoplayDestinationPopOut {" +
-
-            "0% {" +
-
-                "opacity: 1;" +
-
-                "scale: 1;" +
-
-            "}" +
-
-            "100% {" +
-
-                "opacity: 0;" +
-
-                "scale: 0.84;" +
-
-            "}" +
-
-        "}" +
-
-
-        ".geoplay-destination.geoplay-destination-pop-in {" +
-
-            "animation: geoplayDestinationPopIn 260ms cubic-bezier(0.22, 1, 0.36, 1) both;" +
-
-            "transition: none !important;" +
-
-        "}" +
-
-
-        ".geoplay-destination.geoplay-destination-pop-out {" +
-
-            "animation: geoplayDestinationPopOut 170ms cubic-bezier(0.4, 0, 1, 1) both;" +
-
-            "transition: none !important;" +
-
-        "}" +
-
-
-        // ==================================================
-        // DEFAULT POINTER
-        // ==================================================
-
-        ".geoplay-destination:not(.expanded)::after {" +
-
-            "content: '';" +
-
-            "position: absolute;" +
-
-            "width: 12px;" +
-
-            "height: 12px;" +
-
-            "box-sizing: border-box;" +
-
-            "background: #100a2b;" +
-
-            "z-index: -1;" +
-
-        "}" +
-
-
-        // ==================================================
-        // POINTER - CARD ABOVE MARKER
-        // ==================================================
-
-        ".geoplay-destination[data-pointer-side='top']::after {" +
-
-            "left: var(--geoplay-pointer-left);" +
-
-            "bottom: -7px;" +
-
-            "transform: translateX(-50%) rotate(45deg);" +
-
-            "border-right: 1.5px solid #ff8f18;" +
-
-            "border-bottom: 1.5px solid #d52cff;" +
-
-        "}" +
-
-
-        // ==================================================
-        // POINTER - CARD BELOW MARKER
-        // ==================================================
-
-        ".geoplay-destination[data-pointer-side='bottom']::after {" +
-
-            "left: var(--geoplay-pointer-left);" +
-
-            "top: -7px;" +
-
-            "transform: translateX(-50%) rotate(45deg);" +
-
-            "border-left: 1.5px solid #8b3dff;" +
-
-            "border-top: 1.5px solid #d52cff;" +
-
-        "}" +
-
-
-        // ==================================================
-        // POINTER - CARD LEFT OF MARKER
-        // ==================================================
-
-        ".geoplay-destination[data-pointer-side='left']::after {" +
-
-            "right: -7px;" +
-
-            "top: var(--geoplay-pointer-top);" +
-
-            "transform: translateY(-50%) rotate(45deg);" +
-
-            "border-top: 1.5px solid #d52cff;" +
-
-            "border-right: 1.5px solid #ff8f18;" +
-
-        "}" +
-
-
-        // ==================================================
-        // POINTER - CARD RIGHT OF MARKER
-        // ==================================================
-
-        ".geoplay-destination[data-pointer-side='right']::after {" +
-
-            "left: -7px;" +
-
-            "top: var(--geoplay-pointer-top);" +
-
-            "transform: translateY(-50%) rotate(45deg);" +
-
-            "border-left: 1.5px solid #8b3dff;" +
-
-            "border-bottom: 1.5px solid #d52cff;" +
-
-        "}" +
-
-
-        // ==================================================
-        // CALLOUT CONTENT
-        // ==================================================
-
-        ".geoplay-destination-collapsed {" +
-
-            "min-height: 40px;" +
-
-            "padding: 4px 8px 4px 10px;" +
-
-            "box-sizing: border-box;" +
-
-            "display: flex;" +
-
-            "flex-direction: column;" +
-
-            "justify-content: center;" +
-
-            "gap: 0;" +
-
-            "position: relative;" +
-
-            "z-index: 1;" +
-
-        "}" +
-
-
-        // ==================================================
-        // TOP ROW
-        // ==================================================
-
-        ".geoplay-destination-collapsed-main {" +
-
-            "min-width: 0;" +
-
-            "width: 100%;" +
-
-            "display: flex;" +
-
-            "align-items: center;" +
-
-            "gap: 5px;" +
-
-            "box-sizing: border-box;" +
-
-        "}" +
-
-
-        // ==================================================
-        // PIN ICON
-        // ==================================================
-
-        ".geoplay-destination-pin {" +
-
-            "width: 16px;" +
-
-            "height: 16px;" +
-
-            "flex-shrink: 0;" +
-
-            "display: flex;" +
-
-            "align-items: center;" +
-
-            "justify-content: center;" +
-
-            "font-family: Arial, sans-serif;" +
-
-            "font-size: 12px;" +
-
-            "line-height: 1;" +
-
-        "}" +
-
-
-        // ==================================================
-        // CASINO NAME
-        // ==================================================
-
-        ".geoplay-destination-title {" +
-
-            "display: block;" +
-
-            "min-width: 0;" +
-
-            "flex: 1;" +
-
-            "padding-right: 4px;" +
-
-            "font-family: Arial, sans-serif;" +
-
-            "font-size: 11px;" +
-
-            "font-weight: 700;" +
-
-            "letter-spacing: 0.5px;" +
-
-            "line-height: 1.15;" +
-
-            "color: rgba(255,255,255,0.98);" +
-
-            "white-space: nowrap;" +
-
-            "overflow: visible;" +
-
-            "text-overflow: clip;" +
-
-        "}" +
-
-
-        // ==================================================
-        // SECOND ROW
-        // ==================================================
-
-        ".geoplay-destination-bottom-row {" +
-
-            "display: flex;" +
-
-            "align-items: center;" +
-
-            "justify-content: flex-start;" +
-
-            "width: 100%;" +
-
-            "min-height: 13px;" +
-
-            "padding-left: 31px;" +
-
-            "padding-right: 0;" +
-
-            "box-sizing: border-box;" +
-
-        "}" +
-
-
-        // ==================================================
-        // DISTANCE
-        // ==================================================
-
-        ".geoplay-destination-info {" +
-
-            "display: block;" +
-
-            "font-family: Arial, sans-serif;" +
-
-            "font-size: 8.8px;" +
-
-            "font-weight: 700;" +
-
-            "letter-spacing: 0.5px;" +
-
-            "line-height: 1;" +
-
-            "color: rgba(207,229,255,0.88);" +
-
-            "white-space: nowrap;" +
-
-        "}" +
-
-
-        // ==================================================
-        // CHEVRON
-        // ==================================================
-
-        ".geoplay-destination-chevron {" +
-
-            "position: absolute;" +
-
-            "right: 13px;" +
-
-            "top: 50%;" +
-
-            "width: auto;" +
-
-            "height: auto;" +
-
-            "margin: 0;" +
-
-            "display: block;" +
-
-            "background: transparent !important;" +
-
-            "background-image: none !important;" +
-
-            "border: 0 !important;" +
-
-            "border-radius: 0 !important;" +
-
-            "outline: 0 !important;" +
-
-            "box-shadow: none !important;" +
-
-            "color: rgba(255,255,255,0.95);" +
-
-            "font-family: Arial, sans-serif;" +
-
-            "font-size: 18px;" +
-
-            "font-weight: 400;" +
-
-            "line-height: 1;" +
-
-            "padding: 0;" +
-
-            "transform: translateY(-50%);" +
-
-            "box-sizing: content-box;" +
-
-            "appearance: none;" +
-
-            "-webkit-appearance: none;" +
-
-            "text-decoration: none;" +
-
-            "text-shadow: none;" +
-
-            "filter: none;" +
-
-            "pointer-events: none;" +
-
-            "transition: none !important;" +
-
-            "animation: none !important;" +
-
-        "}" +
-
-
-        // ==================================================
-        // CHEVRON - NO HOVER / FOCUS / ACTIVE EFFECT
-        // ==================================================
-
-        ".geoplay-destination:hover .geoplay-destination-chevron," +
-
-        ".geoplay-destination-chevron:hover," +
-
-        ".geoplay-destination-chevron:focus," +
-
-        ".geoplay-destination-chevron:focus-visible," +
-
-        ".geoplay-destination-chevron:active {" +
-
-            "color: rgba(255,255,255,0.95) !important;" +
-
-            "background: transparent !important;" +
-
-            "background-image: none !important;" +
-
-            "border: 0 !important;" +
-
-            "border-radius: 0 !important;" +
-
-            "outline: 0 !important;" +
-
-            "box-shadow: none !important;" +
-
-            "filter: none !important;" +
-
-            "opacity: 1 !important;" +
-
-            "transform: translateY(-50%) !important;" +
-
-            "transition: none !important;" +
-
-            "animation: none !important;" +
-
-        "}" +
-
-
-        // ==================================================
-        // EXPANDED DESTINATION MARKETING CARD
-        // ==================================================
-
-        ".geoplay-destination.expanded {" +
-
-            "width: min(350px, calc(100vw - 28px));" +
-
-            "max-width: calc(100vw - 28px);" +
-
-            "padding: 0;" +
-
-            "overflow: hidden;" +
-
-            "border-radius: 18px;" +
-
-            "background: linear-gradient(rgba(14,9,39,0.985), rgba(14,9,39,0.985)) padding-box, linear-gradient(105deg, #8b3dff 0%, #d52cff 48%, #ff9d00 100%) border-box;" +
-
-            "box-shadow: 0 12px 34px rgba(0,0,0,0.42), 0 0 20px rgba(151,65,255,0.22), 0 0 26px rgba(255,132,0,0.08);" +
-
-            "cursor: default;" +
-
-        "}" +
-
-        ".geoplay-destination.expanded::after {" +
-
-            "display: none;" +
-
-        "}" +
-
-        ".geoplay-destination-expanded-header {" +
-
-            "height: 46px;" +
-
-            "padding: 0 14px 0 16px;" +
-
-            "display: flex;" +
-
-            "align-items: center;" +
-
-            "justify-content: space-between;" +
-
-            "box-sizing: border-box;" +
-
-        "}" +
-
-        ".geoplay-destination-expanded-title {" +
-
-            "font-family: Arial, sans-serif;" +
-
-            "font-size: 13px;" +
-
-            "font-weight: 700;" +
-
-            "letter-spacing: 0.8px;" +
-
-            "line-height: 1;" +
-
-            "color: rgba(255,255,255,0.98);" +
-
-            "white-space: nowrap;" +
-
-        "}" +
-
-        ".geoplay-destination-close {" +
-
-            "width: 30px;" +
-
-            "height: 30px;" +
-
-            "padding: 0;" +
-
-            "display: flex;" +
-
-            "align-items: center;" +
-
-            "justify-content: center;" +
-
-            "border: 0;" +
-
-            "background: transparent;" +
-
-            "color: rgba(255,255,255,0.82);" +
-
-            "font-family: Arial, sans-serif;" +
-
-            "font-size: 25px;" +
-
-            "font-weight: 300;" +
-
-            "line-height: 1;" +
-
-            "cursor: pointer;" +
-
-            "appearance: none;" +
-
-            "-webkit-appearance: none;" +
-
-        "}" +
-
-        ".geoplay-destination-close:hover," +
-
-        ".geoplay-destination-close:focus," +
-
-        ".geoplay-destination-close:focus-visible," +
-
-        ".geoplay-destination-close:active {" +
-
-            "background: transparent;" +
-
-            "color: rgba(255,255,255,0.82);" +
-
-            "border: 0;" +
-
-            "outline: 0;" +
-
-            "box-shadow: none;" +
-
-        "}" +
-
-        ".geoplay-destination-carousel {" +
-
-            "position: relative;" +
-
-            "width: 100%;" +
-
-            "height: 178px;" +
-
-            "overflow: hidden;" +
-
-            "background: #09051c;" +
-
-            "touch-action: pan-y;" +
-
-            "user-select: none;" +
-
-            "-webkit-user-select: none;" +
-
-        "}" +
-
-        ".geoplay-destination-carousel-track {" +
-
-            "width: 100%;" +
-
-            "height: 100%;" +
-
-            "position: relative;" +
-
-        "}" +
-
-        ".geoplay-destination-carousel-image {" +
-
-            "position: absolute;" +
-
-            "inset: 0;" +
-
-            "width: 100%;" +
-
-            "height: 100%;" +
-
-            "display: block;" +
-
-            "object-fit: cover;" +
-
-            "object-position: center;" +
-
-            "opacity: 1;" +
-
-            "transition: opacity 220ms ease;" +
-
-            "pointer-events: none;" +
-
-        "}" +
-
-        ".geoplay-destination-carousel-arrow {" +
-
-            "position: absolute;" +
-
-            "top: 50%;" +
-
-            "width: 30px;" +
-
-            "height: 30px;" +
-
-            "margin: 0;" +
-
-            "padding: 0;" +
-
-            "display: flex;" +
-
-            "align-items: center;" +
-
-            "justify-content: center;" +
-
-            "transform: translateY(-50%);" +
-
-            "border: 1px solid rgba(255,255,255,0.22);" +
-
-            "border-radius: 50%;" +
-
-            "background: rgba(9,5,28,0.62);" +
-
-            "color: rgba(255,255,255,0.96);" +
-
-            "font-family: Arial, sans-serif;" +
-
-            "font-size: 21px;" +
-
-            "font-weight: 300;" +
-
-            "line-height: 1;" +
-
-            "cursor: pointer;" +
-
-            "z-index: 3;" +
-
-            "appearance: none;" +
-
-            "-webkit-appearance: none;" +
-
-            "backdrop-filter: blur(5px);" +
-
-            "-webkit-backdrop-filter: blur(5px);" +
-
-        "}" +
-
-        ".geoplay-destination-carousel-arrow-left {" +
-
-            "left: 10px;" +
-
-        "}" +
-
-        ".geoplay-destination-carousel-arrow-right {" +
-
-            "right: 10px;" +
-
-        "}" +
-
-        ".geoplay-destination-carousel-arrow:hover," +
-
-        ".geoplay-destination-carousel-arrow:focus," +
-
-        ".geoplay-destination-carousel-arrow:focus-visible," +
-
-        ".geoplay-destination-carousel-arrow:active {" +
-
-            "background: rgba(9,5,28,0.62);" +
-
-            "color: rgba(255,255,255,0.96);" +
-
-            "border-color: rgba(255,255,255,0.22);" +
-
-            "outline: 0;" +
-
-            "box-shadow: none;" +
-
-            "transform: translateY(-50%);" +
-
-        "}" +
-
-        ".geoplay-destination-carousel-dots {" +
-
-            "position: absolute;" +
-
-            "left: 50%;" +
-
-            "bottom: 10px;" +
-
-            "transform: translateX(-50%);" +
-
-            "display: flex;" +
-
-            "align-items: center;" +
-
-            "justify-content: center;" +
-
-            "gap: 6px;" +
-
-            "z-index: 3;" +
-
-        "}" +
-
-        ".geoplay-destination-carousel-dot {" +
-
-            "width: 5px;" +
-
-            "height: 5px;" +
-
-            "padding: 0;" +
-
-            "border: 0;" +
-
-            "border-radius: 50%;" +
-
-            "background: rgba(255,255,255,0.42);" +
-
-            "box-shadow: none;" +
-
-            "cursor: pointer;" +
-
-            "appearance: none;" +
-
-            "-webkit-appearance: none;" +
-
-        "}" +
-
-        ".geoplay-destination-carousel-dot.active {" +
-
-            "width: 7px;" +
-
-            "height: 7px;" +
-
-            "background: rgba(255,255,255,0.96);" +
-
-        "}" +
-
-        ".geoplay-destination-marketing {" +
-
-            "padding: 15px 17px 0 17px;" +
-
-            "box-sizing: border-box;" +
-
-        "}" +
-
-        ".geoplay-destination-tagline {" +
-
-            "font-family: Arial, sans-serif;" +
-
-            "font-size: 16px;" +
-
-            "font-weight: 700;" +
-
-            "letter-spacing: 0.1px;" +
-
-            "line-height: 1.25;" +
-
-            "color: rgba(255,255,255,0.98);" +
-
-        "}" +
-
-        ".geoplay-destination-marketing-copy {" +
-
-            "margin-top: 4px;" +
-
-            "font-family: Arial, sans-serif;" +
-
-            "font-size: 10.5px;" +
-
-            "font-weight: 400;" +
-
-            "letter-spacing: 0.15px;" +
-
-            "line-height: 1.45;" +
-
-            "color: rgba(207,229,255,0.76);" +
-
-        "}" +
-
-        ".geoplay-destination-expanded-divider {" +
-
-            "height: 1px;" +
-
-            "margin: 13px 17px 0 17px;" +
-
-            "background: linear-gradient(90deg, rgba(139,61,255,0.38), rgba(213,44,255,0.24), rgba(255,157,0,0.30));" +
-
-        "}" +
-
-        ".geoplay-destination-expanded-details {" +
-
-            "padding: 12px 17px 14px 17px;" +
-
-            "display: flex;" +
-
-            "flex-direction: column;" +
-
-            "gap: 9px;" +
-
-            "box-sizing: border-box;" +
-
-        "}" +
-
-        ".geoplay-destination-expanded-distance," +
-
-        ".geoplay-destination-expanded-address {" +
-
-            "display: flex;" +
-
-            "align-items: center;" +
-
-            "gap: 8px;" +
-
-            "font-family: Arial, sans-serif;" +
-
-            "font-size: 10px;" +
-
-            "font-weight: 700;" +
-
-            "letter-spacing: 0.45px;" +
-
-            "line-height: 1.25;" +
-
-            "color: rgba(255,255,255,0.88);" +
-
-        "}" +
-
-        ".geoplay-destination-distance-icon," +
-
-        ".geoplay-destination-address-icon {" +
-
-            "width: 20px;" +
-
-            "height: 20px;" +
-
-            "flex-shrink: 0;" +
-
-            "display: flex;" +
-
-            "align-items: center;" +
-
-            "justify-content: center;" +
-
-            "font-family: Arial, sans-serif;" +
-
-            "font-size: 14px;" +
-
-            "font-weight: 400;" +
-
-            "line-height: 1;" +
-
-            "color: rgba(255,255,255,0.92);" +
-
-        "}" +
-
-        ".geoplay-destination-address-text {" +
-
-            "font-weight: 400;" +
-
-            "letter-spacing: 0.1px;" +
-
-            "line-height: 1.35;" +
-
-            "color: rgba(207,229,255,0.82);" +
-
-        "}" +
-
-        ".geoplay-destination-play {" +
-
-            "width: calc(100% - 34px);" +
-
-            "height: 42px;" +
-
-            "margin: 0 17px 17px 17px;" +
-
-            "padding: 0;" +
-
-            "display: flex;" +
-
-            "align-items: center;" +
-
-            "justify-content: center;" +
-
-            "border: 1px solid transparent;" +
-
-            "border-radius: 11px;" +
-
-            "background: linear-gradient(90deg, #7138ff 0%, #a43cff 48%, #ff7d24 100%) padding-box, linear-gradient(90deg, #9f6bff 0%, #f05cff 55%, #ffad43 100%) border-box;" +
-
-            "box-shadow: 0 7px 18px rgba(113,56,255,0.24);" +
-
-            "color: rgba(255,255,255,0.98);" +
-
-            "font-family: Arial, sans-serif;" +
-
-            "font-size: 11px;" +
-
-            "font-weight: 800;" +
-
-            "letter-spacing: 1.25px;" +
-
-            "cursor: pointer;" +
-
-            "appearance: none;" +
-
-            "-webkit-appearance: none;" +
-
-        "}" +
-
-        ".geoplay-destination-play:hover," +
-
-        ".geoplay-destination-play:focus," +
-
-        ".geoplay-destination-play:focus-visible," +
-
-        ".geoplay-destination-play:active {" +
-
-            "color: rgba(255,255,255,0.98);" +
-
-            "outline: 0;" +
-
-        "}" +
-
-
-        // ==================================================
-        // MOBILE
-        // ==================================================
-
-        "@media (max-width: 480px) {" +
-
-            ".geoplay-destination {" +
-
-                "width: 202px;" +
-
-                "max-width: calc(100vw - 20px);" +
-
-                "border-radius: 13px;" +
-
-            "}" +
-
-
-            ".geoplay-destination-collapsed {" +
-
-                "min-height: 38px;" +
-
-                "padding: 4px 8px 4px 9px;" +
-
-            "}" +
-
-
-            ".geoplay-destination-collapsed-main {" +
-
-                "gap: 5px;" +
-
-            "}" +
-
-
-            ".geoplay-destination-pin {" +
-
-                "width: 15px;" +
-
-                "height: 15px;" +
-
-                "font-size: 11px;" +
-
-            "}" +
-
-
-            ".geoplay-destination-title {" +
-
-                "font-size: 10.8px;" +
-
-                "letter-spacing: 0.45px;" +
-
-                "padding-right: 4px;" +
-
-            "}" +
-
-
-            ".geoplay-destination-bottom-row {" +
-
-                "padding-left: 29px;" +
-
-                "padding-right: 0;" +
-
-            "}" +
-
-
-            ".geoplay-destination-info {" +
-
-                "font-size: 8.5px;" +
-
-            "}" +
-
-
-            ".geoplay-destination-chevron {" +
-
-                "right: 11px;" +
-
-                "font-size: 17px;" +
-
-            "}" +
-
-        "}" +
-
-
-        // ==================================================
-        // EXPANDED CARD MOBILE OVERRIDES
-        // ==================================================
-
-        "@media (max-width: 480px) {" +
-
-            ".geoplay-destination.expanded {" +
-
-                "width: min(332px, calc(100vw - 24px));" +
-
-                "max-width: calc(100vw - 24px);" +
-
-                "border-radius: 17px;" +
-
-            "}" +
-
-            ".geoplay-destination-carousel {" +
-
-                "height: 168px;" +
-
-            "}" +
-
-            ".geoplay-destination-expanded-title {" +
-
-                "font-size: 12px;" +
-
-            "}" +
-
-            ".geoplay-destination-tagline {" +
-
-                "font-size: 15px;" +
-
-            "}" +
-
-        "}";
-
-
-    document.head.appendChild(
-        style
-    );
 }
 
 
@@ -1591,12 +156,7 @@ function geoplayMapUIDestinationEnsureStyles()
 
 function geoplayMapUICreateDestinationCard()
 {
-    geoplayMapUIDestinationEnsureStyles();
-
-
-    if (
-        !window.geoplayMapUI
-    )
+    if (!window.geoplayMapUI)
     {
         console.error(
             "GEOPLAY UI: Map UI container not found."
@@ -1605,134 +165,66 @@ function geoplayMapUICreateDestinationCard()
         return 0;
     }
 
-
-    // ==================================================
-    // CREATE MODAL OVERLAY
-    // ==================================================
-
     var overlay =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     overlay.id =
         "geoplay-destination-overlay";
 
-
     overlay.className =
         "geoplay-destination-overlay";
 
-
-    overlay.style.position =
-        "absolute";
-
-
-    overlay.style.left =
-        "0";
-
-
-    overlay.style.top =
-        "0";
-
-
-    overlay.style.width =
-        "100%";
-
-
-    overlay.style.height =
-        "100%";
-
-
-    overlay.style.background =
-        "rgba(5,2,18,.42)";
-
-
-    overlay.style.opacity =
-        "0";
-
-
-    overlay.style.visibility =
-        "hidden";
-
-
-    overlay.style.pointerEvents =
-        "none";
-
-
-    overlay.style.zIndex =
-        geoplayDestinationOverlayZIndex;
-
-
-    overlay.style.transition =
-        "opacity 300ms ease, visibility 300ms ease";
-
-
-    window.geoplayMapUI.appendChild(
-        overlay
+    Object.assign(
+        overlay.style,
+        {
+            position: "absolute",
+            left: "0",
+            top: "0",
+            width: "100%",
+            height: "100%",
+            background: "rgba(5,2,18,.42)",
+            opacity: "0",
+            visibility: "hidden",
+            pointerEvents: "none",
+            zIndex: geoplayDestinationOverlayZIndex,
+            transition:
+                "opacity 300ms ease, visibility 300ms ease"
+        }
     );
 
+    window.geoplayMapUI.appendChild(overlay);
 
     window.geoplayDestinationOverlay =
         overlay;
 
-
-    // ==================================================
-    // CREATE DESTINATION CALLOUT
-    // ==================================================
-
     var card =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     card.id =
         "geoplay-destination";
 
-
     card.className =
         "geoplay-destination";
-
 
     card.style.position =
         "absolute";
 
-
     card.style.zIndex =
         geoplayDestinationSceneZIndex;
-
 
     card.setAttribute(
         "data-pointer-side",
         "bottom"
     );
 
+    geoplayMapUISetDestinationCollapsed(card);
 
-    geoplayMapUISetDestinationCollapsed(
-        card
-    );
-
-
-    window.geoplayMapUI.appendChild(
-        card
-    );
-
+    window.geoplayMapUI.appendChild(card);
 
     window.geoplayDestinationCard =
         card;
 
-
-    // ==================================================
-    // ATTACH MAP POSITION LISTENERS
-    // ==================================================
-
     geoplayMapUIAttachDestinationMapListeners();
-
-
-    // ==================================================
-    // PROTECT MODAL FROM MAP INPUT
-    // ==================================================
 
     if (
         typeof geoplayMapUIProtectModalPanel ===
@@ -1745,197 +237,99 @@ function geoplayMapUICreateDestinationCard()
         );
     }
 
-
-    // ==================================================
-    // CALLOUT CLICK / TAP
-    // ==================================================
-
     geoplayMapUIDelegateDestinationInteraction(
         card
     );
 
-
     console.log(
         "GEOPLAY UI: Pine Ridge destination callout created."
     );
-
 
     return 1;
 }
 
 
 // ==================================================
-// DESTINATION CALLOUT INTERACTION
+// DESTINATION INTERACTION
 // ==================================================
 
-function geoplayMapUIDelegateDestinationInteraction(
-    card
-)
+function geoplayMapUIDelegateDestinationInteraction(card)
 {
-    if (
-        !card
-    )
+    if (!card)
     {
         return;
     }
 
+    function handleInteraction(event)
+    {
+        if (
+            geoplayMapUIDestinationEventIsInternal(
+                event
+            )
+        )
+        {
+            return;
+        }
+
+        if (
+            window.geoplayMapStoryLocked ||
+            window.geoplayDestinationExpanded ||
+            window.geoplayDestinationClosing
+        )
+        {
+            return;
+        }
+
+        if (event.type === "touchend")
+        {
+            event.preventDefault();
+        }
+
+        geoplayMapUIExpandDestination();
+    }
 
     card.addEventListener(
         "click",
-        function(event)
-        {
-            if (
-                geoplayMapUIDestinationEventIsInternal(
-                    event
-                )
-            )
-            {
-                return;
-            }
-
-
-            if (
-                window.geoplayMapStoryLocked
-            )
-            {
-                return;
-            }
-
-
-            if (
-                window.geoplayDestinationExpanded
-            )
-            {
-                return;
-            }
-
-
-            if (
-                window.geoplayDestinationClosing
-            )
-            {
-                return;
-            }
-
-
-            geoplayMapUIExpandDestination();
-        }
+        handleInteraction
     );
-
 
     card.addEventListener(
         "touchend",
-        function(event)
+        handleInteraction,
         {
-            if (
-                geoplayMapUIDestinationEventIsInternal(
-                    event
-                )
-            )
-            {
-                return;
-            }
-
-
-            if (
-                window.geoplayMapStoryLocked
-            )
-            {
-                return;
-            }
-
-
-            if (
-                window.geoplayDestinationExpanded
-            )
-            {
-                return;
-            }
-
-
-            if (
-                window.geoplayDestinationClosing
-            )
-            {
-                return;
-            }
-
-
-            event.preventDefault();
-
-
-            geoplayMapUIExpandDestination();
-        },
-        {
-            passive:
-                false
+            passive: false
         }
     );
 }
 
 
-// ==================================================
-// CHECK DESTINATION INTERNAL EVENT
-// ==================================================
-
-function geoplayMapUIDestinationEventIsInternal(
-    event
-)
+function geoplayMapUIDestinationEventIsInternal(event)
 {
-    if (
-        !event ||
-        !event.target
-    )
+    if (!event || !event.target)
     {
         return false;
     }
 
-
-    if (
-        event.target.closest(
-            ".geoplay-destination-close"
-        )
-    )
-    {
-        return true;
-    }
-
-
-    if (
-        event.target.closest(
-            ".geoplay-destination-play"
-        )
-    )
-    {
-        return true;
-    }
-
-
-    return false;
+    return !!event.target.closest(
+        ".geoplay-destination-close, " +
+        ".geoplay-destination-play"
+    );
 }
 
 
 // ==================================================
-// SHOW DESTINATION CARD WITH POP ANIMATION
+// CARD VISIBILITY ANIMATION
 // ==================================================
 
-function geoplayMapUIShowDestinationCard(
-    card
-)
+function geoplayMapUIShowDestinationCard(card)
 {
-    if (
-        !card
-    )
+    if (!card)
     {
         return;
     }
 
-
     if (
-        card.classList.contains(
-            "visible"
-        ) &&
-
+        card.classList.contains("visible") &&
         !card.classList.contains(
             "geoplay-destination-pop-out"
         )
@@ -1944,36 +338,25 @@ function geoplayMapUIShowDestinationCard(
         return;
     }
 
-
     card.classList.remove(
         "geoplay-destination-pop-out"
     );
 
-
     card.classList.remove(
         "geoplay-destination-pop-in"
     );
 
-
     void card.offsetWidth;
 
-
-    card.classList.add(
-        "visible"
-    );
-
-
+    card.classList.add("visible");
     card.classList.add(
         "geoplay-destination-pop-in"
     );
 
-
     window.setTimeout(
         function()
         {
-            if (
-                card
-            )
+            if (card)
             {
                 card.classList.remove(
                     "geoplay-destination-pop-in"
@@ -1985,59 +368,30 @@ function geoplayMapUIShowDestinationCard(
 }
 
 
-// ==================================================
-// HIDE DESTINATION CARD WITH POP ANIMATION
-// ==================================================
-
-function geoplayMapUIHideDestinationCard(
-    card
-)
+function geoplayMapUIHideDestinationCard(card)
 {
-    if (
-        !card
-    )
-    {
-        return;
-    }
-
-
-    if (
-        !card.classList.contains(
-            "visible"
-        )
-    )
-    {
-        return;
-    }
-
-
-    if (
+    if (!card ||
+        !card.classList.contains("visible") ||
         card.classList.contains(
             "geoplay-destination-pop-out"
-        )
-    )
+        ))
     {
         return;
     }
-
 
     card.classList.remove(
         "geoplay-destination-pop-in"
     );
 
-
     card.classList.remove(
         "geoplay-destination-pop-out"
     );
 
-
     void card.offsetWidth;
-
 
     card.classList.add(
         "geoplay-destination-pop-out"
     );
-
 
     window.setTimeout(
         function()
@@ -2053,7 +407,6 @@ function geoplayMapUIHideDestinationCard(
                     "visible"
                 );
 
-
                 card.classList.remove(
                     "geoplay-destination-pop-out"
                 );
@@ -2065,139 +418,73 @@ function geoplayMapUIHideDestinationCard(
 
 
 // ==================================================
-// SET COLLAPSED DESTINATION CALLOUT
+// COLLAPSED DESTINATION
 // ==================================================
 
-function geoplayMapUISetDestinationCollapsed(
-    card
-)
+function geoplayMapUISetDestinationCollapsed(card)
 {
-    if (
-        !card
-    )
+    if (!card)
     {
         return;
     }
 
-
-    card.classList.remove(
-        "expanded"
-    );
-
-
-    card.classList.remove(
-        "modal-closing"
-    );
-
-
+    card.classList.remove("expanded");
+    card.classList.remove("modal-closing");
     card.classList.remove(
         "geoplay-destination-pop-in"
     );
-
-
     card.classList.remove(
         "geoplay-destination-pop-out"
     );
-
-
-    card.classList.remove(
-        "visible"
-    );
-
+    card.classList.remove("visible");
 
     card.style.zIndex =
         geoplayDestinationSceneZIndex;
 
-
-    var destinationName =
+    var name =
         geoplayMapUIDestinationName();
-
-
-    var destinationDistance =
-        geoplayMapUIDestinationDistance();
-
 
     var distanceReady =
         geoplayMapUIDestinationDistanceReady();
 
-
     var distanceMarkup =
-        "";
-
-
-    if (
         distanceReady
-    )
-    {
-        distanceMarkup =
-
-            "<div class='geoplay-destination-bottom-row'>" +
-
-                "<span class='geoplay-destination-info'>" +
-
-                    destinationDistance +
-
-                "</span>" +
-
-            "</div>";
-    }
-
+            ? (
+                "<div class='geoplay-destination-bottom-row'>" +
+                    "<span class='geoplay-destination-info'>" +
+                        geoplayMapUIDestinationDistance() +
+                    "</span>" +
+                "</div>"
+            )
+            : "";
 
     card.innerHTML =
-
         "<div class='geoplay-destination-collapsed'>" +
-
             "<div class='geoplay-destination-collapsed-main'>" +
-
-                "<span class='geoplay-destination-pin'>" +
-
-                    "📍" +
-
-                "</span>" +
-
+                "<span class='geoplay-destination-pin'>📍</span>" +
                 "<span class='geoplay-destination-title'>" +
-
-                    destinationName.toUpperCase() +
-
+                    name.toUpperCase() +
                 "</span>" +
-
             "</div>" +
-
             distanceMarkup +
-
-            "<span class='geoplay-destination-chevron'>" +
-
-                "›" +
-
-            "</span>" +
-
+            "<span class='geoplay-destination-chevron'>›</span>" +
         "</div>";
 
-
-    if (
-        !card.getAttribute(
-            "data-pointer-side"
-        )
-    )
-    {
-        card.setAttribute(
-            "data-pointer-side",
-            "top"
-        );
-    }
-
+    card.setAttribute(
+        "data-pointer-side",
+        card.getAttribute("data-pointer-side") ||
+        "top"
+    );
 
     card.style.setProperty(
         "--geoplay-pointer-left",
         "50%"
     );
 
-
     card.style.setProperty(
         "--geoplay-pointer-top",
         "50%"
     );
-
 
     window.geoplayDestinationExpanded =
         false;
@@ -2205,296 +492,291 @@ function geoplayMapUISetDestinationCollapsed(
 
 
 // ==================================================
-// SET EXPANDED DESTINATION CONTENT
+// EXPANDED DESTINATION
 // ==================================================
 
-function geoplayMapUISetDestinationExpanded(
-    card
-)
+function geoplayMapUISetDestinationExpanded(card)
 {
-    if (
-        !card
-    )
+    if (!card)
     {
         return;
     }
 
-
-    card.classList.add(
-        "expanded"
-    );
-
-
-    card.classList.remove(
-        "modal-closing"
-    );
-
-
-    card.style.zIndex =
-        geoplayDestinationModalZIndex;
-
-
-    var destinationName =
+    var name =
         geoplayMapUIDestinationName();
-
-
-    var destinationDistance =
-        geoplayMapUIDestinationDistance();
-
 
     var distanceReady =
         geoplayMapUIDestinationDistanceReady();
 
-
     var distanceMarkup =
-        "";
-
-
-    if (
         distanceReady
-    )
-    {
-        distanceMarkup =
+            ? (
+                "<div class='geoplay-destination-expanded-distance'>" +
+                    "<span class='geoplay-destination-distance-icon'>➜</span>" +
+                    "<span>" +
+                        geoplayMapUIDestinationDistance() +
+                    "</span>" +
+                "</div>"
+            )
+            : "";
 
-            "<div class='geoplay-destination-expanded-distance'>" +
+    card.classList.add("expanded");
+    card.classList.remove("modal-closing");
 
-                "<span class='geoplay-destination-distance-icon'>" +
-
-                    "➜" +
-
-                "</span>" +
-
-                "<span>" +
-
-                    destinationDistance +
-
-                "</span>" +
-
-            "</div>";
-    }
-
+    card.style.zIndex =
+        geoplayDestinationModalZIndex;
 
     card.innerHTML =
-
         "<div class='geoplay-destination-expanded-header'>" +
-
             "<span class='geoplay-destination-expanded-title'>" +
-
-                destinationName.toUpperCase() +
-
+                name.toUpperCase() +
             "</span>" +
 
-            "<button " +
-
-                "type='button' " +
-
+            "<button type='button' " +
                 "class='geoplay-destination-close' " +
-
                 "aria-label='Close " +
-
-                    destinationName +
-
+                    name +
                     " information'>" +
-
                 "×" +
-
             "</button>" +
-
         "</div>" +
 
-
-        "<div " +
-
-            "class='geoplay-destination-carousel' " +
-
+        "<div class='geoplay-destination-carousel' " +
             "aria-label='Pine Ridge Casino photos'>" +
 
-            
-
             "<div class='geoplay-destination-carousel-track'>" +
-
-                "<img " +
-
-                    "class='geoplay-destination-carousel-image' " +
-
+                "<img class='geoplay-destination-carousel-image' " +
                     "src='" +
-
                         window.geoplayDestinationCarouselImages[0] +
-
                     "' " +
-
                     "alt='" +
-
-                        destinationName +
-
+                        name +
                     "' " +
-
                     "draggable='false'>" +
-
             "</div>" +
 
-
-            "<button " +
-
-                "type='button' " +
-
+            "<button type='button' " +
                 "class='geoplay-destination-carousel-arrow geoplay-destination-carousel-arrow-left' " +
+                "aria-label='Previous image'>‹</button>" +
 
-                "aria-label='Previous image'>" +
-
-                "‹" +
-
-            "</button>" +
-
-
-            "<button " +
-
-                "type='button' " +
-
+            "<button type='button' " +
                 "class='geoplay-destination-carousel-arrow geoplay-destination-carousel-arrow-right' " +
-
-                "aria-label='Next image'>" +
-
-                "›" +
-
-            "</button>" +
-
+                "aria-label='Next image'>›</button>" +
 
             "<div class='geoplay-destination-carousel-dots'></div>" +
-
         "</div>" +
 
-
         "<div class='geoplay-destination-marketing'>" +
-
             "<div class='geoplay-destination-tagline'>" +
-
                 "Your night starts here." +
-
             "</div>" +
 
             "<div class='geoplay-destination-marketing-copy'>" +
-
                 "Big games. Great food. Unforgettable nights." +
-
             "</div>" +
-
         "</div>" +
-
 
         "<div class='geoplay-destination-expanded-divider'></div>" +
 
-
         "<div class='geoplay-destination-expanded-details'>" +
-
             distanceMarkup +
 
-
             "<div class='geoplay-destination-expanded-address'>" +
-
-                "<span class='geoplay-destination-address-icon'>" +
-
-                    "⌖" +
-
-                "</span>" +
+                "<span class='geoplay-destination-address-icon'>⌖</span>" +
 
                 "<span class='geoplay-destination-address-text'>" +
-
                     "777 Pine Ridge Road<br>" +
-
                     "Pine Ridge, CA 95563" +
-
                 "</span>" +
-
             "</div>" +
-
         "</div>" +
 
-
-        "<button " +
-
-            "type='button' " +
-
+        "<button type='button' " +
             "class='geoplay-destination-play'>" +
-
-            "<span>" +
-
-                "PLAY HERE" +
-
-            "</span>" +
-
+            "<span>PLAY HERE</span>" +
         "</button>";
-
 
     window.geoplayDestinationExpanded =
         true;
 
-
     window.geoplayDestinationCarouselIndex =
         0;
 
-
-    geoplayMapUIAttachDestinationCarousel(
-        card
-    );
-
-
-    geoplayMapUIAttachDestinationClose(
-        card
-    );
-
-
-    geoplayMapUIAttachDestinationPlay(
-        card
-    );
+    geoplayMapUIAttachDestinationCarousel(card);
+    geoplayMapUIAttachDestinationClose(card);
+    geoplayMapUIAttachDestinationPlay(card);
 }
 
 
 // ==================================================
-// ATTACH DESTINATION CAROUSEL
+// CAROUSEL
 // ==================================================
 
-function geoplayMapUIAttachDestinationCarousel(
-    card
+function geoplayMapUIDestinationNormalizeCarouselIndex(
+    index,
+    total
 )
 {
-    if (
-        !card
-    )
+    if (!total)
+    {
+        return 0;
+    }
+
+    return (
+        (
+            index % total
+        ) +
+        total
+    ) % total;
+}
+
+
+function geoplayMapUIDestinationSetCarouselImage(
+    image,
+    imageUrl
+)
+{
+    if (!image)
     {
         return;
     }
 
+    image.style.opacity =
+        "0";
 
-    var carousel =
-        card.querySelector(
-            ".geoplay-destination-carousel"
+    window.setTimeout(
+        function()
+        {
+            image.src =
+                imageUrl;
+
+            image.onload =
+                function()
+                {
+                    image.style.opacity =
+                        "1";
+                };
+
+            image.onerror =
+                function()
+                {
+                    image.style.opacity =
+                        "1";
+                };
+
+            if (image.complete)
+            {
+                image.style.opacity =
+                    "1";
+            }
+        },
+        90
+    );
+}
+
+
+function geoplayMapUIDestinationUpdateCarouselDots(
+    dots,
+    index
+)
+{
+    if (!dots)
+    {
+        return;
+    }
+
+    dots.querySelectorAll(
+        ".geoplay-destination-carousel-dot"
+    ).forEach(
+        function(dot, dotIndex)
+        {
+            dot.classList.toggle(
+                "active",
+                dotIndex === index
+            );
+        }
+    );
+}
+
+
+function geoplayMapUIDestinationCarouselShow(
+    card,
+    index
+)
+{
+    if (!card)
+    {
+        return;
+    }
+
+    var images =
+        window.geoplayDestinationCarouselImages ||
+        [];
+
+    if (!images.length)
+    {
+        return;
+    }
+
+    index =
+        geoplayMapUIDestinationNormalizeCarouselIndex(
+            index,
+            images.length
         );
 
+    window.geoplayDestinationCarouselIndex =
+        index;
 
     var image =
         card.querySelector(
             ".geoplay-destination-carousel-image"
         );
 
+    geoplayMapUIDestinationSetCarouselImage(
+        image,
+        images[index]
+    );
+
+    geoplayMapUIDestinationUpdateCarouselDots(
+        card.querySelector(
+            ".geoplay-destination-carousel-dots"
+        ),
+        index
+    );
+}
+
+
+function geoplayMapUIAttachDestinationCarousel(card)
+{
+    if (!card)
+    {
+        return;
+    }
+
+    var carousel =
+        card.querySelector(
+            ".geoplay-destination-carousel"
+        );
+
+    var image =
+        card.querySelector(
+            ".geoplay-destination-carousel-image"
+        );
 
     var previousButton =
         card.querySelector(
             ".geoplay-destination-carousel-arrow-left"
         );
 
-
     var nextButton =
         card.querySelector(
             ".geoplay-destination-carousel-arrow-right"
         );
 
-
     var dots =
         card.querySelector(
             ".geoplay-destination-carousel-dots"
         );
-
 
     if (
         !carousel ||
@@ -2507,228 +789,87 @@ function geoplayMapUIAttachDestinationCarousel(
         return;
     }
 
-
     var images =
         window.geoplayDestinationCarouselImages ||
         [];
 
-
-    if (
-        images.length === 0
-    )
+    if (!images.length)
     {
         return;
     }
 
+    dots.innerHTML = "";
 
-    // ==================================================
-    // CREATE DOTS
-    // ==================================================
-
-    dots.innerHTML =
-        "";
-
-
-    for (
-        var i = 0;
-        i < images.length;
-        i++
-    )
-    {
-        var dot =
-            document.createElement(
-                "button"
-            );
-
-
-        dot.type =
-            "button";
-
-
-        dot.className =
-            "geoplay-destination-carousel-dot";
-
-
-        dot.setAttribute(
-            "aria-label",
-            "Show image " +
-            (
-                i + 1
-            )
-        );
-
-
-        dot.dataset.index =
-            i;
-
-
-        dot.addEventListener(
-            "click",
-            function(event)
-            {
-                event.preventDefault();
-
-                event.stopPropagation();
-
-
-                geoplayMapUIDestinationCarouselShow(
-                    card,
-                    parseInt(
-                        event.currentTarget.dataset.index,
-                        10
-                    )
-                );
-            }
-        );
-
-
-        dots.appendChild(
-            dot
-        );
-    }
-
-
-    // ==================================================
-    // UPDATE CAROUSEL
-    // ==================================================
-
-    function updateCarousel(
-        index
-    )
-    {
-        var total =
-            images.length;
-
-
-        if (
-            total === 0
-        )
+    images.forEach(
+        function(imageUrl, index)
         {
-            return;
-        }
+            var dot =
+                document.createElement("button");
 
+            dot.type = "button";
 
-        index =
-            (
-                index %
-                total
-            ) +
-            total;
+            dot.className =
+                "geoplay-destination-carousel-dot";
 
-
-        index =
-            index %
-            total;
-
-
-        window.geoplayDestinationCarouselIndex =
-            index;
-
-
-        image.style.opacity =
-            "0";
-
-
-        window.setTimeout(
-            function()
-            {
-                image.src =
-                    images[index];
-
-
-                image.onload =
-                    function()
-                    {
-                        image.style.opacity =
-                            "1";
-                    };
-
-
-                image.onerror =
-                    function()
-                    {
-                        image.style.opacity =
-                            "1";
-                    };
-
-
-                if (
-                    image.complete
-                )
-                {
-                    image.style.opacity =
-                        "1";
-                }
-            },
-            90
-        );
-
-
-        var dotButtons =
-            dots.querySelectorAll(
-                ".geoplay-destination-carousel-dot"
+            dot.setAttribute(
+                "aria-label",
+                "Show image " +
+                (index + 1)
             );
 
+            dot.dataset.index =
+                index;
 
-        dotButtons.forEach(
-            function(
-                dotButton,
-                dotIndex
-            )
-            {
-                if (
-                    dotIndex ===
-                    index
-                )
+            dot.addEventListener(
+                "click",
+                function(event)
                 {
-                    dotButton.classList.add(
-                        "active"
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    geoplayMapUIDestinationCarouselShow(
+                        card,
+                        parseInt(
+                            event.currentTarget.dataset.index,
+                            10
+                        )
                     );
                 }
-                else
-                {
-                    dotButton.classList.remove(
-                        "active"
-                    );
-                }
-            }
-        );
-    }
+            );
 
+            dots.appendChild(dot);
+        }
+    );
 
     previousButton.addEventListener(
         "click",
         function(event)
         {
             event.preventDefault();
-
             event.stopPropagation();
 
-
-            updateCarousel(
+            geoplayMapUIDestinationCarouselShow(
+                card,
                 window.geoplayDestinationCarouselIndex -
                 1
             );
         }
     );
 
-
     nextButton.addEventListener(
         "click",
         function(event)
         {
             event.preventDefault();
-
             event.stopPropagation();
 
-
-            updateCarousel(
+            geoplayMapUIDestinationCarouselShow(
+                card,
                 window.geoplayDestinationCarouselIndex +
                 1
             );
         }
     );
-
 
     carousel.addEventListener(
         "touchstart",
@@ -2742,35 +883,29 @@ function geoplayMapUIAttachDestinationCarousel(
                 return;
             }
 
-
             window.geoplayDestinationCarouselTouchStartX =
                 event.touches[0].clientX;
-
 
             window.geoplayDestinationCarouselTouchStartY =
                 event.touches[0].clientY;
         },
         {
-            passive:
-                true
+            passive: true
         }
     );
-
 
     carousel.addEventListener(
         "touchend",
         function(event)
         {
-            if (
-                window.geoplayDestinationCarouselTouchStartX ===
-                null
-            )
-            {
-                return;
-            }
+            var startX =
+                window.geoplayDestinationCarouselTouchStartX;
 
+            var startY =
+                window.geoplayDestinationCarouselTouchStartY;
 
             if (
+                startX === null ||
                 !event.changedTouches ||
                 !event.changedTouches.length
             )
@@ -2778,83 +913,45 @@ function geoplayMapUIAttachDestinationCarousel(
                 return;
             }
 
-
-            var endX =
-                event.changedTouches[0].clientX;
-
-
-            var endY =
-                event.changedTouches[0].clientY;
-
-
             var deltaX =
-                endX -
-                window.geoplayDestinationCarouselTouchStartX;
-
+                event.changedTouches[0].clientX -
+                startX;
 
             var deltaY =
-                endY -
-                window.geoplayDestinationCarouselTouchStartY;
-
+                event.changedTouches[0].clientY -
+                startY;
 
             window.geoplayDestinationCarouselTouchStartX =
                 null;
 
-
             window.geoplayDestinationCarouselTouchStartY =
                 null;
 
-
             if (
-                Math.abs(deltaX) <
-                35
+                Math.abs(deltaX) < 35 ||
+                Math.abs(deltaX) < Math.abs(deltaY)
             )
             {
                 return;
             }
 
-
-            if (
-                Math.abs(deltaX) <
-                Math.abs(deltaY)
-            )
-            {
-                return;
-            }
-
-
-            if (
-                deltaX < 0
-            )
-            {
-                updateCarousel(
-                    window.geoplayDestinationCarouselIndex +
-                    1
-                );
-            }
-            else
-            {
-                updateCarousel(
-                    window.geoplayDestinationCarouselIndex -
-                    1
-                );
-            }
+            geoplayMapUIDestinationCarouselShow(
+                card,
+                window.geoplayDestinationCarouselIndex +
+                (
+                    deltaX < 0
+                        ? 1
+                        : -1
+                )
+            );
         },
         {
-            passive:
-                true
+            passive: true
         }
     );
 
-
-    // ==================================================
-    // PRELOAD ALL IMAGES
-    // ==================================================
-
     images.forEach(
-        function(
-            imageUrl
-        )
+        function(imageUrl)
         {
             var preload =
                 new Image();
@@ -2864,253 +961,89 @@ function geoplayMapUIAttachDestinationCarousel(
         }
     );
 
-
-    updateCarousel(
+    geoplayMapUIDestinationCarouselShow(
+        card,
         0
     );
 }
 
 
 // ==================================================
-// SHOW DESTINATION CAROUSEL IMAGE
+// CLOSE / PLAY BUTTONS
 // ==================================================
 
-function geoplayMapUIDestinationCarouselShow(
-    card,
-    index
-)
-{
-    if (
-        !card
-    )
-    {
-        return;
-    }
-
-
-    var images =
-        window.geoplayDestinationCarouselImages ||
-        [];
-
-
-    if (
-        images.length === 0
-    )
-    {
-        return;
-    }
-
-
-    index =
-        (
-            index %
-            images.length
-        ) +
-        images.length;
-
-
-    index =
-        index %
-        images.length;
-
-
-    window.geoplayDestinationCarouselIndex =
-        index;
-
-
-    var image =
-        card.querySelector(
-            ".geoplay-destination-carousel-image"
-        );
-
-
-    if (
-        image
-    )
-    {
-        image.style.opacity =
-            "0";
-
-
-        window.setTimeout(
-            function()
-            {
-                image.src =
-                    images[index];
-
-
-                image.onload =
-                    function()
-                    {
-                        image.style.opacity =
-                            "1";
-                    };
-
-
-                image.onerror =
-                    function()
-                    {
-                        image.style.opacity =
-                            "1";
-                    };
-
-
-                if (
-                    image.complete
-                )
-                {
-                    image.style.opacity =
-                        "1";
-                }
-            },
-            90
-        );
-    }
-
-
-    var dots =
-        card.querySelectorAll(
-            ".geoplay-destination-carousel-dot"
-        );
-
-
-    dots.forEach(
-        function(
-            dot,
-            dotIndex
-        )
-        {
-            if (
-                dotIndex ===
-                index
-            )
-            {
-                dot.classList.add(
-                    "active"
-                );
-            }
-            else
-            {
-                dot.classList.remove(
-                    "active"
-                );
-            }
-        }
-    );
-}
-
-// ==================================================
-// ATTACH CLOSE BUTTON
-// ==================================================
-
-function geoplayMapUIAttachDestinationClose(
-    card
-)
+function geoplayMapUIAttachDestinationClose(card)
 {
     var closeButton =
         card.querySelector(
             ".geoplay-destination-close"
         );
 
-
-    if (
-        !closeButton
-    )
+    if (!closeButton)
     {
         return;
     }
 
+    function handleClose(event)
+    {
+        event.preventDefault();
+        event.stopPropagation();
+
+        geoplayMapUICollapseDestination();
+    }
 
     closeButton.addEventListener(
         "click",
-        function(event)
-        {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
-            geoplayMapUICollapseDestination();
-        }
+        handleClose
     );
-
 
     closeButton.addEventListener(
         "touchend",
-        function(event)
+        handleClose,
         {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
-            geoplayMapUICollapseDestination();
-        },
-        {
-            passive:
-                false
+            passive: false
         }
     );
 }
 
 
-// ==================================================
-// ATTACH PLAY HERE BUTTON
-// ==================================================
-
-function geoplayMapUIAttachDestinationPlay(
-    card
-)
+function geoplayMapUIAttachDestinationPlay(card)
 {
     var playButton =
         card.querySelector(
             ".geoplay-destination-play"
         );
 
-
-    if (
-        !playButton
-    )
+    if (!playButton)
     {
         return;
     }
 
+    function handlePlay(event)
+    {
+        event.preventDefault();
+        event.stopPropagation();
+
+        geoplayMapUIPlayHere();
+    }
 
     playButton.addEventListener(
         "click",
-        function(event)
-        {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
-            geoplayMapUIPlayHere();
-        }
+        handlePlay
     );
-
 
     playButton.addEventListener(
         "touchend",
-        function(event)
+        handlePlay,
         {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
-            geoplayMapUIPlayHere();
-        },
-        {
-            passive:
-                false
+            passive: false
         }
     );
 }
 
 
 // ==================================================
-// EXPAND DESTINATION
+// EXPAND / COLLAPSE
 // ==================================================
 
 function geoplayMapUIExpandDestination()
@@ -3118,30 +1051,14 @@ function geoplayMapUIExpandDestination()
     var card =
         window.geoplayDestinationCard;
 
-
     if (
-        !card
-    )
-    {
-        return 0;
-    }
-
-
-    if (
-        window.geoplayMapStoryLocked
-    )
-    {
-        return 0;
-    }
-
-
-    if (
+        !card ||
+        window.geoplayMapStoryLocked ||
         window.geoplayDestinationClosing
     )
     {
         return 0;
     }
-
 
     if (
         typeof geoplayMapUIOpenModal !==
@@ -3155,52 +1072,33 @@ function geoplayMapUIExpandDestination()
         return 0;
     }
 
-
-    geoplayMapUISetDestinationExpanded(
-        card
-    );
-
+    geoplayMapUISetDestinationExpanded(card);
 
     geoplayMapUIOpenModal(
         window.geoplayDestinationOverlay,
         card
     );
 
-
     console.log(
         "GEOPLAY UI: Pine Ridge information card expanded."
     );
 
-
     return 1;
 }
 
-
-// ==================================================
-// COLLAPSE DESTINATION
-// ==================================================
 
 function geoplayMapUICollapseDestination()
 {
     var card =
         window.geoplayDestinationCard;
 
-
     if (
-        !card
-    )
-    {
-        return 0;
-    }
-
-
-    if (
+        !card ||
         window.geoplayDestinationClosing
     )
     {
         return 0;
     }
-
 
     if (
         typeof geoplayMapUICloseModal !==
@@ -3214,19 +1112,15 @@ function geoplayMapUICollapseDestination()
         return 0;
     }
 
-
     window.geoplayDestinationClosing =
         true;
-
 
     geoplayMapUICloseModal(
         window.geoplayDestinationOverlay,
         card,
         function()
         {
-            if (
-                !window.geoplayDestinationCard
-            )
+            if (!window.geoplayDestinationCard)
             {
                 window.geoplayDestinationClosing =
                     false;
@@ -3234,32 +1128,24 @@ function geoplayMapUICollapseDestination()
                 return;
             }
 
-
             geoplayMapUISetDestinationCollapsed(
                 window.geoplayDestinationCard
             );
 
+            var destinationCard =
+                window.geoplayDestinationCard;
 
-            window.geoplayDestinationCard.style.left =
-                "";
+            destinationCard.style.left = "";
+            destinationCard.style.top = "";
+            destinationCard.style.transform = "";
 
-            window.geoplayDestinationCard.style.top =
-                "";
-
-            window.geoplayDestinationCard.style.transform =
-                "";
-
-
-            window.geoplayDestinationCard.style.zIndex =
+            destinationCard.style.zIndex =
                 geoplayDestinationSceneZIndex;
-
 
             geoplayMapUIPositionDestination();
 
-
             window.geoplayDestinationClosing =
                 false;
-
 
             console.log(
                 "GEOPLAY UI: Pine Ridge information card collapsed."
@@ -3267,89 +1153,62 @@ function geoplayMapUICollapseDestination()
         }
     );
 
-
     return 1;
 }
 
 
-// ==================================================
-// PLAY HERE
-// ==================================================
-
 function geoplayMapUIPlayHere()
 {
-    if (
-        window.geoplayMapStoryLocked
-    )
+    if (window.geoplayMapStoryLocked)
     {
         return 0;
     }
-
 
     console.log(
         "GEOPLAY UI: PLAY HERE selected."
     );
 
-
     return 1;
 }
 
 
 // ==================================================
-// CREATE OFF-SCREEN INDICATOR
+// OFF-SCREEN INDICATOR
 // ==================================================
 
 function geoplayMapUICreateOffscreenIndicator()
 {
-    if (
-        !window.geoplayMapUI
-    )
+    if (!window.geoplayMapUI)
     {
         return 0;
     }
 
-
     var indicator =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     indicator.id =
         "geoplay-destination-offscreen";
 
-
     indicator.className =
         "geoplay-destination-offscreen";
 
-
     var arrow =
-        document.createElement(
-            "span"
-        );
-
+        document.createElement("span");
 
     arrow.id =
         "geoplay-destination-offscreen-arrow";
 
-
     arrow.className =
         "geoplay-destination-offscreen-arrow";
-
 
     arrow.textContent =
         "➜";
 
-
     var name =
-        document.createElement(
-            "span"
-        );
-
+        document.createElement("span");
 
     name.className =
         "geoplay-destination-offscreen-name";
-
 
     name.textContent =
         geoplayMapUIDestinationName()
@@ -3359,174 +1218,103 @@ function geoplayMapUICreateOffscreenIndicator()
                 ""
             );
 
-
-    indicator.appendChild(
-        arrow
-    );
-
-
-    indicator.appendChild(
-        name
-    );
-
+    indicator.appendChild(arrow);
+    indicator.appendChild(name);
 
     window.geoplayDestinationOffscreenArrow =
         arrow;
-
 
     window.geoplayMapUI.appendChild(
         indicator
     );
 
-
     geoplayMapUIAttachOffscreenIndicatorInteraction(
         indicator
     );
-
 
     return 1;
 }
 
 
-// ==================================================
-// OFF-SCREEN INDICATOR INTERACTION
-// ==================================================
-
 function geoplayMapUIAttachOffscreenIndicatorInteraction(
     indicator
 )
 {
+    function handleInteraction(event)
+    {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (window.geoplayMapStoryLocked)
+        {
+            return;
+        }
+
+        geoplayMapUIGoToDestination();
+    }
+
     indicator.addEventListener(
         "click",
-        function(event)
-        {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
-            if (
-                window.geoplayMapStoryLocked
-            )
-            {
-                return;
-            }
-
-
-            geoplayMapUIGoToDestination();
-        }
+        handleInteraction
     );
-
 
     indicator.addEventListener(
         "touchend",
-        function(event)
+        handleInteraction,
         {
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
-            if (
-                window.geoplayMapStoryLocked
-            )
-            {
-                return;
-            }
-
-
-            geoplayMapUIGoToDestination();
-        },
-        {
-            passive:
-                false
+            passive: false
         }
     );
 }
 
 
 // ==================================================
-// ATTACH DESTINATION MAP LISTENERS
+// MAP LISTENERS
 // ==================================================
 
 function geoplayMapUIAttachDestinationMapListeners()
 {
     if (
-        window.geoplayDestinationMapListenersAttached
-    )
-    {
-        return;
-    }
-
-
-    if (
+        window.geoplayDestinationMapListenersAttached ||
         !window.geoplayMap ||
         typeof window.geoplayMap.on !==
-        "function"
+            "function"
     )
     {
         return;
     }
-
 
     window.geoplayDestinationMapListenersAttached =
         true;
-
 
     window.geoplayMap.on(
         "movestart",
         function()
         {
             if (
-                window.geoplayDestinationControlledTransition
-            )
-            {
-                return;
-            }
-
-
-            if (
+                window.geoplayDestinationControlledTransition ||
                 window.geoplayMapStoryLocked
             )
             {
                 return;
             }
 
-
-            // ==================================================
-            // IMPORTANT:
-            // Once the user manually moves the map,
-            // return to normal marker-based positioning.
-            //
-            // This means the final presentation state no
-            // longer forces the casino card to remain visible.
-            // ==================================================
-
             window.geoplayDestinationFinalPresentation =
                 false;
         }
     );
-
 
     window.geoplayMap.on(
         "move",
         function()
         {
             if (
-                !window.geoplayDestinationVisible
-            )
-            {
-                return;
-            }
-
-
-            if (
+                !window.geoplayDestinationVisible ||
                 window.geoplayDestinationExpanded
             )
             {
                 return;
             }
-
 
             if (
                 window.geoplayDestinationControlledTransition
@@ -3542,42 +1330,26 @@ function geoplayMapUIAttachDestinationMapListeners()
                         "geoplay-destination-offscreen"
                     );
 
-
-                if (
-                    card
-                )
+                if (card)
                 {
                     card.classList.remove(
                         "visible"
                     );
                 }
 
-
-                if (
-                    indicator
-                )
+                if (indicator)
                 {
                     indicator.classList.remove(
                         "visible"
                     );
                 }
 
-
                 return;
             }
-
-
-            // ==================================================
-            // NORMAL MAP MOVEMENT
-            //
-            // Always recalculate from the casino MARKER.
-            // The card itself never determines visibility.
-            // ==================================================
 
             geoplayMapUIPositionDestination();
         }
     );
-
 
     window.geoplayMap.on(
         "moveend",
@@ -3590,13 +1362,10 @@ function geoplayMapUIAttachDestinationMapListeners()
                 window.geoplayDestinationControlledTransition =
                     false;
 
-
                 geoplayMapUIShowDestination();
-
 
                 return;
             }
-
 
             if (
                 window.geoplayDestinationVisible &&
@@ -3607,7 +1376,6 @@ function geoplayMapUIAttachDestinationMapListeners()
             }
         }
     );
-
 
     window.geoplayMap.on(
         "resize",
@@ -3631,56 +1399,39 @@ function geoplayMapUIAttachDestinationMapListeners()
 
 function geoplayMapUIShowDestination()
 {
-    if (
-        !window.geoplayMap
-    )
+    if (!window.geoplayMap)
     {
         return 0;
     }
-
 
     var card =
         document.getElementById(
             "geoplay-destination"
         );
 
-
-    if (
-        !card
-    )
+    if (!card)
     {
         return 0;
     }
 
-
     window.geoplayDestinationVisible =
         true;
 
-
-    // ==================================================
-    // FINAL DESTINATION PRESENTATION
-    // ==================================================
-
     window.geoplayDestinationFinalPresentation =
         true;
-
 
     geoplayMapUISetDestinationCollapsed(
         card
     );
 
-
     card.style.zIndex =
         geoplayDestinationSceneZIndex;
 
-
     geoplayMapUIPositionDestination();
-
 
     console.log(
         "GEOPLAY UI: Pine Ridge destination presentation activated."
     );
-
 
     return 1;
 }
@@ -3700,24 +1451,20 @@ function geoplayMapUIPositionDestination()
         return;
     }
 
-
     var card =
         document.getElementById(
             "geoplay-destination"
         );
-
 
     var indicator =
         document.getElementById(
             "geoplay-destination-offscreen"
         );
 
-
     var mapContainer =
         document.getElementById(
             "geoplay-map"
         );
-
 
     if (
         !card ||
@@ -3728,10 +1475,7 @@ function geoplayMapUIPositionDestination()
         return;
     }
 
-
-    if (
-        window.geoplayDestinationExpanded
-    )
+    if (window.geoplayDestinationExpanded)
     {
         geoplayMapUIPositionExpandedDestination(
             card,
@@ -3742,17 +1486,14 @@ function geoplayMapUIPositionDestination()
         return;
     }
 
-
     card.style.zIndex =
         geoplayDestinationSceneZIndex;
 
-
     if (
         typeof geoplayDestinationLongitude ===
-        "undefined" ||
-
+            "undefined" ||
         typeof geoplayDestinationLatitude ===
-        "undefined"
+            "undefined"
     )
     {
         console.error(
@@ -3762,22 +1503,19 @@ function geoplayMapUIPositionDestination()
         return;
     }
 
-
     var point =
         window.geoplayMap.project(
-        [
-            geoplayDestinationLongitude,
-            geoplayDestinationLatitude
-        ]);
-
+            [
+                geoplayDestinationLongitude,
+                geoplayDestinationLatitude
+            ]
+        );
 
     var width =
         mapContainer.clientWidth;
 
-
     var height =
         mapContainer.clientHeight;
-
 
     if (
         width <= 0 ||
@@ -3787,11 +1525,6 @@ function geoplayMapUIPositionDestination()
         return;
     }
 
-
-    // ==================================================
-    // CONTROLLED CAMERA TRANSITION
-    // ==================================================
-
     if (
         window.geoplayDestinationControlledTransition
     )
@@ -3800,28 +1533,12 @@ function geoplayMapUIPositionDestination()
             "visible"
         );
 
-
         indicator.classList.remove(
             "visible"
         );
 
-
         return;
     }
-
-
-    // ==================================================
-    // FINAL DESTINATION PRESENTATION
-    // ==================================================
-    //
-    // The first frame after the controlled camera movement
-    // should present the casino card.
-    //
-    // Once the user manually moves the map,
-    // movestart clears this flag and normal marker-based
-    // visibility takes over.
-    //
-    // ==================================================
 
     if (
         window.geoplayDestinationFinalPresentation
@@ -3838,40 +1555,16 @@ function geoplayMapUIPositionDestination()
         return;
     }
 
-
     var margin =
         geoplayDestinationVisibilityMargin;
 
-
-    // ==================================================
-    // MARKER-ONLY VISIBILITY TEST
-    // ==================================================
-    //
-    // ONLY the casino MARKER determines whether the
-    // casino card or the off-screen indicator appears.
-    //
-    // The card touching an edge does NOT trigger the
-    // indicator.
-    //
-    // ==================================================
-
     var markerVisible =
         point.x >= margin &&
-
-        point.x <=
-            width -
-            margin &&
-
+        point.x <= width - margin &&
         point.y >= margin &&
+        point.y <= height - margin;
 
-        point.y <=
-            height -
-            margin;
-
-
-    if (
-        markerVisible
-    )
+    if (markerVisible)
     {
         geoplayMapUIPositionVisibleDestination(
             card,
@@ -3884,7 +1577,6 @@ function geoplayMapUIPositionDestination()
         return;
     }
 
-
     geoplayMapUIPositionOffscreenDestination(
         card,
         indicator,
@@ -3896,7 +1588,7 @@ function geoplayMapUIPositionDestination()
 
 
 // ==================================================
-// POSITION EXPANDED DESTINATION
+// EXPANDED POSITION
 // ==================================================
 
 function geoplayMapUIPositionExpandedDestination(
@@ -3909,161 +1601,81 @@ function geoplayMapUIPositionExpandedDestination(
         "visible"
     );
 
-
     window.geoplayDestinationOffscreen =
         false;
 
-
     card.style.zIndex =
         geoplayDestinationModalZIndex;
-
 
     if (
         typeof geoplayMapUICenterModal ===
         "function"
     )
     {
-        geoplayMapUICenterModal(
-            card
-        );
-
+        geoplayMapUICenterModal(card);
         return;
     }
-
 
     card.style.left =
         (
             mapContainer.clientWidth /
             2
-        ) +
-        "px";
-
+        ) + "px";
 
     card.style.top =
         (
             mapContainer.clientHeight /
             2
-        ) +
-        "px";
+        ) + "px";
 }
 
 
 // ==================================================
-// POSITION VISIBLE DESTINATION
+// VISIBLE POSITION
 // ==================================================
 
 function geoplayMapUIPositionVisibleDestination(
     card,
     indicator,
-    point,
-    width,
-    height
+    point
 )
 {
-    // ==================================================
-    // SIMPLE DESTINATION RULE
-    // ==================================================
-    //
-    // The casino card has ONE permanent relationship
-    // to the casino marker:
-    //
-    //          CASINO MARKER
-    //                ▲
-    //                │
-    //             CARD
-    //
-    // The card is always positioned directly above the
-    // marker when the marker itself is visible.
-    //
-    // ==================================================
-
-    var markerGap =
-        geoplayDestinationMarkerGap;
-
-
-    // ==================================================
-    // DESTINATION IS IN VIEW
-    // ==================================================
-
     indicator.classList.remove(
         "visible"
     );
 
-
     window.geoplayDestinationOffscreen =
         false;
 
-
-    // ==================================================
-    // IMPORTANT:
-    // POSITION THE CARD BEFORE MAKING IT VISIBLE.
-    //
-    // Previously, the pop-in animation could begin while
-    // the card still had no left/top position. The browser
-    // could therefore render one frame at its default
-    // position — the top-left corner of the map.
-    //
-    // We now establish the complete position first.
-    // ==================================================
-
     card.style.zIndex =
         geoplayDestinationSceneZIndex;
-
 
     card.setAttribute(
         "data-pointer-side",
         "top"
     );
 
-
     card.style.setProperty(
         "--geoplay-pointer-left",
         "50%"
     );
-
 
     card.style.setProperty(
         "--geoplay-pointer-top",
         "50%"
     );
 
-
-    // ==================================================
-    // CARD ANCHORED TO MARKER
-    // ==================================================
-    //
-    // Set these BEFORE geoplayMapUIShowDestinationCard()
-    // so the very first animation frame is already in the
-    // correct location.
-    //
-    // ==================================================
-
     card.style.left =
-        point.x +
-        "px";
-
+        point.x + "px";
 
     card.style.top =
         (
             point.y -
-            markerGap
-        ) +
-        "px";
-
+            geoplayDestinationMarkerGap
+        ) + "px";
 
     card.style.transform =
         "translate(-50%,-100%)";
-
-
-    // ==================================================
-    // NOW SHOW THE CARD
-    // ==================================================
-    //
-    // The card is already positioned correctly, so the
-    // browser cannot briefly display it in the top-left
-    // corner before the pop-in animation starts.
-    //
-    // ==================================================
 
     geoplayMapUIShowDestinationCard(
         card
@@ -4072,7 +1684,7 @@ function geoplayMapUIPositionVisibleDestination(
 
 
 // ==================================================
-// POSITION OFF-SCREEN DESTINATION
+// OFF-SCREEN POSITION
 // ==================================================
 
 function geoplayMapUIPositionOffscreenDestination(
@@ -4083,73 +1695,42 @@ function geoplayMapUIPositionOffscreenDestination(
     height
 )
 {
-    // ==================================================
-    // HIDE CARD
-    // ==================================================
-
     geoplayMapUIHideDestinationCard(
         card
     );
 
-
-    if (
-        !window.geoplayDestinationIndicatorEnabled
-    )
+    if (!window.geoplayDestinationIndicatorEnabled)
     {
         indicator.classList.remove(
             "visible"
         );
 
-
         window.geoplayDestinationOffscreen =
             false;
 
-
         return;
     }
-
-
-    // ==================================================
-    // SHOW INDICATOR
-    // ==================================================
 
     indicator.classList.add(
         "visible"
     );
 
-
     window.geoplayDestinationOffscreen =
         true;
 
-
     var centerX =
-        width /
-        2;
-
+        width / 2;
 
     var centerY =
-        height /
-        2;
-
+        height / 2;
 
     var dx =
         point.x -
         centerX;
 
-
     var dy =
         point.y -
         centerY;
-
-
-    // ==================================================
-    // CALCULATE EDGE POSITION
-    // ==================================================
-    //
-    // The indicator is positioned using the destination
-    // MARKER position, never the card position.
-    //
-    // ==================================================
 
     var edge =
         geoplayMapUICalculateDestinationEdge(
@@ -4161,35 +1742,24 @@ function geoplayMapUIPositionOffscreenDestination(
             height
         );
 
-
     indicator.style.left =
-        edge.x +
-        "px";
-
+        edge.x + "px";
 
     indicator.style.top =
-        edge.y +
-        "px";
-
-
-    // ==================================================
-    // POINT ARROW TOWARD ACTUAL DESTINATION
-    // ==================================================
-
-    var angle =
-        Math.atan2(
-            dy,
-            dx
-        )
-        *
-        180 /
-        Math.PI;
-
+        edge.y + "px";
 
     if (
         window.geoplayDestinationOffscreenArrow
     )
     {
+        var angle =
+            Math.atan2(
+                dy,
+                dx
+            ) *
+            180 /
+            Math.PI;
+
         window.geoplayDestinationOffscreenArrow.style.transform =
             "rotate(" +
             angle +
@@ -4201,14 +1771,6 @@ function geoplayMapUIPositionOffscreenDestination(
 // ==================================================
 // CALCULATE OFF-SCREEN EDGE
 // ==================================================
-//
-// This version explicitly handles the four major
-// directions and uses the map viewport as the boundary.
-//
-// This is particularly important for the NORTH case,
-// where the casino marker can move above the viewport.
-//
-// ==================================================
 
 function geoplayMapUICalculateDestinationEdge(
     centerX,
@@ -4219,342 +1781,187 @@ function geoplayMapUICalculateDestinationEdge(
     height
 )
 {
-    // ==================================================
-    // INDICATOR HALF-DIMENSIONS
-    // ==================================================
-    //
-    // Approximate half-size of the indicator so its
-    // visual center stays safely inside the viewport.
-    //
-    // ==================================================
-
     var indicatorHalfWidth =
         58;
-
 
     var indicatorHalfHeight =
         16;
 
-
-    // ==================================================
-    // EDGE PADDING
-    // ==================================================
-
     var horizontalPadding =
         12;
-
 
     var verticalPadding =
         12;
 
-
-    // ==================================================
-    // SAFE EDGES
-    // ==================================================
-
     var leftEdge =
         indicatorHalfWidth +
         horizontalPadding;
-
 
     var rightEdge =
         width -
         indicatorHalfWidth -
         horizontalPadding;
 
-
     var topEdge =
         indicatorHalfHeight +
         verticalPadding;
-
 
     var bottomEdge =
         height -
         indicatorHalfHeight -
         verticalPadding;
 
-
-    // ==================================================
-    // SAFETY FOR SMALL VIEWPORTS
-    // ==================================================
-
-    if (
-        rightEdge <
-        leftEdge
-    )
+    if (rightEdge < leftEdge)
     {
         leftEdge =
-            width /
-            2;
+            width / 2;
 
         rightEdge =
-            width /
-            2;
+            width / 2;
     }
 
-
-    if (
-        bottomEdge <
-        topEdge
-    )
+    if (bottomEdge < topEdge)
     {
         topEdge =
-            height /
-            2;
+            height / 2;
 
         bottomEdge =
-            height /
-            2;
+            height / 2;
     }
-
-
-    // ==================================================
-    // DESTINATION DIRECTLY ABOVE
-    // ==================================================
-    //
-    // This is the important NORTH case.
-    //
-    // If the marker is above the viewport and its
-    // horizontal position is reasonably within the
-    // viewport, place the indicator directly at the
-    // TOP edge.
-    //
-    // ==================================================
 
     if (
         dy < 0 &&
-        Math.abs(dx) <=
-            Math.abs(dy)
+        Math.abs(dx) <= Math.abs(dy)
     )
     {
         var northRatio =
             dy !== 0
-                ?
-                (
+                ? (
                     topEdge -
                     centerY
-                ) /
-                dy
-                :
-                0;
+                ) / dy
+                : 0;
 
-
-        var northX =
-            centerX +
-            dx *
-            northRatio;
-
-
-        northX =
-            Math.max(
+        return {
+            x: Math.max(
                 leftEdge,
                 Math.min(
                     rightEdge,
-                    northX
+                    centerX +
+                    dx *
+                    northRatio
                 )
-            );
-
-
-        return {
-            x:
-                northX,
-
-            y:
-                topEdge
+            ),
+            y: topEdge
         };
     }
 
-
-    // ==================================================
-    // DESTINATION DIRECTLY BELOW
-    // ==================================================
-
     if (
         dy > 0 &&
-        Math.abs(dx) <=
-            Math.abs(dy)
+        Math.abs(dx) <= Math.abs(dy)
     )
     {
         var southRatio =
             dy !== 0
-                ?
-                (
+                ? (
                     bottomEdge -
                     centerY
-                ) /
-                dy
-                :
-                0;
+                ) / dy
+                : 0;
 
-
-        var southX =
-            centerX +
-            dx *
-            southRatio;
-
-
-        southX =
-            Math.max(
+        return {
+            x: Math.max(
                 leftEdge,
                 Math.min(
                     rightEdge,
-                    southX
+                    centerX +
+                    dx *
+                    southRatio
                 )
-            );
-
-
-        return {
-            x:
-                southX,
-
-            y:
-                bottomEdge
+            ),
+            y: bottomEdge
         };
     }
 
-
-    // ==================================================
-    // DESTINATION TO THE LEFT
-    // ==================================================
-
     if (
         dx < 0 &&
-        Math.abs(dx) >
-            Math.abs(dy)
+        Math.abs(dx) > Math.abs(dy)
     )
     {
         var westRatio =
             dx !== 0
-                ?
-                (
+                ? (
                     leftEdge -
                     centerX
-                ) /
-                dx
-                :
-                0;
+                ) / dx
+                : 0;
 
-
-        var westY =
-            centerY +
-            dy *
-            westRatio;
-
-
-        westY =
-            Math.max(
+        return {
+            x: leftEdge,
+            y: Math.max(
                 topEdge,
                 Math.min(
                     bottomEdge,
-                    westY
+                    centerY +
+                    dy *
+                    westRatio
                 )
-            );
-
-
-        return {
-            x:
-                leftEdge,
-
-            y:
-                westY
+            )
         };
     }
 
-
-    // ==================================================
-    // DESTINATION TO THE RIGHT
-    // ==================================================
-
     if (
         dx > 0 &&
-        Math.abs(dx) >
-            Math.abs(dy)
+        Math.abs(dx) > Math.abs(dy)
     )
     {
         var eastRatio =
             dx !== 0
-                ?
-                (
+                ? (
                     rightEdge -
                     centerX
-                ) /
-                dx
-                :
-                0;
+                ) / dx
+                : 0;
 
-
-        var eastY =
-            centerY +
-            dy *
-            eastRatio;
-
-
-        eastY =
-            Math.max(
+        return {
+            x: rightEdge,
+            y: Math.max(
                 topEdge,
                 Math.min(
                     bottomEdge,
-                    eastY
+                    centerY +
+                    dy *
+                    eastRatio
                 )
-            );
-
-
-        return {
-            x:
-                rightEdge,
-
-            y:
-                eastY
+            )
         };
     }
 
-
-    // ==================================================
-    // DIAGONAL / CORNER CASES
-    // ==================================================
-    //
-    // For diagonal destinations, calculate the actual
-    // intersection with the viewport boundary.
-    //
-    // ==================================================
-
     var scaleX =
         dx !== 0
-            ?
-            Math.abs(
+            ? Math.abs(
                 (
                     dx > 0
-                        ?
-                        rightEdge -
-                        centerX
-                        :
-                        leftEdge -
-                        centerX
-                ) /
-                dx
+                        ? rightEdge -
+                          centerX
+                        : leftEdge -
+                          centerX
+                ) / dx
             )
-            :
-            Infinity;
-
+            : Infinity;
 
     var scaleY =
         dy !== 0
-            ?
-            Math.abs(
+            ? Math.abs(
                 (
                     dy > 0
-                        ?
-                        bottomEdge -
-                        centerY
-                        :
-                        topEdge -
-                        centerY
-                ) /
-                dy
+                        ? bottomEdge -
+                          centerY
+                        : topEdge -
+                          centerY
+                ) / dy
             )
-            :
-            Infinity;
-
+            : Infinity;
 
     var scale =
         Math.min(
@@ -4562,54 +1969,31 @@ function geoplayMapUICalculateDestinationEdge(
             scaleY
         );
 
-
-    if (
-        !isFinite(scale)
-    )
+    if (!isFinite(scale))
     {
-        scale =
-            1;
+        scale = 1;
     }
 
-
-    var edgeX =
-        centerX +
-        dx *
-        scale;
-
-
-    var edgeY =
-        centerY +
-        dy *
-        scale;
-
-
-    edgeX =
-        Math.max(
+    return {
+        x: Math.max(
             leftEdge,
             Math.min(
                 rightEdge,
-                edgeX
+                centerX +
+                dx *
+                scale
             )
-        );
+        ),
 
-
-    edgeY =
-        Math.max(
+        y: Math.max(
             topEdge,
             Math.min(
                 bottomEdge,
-                edgeY
+                centerY +
+                dy *
+                scale
             )
-        );
-
-
-    return {
-        x:
-            edgeX,
-
-        y:
-            edgeY
+        )
     };
 }
 
@@ -4625,59 +2009,41 @@ function geoplayMapUIHideDestination()
             "geoplay-destination"
         );
 
-
     var indicator =
         document.getElementById(
             "geoplay-destination-offscreen"
         );
 
-
-    if (
-        card
-    )
+    if (card)
     {
         geoplayMapUIHideDestinationCard(
             card
         );
 
-
         card.classList.remove(
             "expanded"
         );
-
 
         card.classList.remove(
             "modal-closing"
         );
 
-
-        card.style.transform =
-            "";
-
-
-        card.style.left =
-            "";
-
-
-        card.style.top =
-            "";
-
+        card.style.transform = "";
+        card.style.left = "";
+        card.style.top = "";
 
         card.style.zIndex =
             geoplayDestinationSceneZIndex;
-
 
         card.setAttribute(
             "data-pointer-side",
             "top"
         );
 
-
         card.style.setProperty(
             "--geoplay-pointer-left",
             "50%"
         );
-
 
         card.style.setProperty(
             "--geoplay-pointer-top",
@@ -4685,62 +2051,49 @@ function geoplayMapUIHideDestination()
         );
     }
 
-
-    if (
-        indicator
-    )
+    if (indicator)
     {
         indicator.classList.remove(
             "visible"
         );
     }
 
-
-    if (
-        window.geoplayDestinationOverlay
-    )
+    if (window.geoplayDestinationOverlay)
     {
-        window.geoplayDestinationOverlay.classList.remove(
+        var overlay =
+            window.geoplayDestinationOverlay;
+
+        overlay.classList.remove(
             "visible"
         );
 
-
-        window.geoplayDestinationOverlay.style.opacity =
+        overlay.style.opacity =
             "0";
 
-
-        window.geoplayDestinationOverlay.style.visibility =
+        overlay.style.visibility =
             "hidden";
 
-
-        window.geoplayDestinationOverlay.style.pointerEvents =
+        overlay.style.pointerEvents =
             "none";
     }
-
 
     window.geoplayDestinationVisible =
         false;
 
-
     window.geoplayDestinationOffscreen =
         false;
-
 
     window.geoplayDestinationExpanded =
         false;
 
-
     window.geoplayDestinationClosing =
         false;
-
 
     window.geoplayDestinationFinalPresentation =
         false;
 
-
     window.geoplayDestinationControlledTransition =
         false;
-
 
     return 1;
 }
@@ -4752,9 +2105,7 @@ function geoplayMapUIHideDestination()
 
 function geoplayMapUIUpdatePositions()
 {
-    if (
-        window.geoplayDestinationVisible
-    )
+    if (window.geoplayDestinationVisible)
     {
         geoplayMapUIPositionDestination();
     }
@@ -4767,9 +2118,7 @@ function geoplayMapUIUpdatePositions()
 
 function geoplayMapUIGoToDestination()
 {
-    if (
-        window.geoplayMapStoryLocked
-    )
+    if (window.geoplayMapStoryLocked)
     {
         console.log(
             "GEOPLAY UI: Destination selection blocked during story."
@@ -4778,21 +2127,16 @@ function geoplayMapUIGoToDestination()
         return 0;
     }
 
-
-    if (
-        !window.geoplayMap
-    )
+    if (!window.geoplayMap)
     {
         return 0;
     }
 
-
     if (
         typeof geoplayDestinationLongitude ===
-        "undefined" ||
-
+            "undefined" ||
         typeof geoplayDestinationLatitude ===
-        "undefined"
+            "undefined"
     )
     {
         console.error(
@@ -4802,58 +2146,44 @@ function geoplayMapUIGoToDestination()
         return 0;
     }
 
-
     console.log(
         "GEOPLAY UI: Pine Ridge indicator selected."
     );
-
 
     var indicator =
         document.getElementById(
             "geoplay-destination-offscreen"
         );
 
-
-    if (
-        indicator
-    )
+    if (indicator)
     {
         indicator.classList.remove(
             "visible"
         );
     }
 
-
     var card =
         document.getElementById(
             "geoplay-destination"
         );
 
-
-    if (
-        card
-    )
+    if (card)
     {
         geoplayMapUIHideDestinationCard(
             card
         );
     }
 
-
     window.geoplayDestinationOffscreen =
         false;
-
 
     window.geoplayDestinationFinalPresentation =
         false;
 
-
     window.geoplayDestinationControlledTransition =
         true;
 
-
     geoplayMapUIAttachDestinationMapListeners();
-
 
     window.geoplayMap.easeTo(
     {
@@ -4863,22 +2193,12 @@ function geoplayMapUIGoToDestination()
             geoplayDestinationLatitude
         ],
 
-        zoom:
-            14.7,
-
-        bearing:
-            0,
-
-        pitch:
-            0,
-
-        duration:
-            900,
-
-        essential:
-            true
+        zoom: 14.7,
+        bearing: 0,
+        pitch: 0,
+        duration: 900,
+        essential: true
     });
-
 
     return 1;
 }
