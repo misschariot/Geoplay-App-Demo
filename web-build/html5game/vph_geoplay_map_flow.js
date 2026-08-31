@@ -53,6 +53,10 @@ window.geoplayMapFlowSearchIndicator =
     null;
 
 
+window.geoplayMapFlowLocationIndicator =
+    null;
+
+
 // ==================================================
 // ROUTE STORY SYNCHRONIZATION STATE
 // ==================================================
@@ -140,10 +144,10 @@ function geoplayMapFlowStart()
 
 
     // ==================================================
-    // RESET SEARCH VISUAL
+    // RESET SEARCH / LOCATION VISUALS
     // ==================================================
 
-    geoplayMapFlowHideSearchIndicator();
+    geoplayMapFlowHideAllStatusIndicators();
 
 
     // ==================================================
@@ -218,13 +222,16 @@ function geoplayMapFlowStart()
 
 
 // ==================================================
-// SEARCH VISUAL
+// STATUS VISUAL
 // ==================================================
 //
-// The search state is intentionally lightweight and
-// map-focused. The panel remains centered while the
-// search animation uses a stable magnifying glass and
-// moving scan elements around it.
+// Used for both:
+//
+// - FINDING YOUR LOCATION
+// - SEARCHING NEARBY
+//
+// The panel remains centered while the search animation
+// uses a stable magnifying glass and moving scan elements.
 //
 // Visual language:
 // - Deep Geoplay glass background
@@ -236,17 +243,26 @@ function geoplayMapFlowStart()
 //
 // ==================================================
 
-function geoplayMapFlowCreateSearchIndicator()
+function geoplayMapFlowCreateStatusIndicator(
+    indicatorId,
+    labelText
+)
 {
     // ==================================================
     // ALREADY EXISTS
     // ==================================================
 
+    var existingIndicator =
+        document.getElementById(
+            indicatorId
+        );
+
+
     if (
-        window.geoplayMapFlowSearchIndicator
+        existingIndicator
     )
     {
-        return window.geoplayMapFlowSearchIndicator;
+        return existingIndicator;
     }
 
 
@@ -263,7 +279,7 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     // ==================================================
-    // CREATE SEARCH INDICATOR
+    // CREATE STATUS INDICATOR
     // ==================================================
 
     var indicator =
@@ -273,7 +289,7 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     indicator.id =
-        "geoplay-search-indicator";
+        indicatorId;
 
 
     indicator.style.position =
@@ -293,12 +309,7 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     // ==================================================
-    // SEARCH CARD SIZE
-    // ==================================================
-    //
-    // Slightly smaller than the previous version so
-    // the map remains more visible during the search.
-    //
+    // STATUS CARD SIZE
     // ==================================================
 
     indicator.style.width =
@@ -338,32 +349,47 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     indicator.style.borderRadius =
-        "22px";
+        "16px";
 
 
     // ==================================================
     // GEOPLAY GLASS BACKGROUND
     // ==================================================
+    //
+    // Match the Pine Ridge destination card:
+    // - Deep purple glass interior
+    // - Same diagonal depth treatment
+    // - Same polished Geoplay visual language
+    //
+    // ==================================================
 
     indicator.style.background =
         "linear-gradient(" +
             "145deg," +
-            "rgba(27, 11, 48, 0.96)," +
-            "rgba(11, 5, 27, 0.97)" +
-        ")";
+            "rgba(27, 11, 48, 0.98)," +
+            "rgba(11, 5, 27, 0.99)" +
+        ") padding-box," +
+
+        "linear-gradient(" +
+            "105deg," +
+            "#ff9b18 0%," +
+            "#ff5a58 40%," +
+            "#b34cff 72%," +
+            "#7138ff 100%" +
+        ") border-box";
 
 
     // ==================================================
-    // GEOPLAY BORDER
+    // GEOPLAY GRADIENT BORDER
     // ==================================================
     //
-    // Purple is now the primary accent with the subtle
-    // Geoplay neon treatment used elsewhere in the UI.
+    // This is the same orange -> pink -> purple
+    // gradient used by the Pine Ridge destination card.
     //
     // ==================================================
 
     indicator.style.border =
-        "1px solid rgba(179, 76, 255, 0.70)";
+        "1px solid transparent";
 
 
     // ==================================================
@@ -371,10 +397,23 @@ function geoplayMapFlowCreateSearchIndicator()
     // ==================================================
 
     indicator.style.boxShadow =
-        "0 0 22px rgba(139, 61, 255, 0.20)," +
-        "0 0 42px rgba(41, 200, 255, 0.08)," +
+        "0 0 12px rgba(255, 155, 24, 0.22)," +
+        "0 0 28px rgba(139, 61, 255, 0.18)," +
+        "0 12px 30px rgba(0, 0, 0, 0.38)," +
         "inset 0 1px 0 rgba(255, 255, 255, 0.08)," +
-        "inset 0 0 20px rgba(139, 92, 255, 0.06)";
+        "inset 0 0 20px rgba(139, 92, 255, 0.05)";
+
+
+    // ==================================================
+    // GEOPLAY GLASS EFFECT
+    // ==================================================
+
+    indicator.style.backdropFilter =
+        "blur(10px)";
+
+
+    indicator.style.webkitBackdropFilter =
+        "blur(10px)";
 
 
     indicator.style.pointerEvents =
@@ -449,26 +488,12 @@ function geoplayMapFlowCreateSearchIndicator()
         "inset 0 0 10px rgba(41, 200, 255, 0.06)";
 
 
-    // ==================================================
-    // OUTER RING BREATH
-    // ==================================================
-    //
-    // Very subtle movement keeps the icon alive without
-    // making the whole magnifying glass pulse.
-    //
-    // ==================================================
-
     icon.style.animation =
         "geoplaySearchRingBreathe 1.8s ease-in-out infinite";
 
 
     // ==================================================
     // SEARCH SWEEP TRACK
-    // ==================================================
-    //
-    // A faint rotating arc gives the player a clear
-    // visual indication that the area is being searched.
-    //
     // ==================================================
 
     var sweepTrack =
@@ -523,11 +548,6 @@ function geoplayMapFlowCreateSearchIndicator()
 
     // ==================================================
     // SCAN POINT
-    // ==================================================
-    //
-    // Small cyan point travels around the outer ring.
-    // This is now the primary searching motion.
-    //
     // ==================================================
 
     var scanPoint =
@@ -707,7 +727,7 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     // ==================================================
-    // SEARCH TEXT
+    // STATUS TEXT
     // ==================================================
 
     var label =
@@ -753,7 +773,7 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     label.textContent =
-        "SEARCHING NEARBY";
+        labelText;
 
 
     // ==================================================
@@ -786,7 +806,45 @@ function geoplayMapFlowCreateSearchIndicator()
     );
 
 
+    return indicator;
+}
+
+
+// ==================================================
+// CREATE SEARCH INDICATOR
+// ==================================================
+
+function geoplayMapFlowCreateSearchIndicator()
+{
+    var indicator =
+        geoplayMapFlowCreateStatusIndicator(
+            "geoplay-search-indicator",
+            "SEARCHING NEARBY"
+        );
+
+
     window.geoplayMapFlowSearchIndicator =
+        indicator;
+
+
+    return indicator;
+}
+
+
+// ==================================================
+// CREATE LOCATION INDICATOR
+// ==================================================
+
+function geoplayMapFlowCreateLocationIndicator()
+{
+    var indicator =
+        geoplayMapFlowCreateStatusIndicator(
+            "geoplay-location-indicator",
+            "FINDING YOUR LOCATION"
+        );
+
+
+    window.geoplayMapFlowLocationIndicator =
         indicator;
 
 
@@ -888,15 +946,13 @@ function geoplayMapFlowEnsureSearchAnimations()
 
 
 // ==================================================
-// POSITION SEARCH INDICATOR
+// POSITION STATUS INDICATOR
 // ==================================================
 
-function geoplayMapFlowPositionSearchIndicator()
+function geoplayMapFlowPositionStatusIndicator(
+    indicator
+)
 {
-    var indicator =
-        window.geoplayMapFlowSearchIndicator;
-
-
     if (
         !indicator
     )
@@ -936,7 +992,9 @@ function geoplayMapFlowShowSearchIndicator()
     }
 
 
-    geoplayMapFlowPositionSearchIndicator();
+    geoplayMapFlowPositionStatusIndicator(
+        indicator
+    );
 
 
     indicator.style.visibility =
@@ -986,6 +1044,86 @@ function geoplayMapFlowHideSearchIndicator()
 
 
 // ==================================================
+// SHOW LOCATION INDICATOR
+// ==================================================
+
+function geoplayMapFlowShowLocationIndicator()
+{
+    var indicator =
+        geoplayMapFlowCreateLocationIndicator();
+
+
+    if (
+        !indicator
+    )
+    {
+        return 0;
+    }
+
+
+    geoplayMapFlowPositionStatusIndicator(
+        indicator
+    );
+
+
+    indicator.style.visibility =
+        "visible";
+
+
+    indicator.style.opacity =
+        "1";
+
+
+    console.log(
+        "GEOPLAY FLOW: Location indicator shown."
+    );
+
+
+    return 1;
+}
+
+
+// ==================================================
+// HIDE LOCATION INDICATOR
+// ==================================================
+
+function geoplayMapFlowHideLocationIndicator()
+{
+    var indicator =
+        window.geoplayMapFlowLocationIndicator;
+
+
+    if (
+        indicator
+    )
+    {
+        indicator.style.opacity =
+            "0";
+
+
+        indicator.style.visibility =
+            "hidden";
+    }
+
+
+    console.log(
+        "GEOPLAY FLOW: Location indicator hidden."
+    );
+}
+
+
+// ==================================================
+// HIDE ALL SEARCH / LOCATION INDICATORS
+// ==================================================
+
+function geoplayMapFlowHideAllStatusIndicators()
+{
+    geoplayMapFlowHideSearchIndicator();
+    geoplayMapFlowHideLocationIndicator();
+}
+
+
+// ==================================================
 // 1. FIND PLAYER
 // ==================================================
 
@@ -1020,6 +1158,19 @@ function geoplayMapFlowRequestPlayerLocation()
             );
 
 
+            // ==================================================
+            // SHOW LIVE LOCATION FEEDBACK
+            // ==================================================
+            //
+            // This indicator stays visible for as long as
+            // the browser is actually trying to determine
+            // the player's position.
+            //
+            // ==================================================
+
+            geoplayMapFlowShowLocationIndicator();
+
+
             if (
                 typeof geoplayMapGetRealPlayerLocation !==
                 "function"
@@ -1028,6 +1179,9 @@ function geoplayMapFlowRequestPlayerLocation()
                 console.warn(
                     "GEOPLAY FLOW: Real location function unavailable. Using fallback location."
                 );
+
+
+                geoplayMapFlowHideLocationIndicator();
 
 
                 geoplayMapFlowPlayerFound();
@@ -1045,6 +1199,13 @@ function geoplayMapFlowRequestPlayerLocation()
                     console.log(
                         "GEOPLAY FLOW: Real player location found."
                     );
+
+
+                    // ==================================================
+                    // LOCATION LOOKUP IS COMPLETE
+                    // ==================================================
+
+                    geoplayMapFlowHideLocationIndicator();
 
 
                     if (
@@ -1099,6 +1260,9 @@ function geoplayMapFlowRequestPlayerLocation()
                         "GEOPLAY FLOW: Real location could not be determined. Using fallback location.",
                         error
                     );
+
+
+                    geoplayMapFlowHideLocationIndicator();
 
 
                     geoplayMapFlowPlayerFound();
@@ -2205,7 +2369,7 @@ function geoplayMapFlowFinish()
         true;
 
 
-    geoplayMapFlowHideSearchIndicator();
+    geoplayMapFlowHideAllStatusIndicators();
 
 
     // ==================================================
