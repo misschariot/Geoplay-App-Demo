@@ -1015,8 +1015,9 @@ function geoplayMapFlowSearchComplete()
 
     geoplayMapFlowGenerateNearbyCasino();
 
-    // Show the marker, but not the destination card.
-    // The card waits until the destination camera arrives.
+    // Show the marker, but keep the destination card hidden.
+    // The card will not appear until the route has finished
+    // drawing and the final destination camera has completed.
 
     geoplayMapShowDestinationMarker();
 
@@ -1040,8 +1041,8 @@ function geoplayMapFlowShowDiscoveredCasino()
     // Keep the casino marker visible during travel.
     geoplayMapShowDestinationMarker();
 
-    // Prevent the destination card from appearing
-    // before the destination camera reaches the casino.
+    // Keep the destination card completely hidden while
+    // the route journey is being prepared and displayed.
     geoplayMapUIHideDestination();
 
     setTimeout(
@@ -1109,10 +1110,9 @@ function geoplayMapFlowDestinationArrived()
         "GEOPLAY FLOW: Destination reached."
     );
 
-    // The casino card is intentionally shown only
-    // after the destination camera finishes.
-
-    geoplayMapUIShowDestination();
+    // Keep the destination card hidden while the story
+    // frames the player and prepares the road route.
+    geoplayMapUIHideDestination();
 
     geoplayMapUISay(
         "There it is — Pine Ridge Casino!",
@@ -1149,6 +1149,10 @@ function geoplayMapFlowReturnToPlayer()
 
     window.geoplayDestinationDistanceMiles =
         null;
+
+    // Make absolutely sure the destination card remains
+    // hidden before the distance sequence begins.
+    geoplayMapUIHideDestination();
 
     geoplayMapUISay(
         "Let's see how far away it is..."
@@ -1320,6 +1324,10 @@ function geoplayMapFlowTryStartRoute()
         true;
 
     geoplayMapUIHideDialogue();
+
+    // Keep the destination card hidden for the entire
+    // route animation.
+    geoplayMapUIHideDestination();
 
     console.log(
         "GEOPLAY FLOW: Camera and route are ready. Starting route animation."
@@ -1538,12 +1546,89 @@ function geoplayMapFlowRouteArrived()
         "GEOPLAY FLOW: Route arrived."
     );
 
+    // The route has finished drawing. Now perform the
+    // final destination camera move so the casino marker
+    // becomes the visual focus before the card appears.
+
+    if (
+        !window.geoplayMap ||
+        typeof geoplayDestinationLongitude !==
+            "number" ||
+        typeof geoplayDestinationLatitude !==
+            "number"
+    )
+    {
+        console.warn(
+            "GEOPLAY FLOW: Destination camera unavailable. Showing final destination presentation."
+        );
+
+        geoplayMapFlowShowFinalDestinationPresentation();
+
+        return;
+    }
+
+    window.geoplayDestinationControlledTransition =
+        true;
+
+    geoplayMapUIHideDestination();
+
+    window.geoplayMap.once(
+        "moveend",
+        function()
+        {
+            window.geoplayDestinationControlledTransition =
+                false;
+
+            geoplayMapFlowShowFinalDestinationPresentation();
+        }
+    );
+
+    window.geoplayMap.easeTo(
+    {
+        center:
+        [
+            geoplayDestinationLongitude,
+            geoplayDestinationLatitude
+        ],
+
+        zoom: 15.2,
+        bearing: 0,
+        pitch: 0,
+
+        duration: 1100,
+        essential: true
+    });
+}
+
+
+// ==================================================
+// FINAL DESTINATION PRESENTATION
+// ==================================================
+
+function geoplayMapFlowShowFinalDestinationPresentation()
+{
+    console.log(
+        "GEOPLAY FLOW: Final destination camera finished."
+    );
+
+    // Refresh the destination card using the final
+    // calculated road distance before displaying it.
     if (
         typeof geoplayMapUIRefreshDestinationDistance ===
         "function"
     )
     {
         geoplayMapUIRefreshDestinationDistance();
+    }
+
+    geoplayMapUIShowDestination();
+
+    if (
+        typeof geoplayMapUIUpdatePositions ===
+        "function"
+    )
+    {
+        geoplayMapUIUpdatePositions();
     }
 
     geoplayMapUISay(
@@ -1588,53 +1673,11 @@ function geoplayMapFlowFinish()
 
     geoplayMapFlowHideAllStatusIndicators();
 
+    // The final destination camera and destination card
+    // presentation have already happened in
+    // geoplayMapFlowRouteArrived().
     window.geoplayDestinationIndicatorEnabled =
         true;
-
-    if (
-        window.geoplayMap &&
-        typeof geoplayDestinationLongitude ===
-        "number" &&
-        typeof geoplayDestinationLatitude ===
-        "number"
-    )
-    {
-        window.geoplayDestinationControlledTransition =
-            true;
-
-        geoplayMapUIHideDestination();
-
-        window.geoplayMap.once(
-            "moveend",
-            function()
-            {
-                window.geoplayDestinationControlledTransition =
-                    false;
-
-                geoplayMapUIShowDestination();
-
-                geoplayMapFlowCompleteAfterFinalPresentation();
-            }
-        );
-
-        window.geoplayMap.easeTo(
-        {
-            center:
-            [
-                geoplayDestinationLongitude,
-                geoplayDestinationLatitude
-            ],
-
-            zoom: 15.2,
-            bearing: 0,
-            pitch: 0,
-
-            duration: 1100,
-            essential: true
-        });
-
-        return;
-    }
 
     geoplayMapFlowCompleteAfterFinalPresentation();
 }
