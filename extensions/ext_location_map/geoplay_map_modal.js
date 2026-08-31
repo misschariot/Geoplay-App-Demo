@@ -10,6 +10,7 @@
 // - Shared centering
 // - Shared animation timing
 // - Shared modal state
+// - Shared underlying navigation protection
 //
 // USED BY:
 // - SEARCH
@@ -38,6 +39,233 @@ window.geoplayModalOpening =
 
 window.geoplayModalClosing =
     false;
+
+
+// ==================================================
+// SHARED UNDERLYING UI STATE
+// ==================================================
+//
+// SEARCH + HOME are created by the shared map UI
+// system and normally sit above the map.
+//
+// When a modal opens, they need to visually behave
+// like underlying UI:
+//
+// - dimmed
+// - non-interactive
+//
+// Their original inline styles are stored so they
+// can be restored exactly when the modal closes.
+//
+// ==================================================
+
+window.geoplayModalUnderlyingUIState =
+{
+    element: null,
+    opacity: "",
+    filter: "",
+    pointerEvents: "",
+    transition: "",
+    zIndex: ""
+};
+
+
+// ==================================================
+// FIND UNDERLYING STORY ACTIONS
+// ==================================================
+//
+// The SEARCH + HOME buttons are contained inside:
+//
+// #geoplay-story-actions
+//
+// This element is created by geoplay_map_ui.js.
+//
+// ==================================================
+
+function geoplayMapUIGetStoryActions()
+{
+    var actions =
+        document.getElementById(
+            "geoplay-story-actions"
+        );
+
+
+    if (
+        !actions &&
+        window.geoplayMapUI
+    )
+    {
+        actions =
+            window.geoplayMapUI.querySelector(
+                "#geoplay-story-actions"
+            );
+    }
+
+
+    return actions || null;
+}
+
+
+// ==================================================
+// DIM UNDERLYING STORY ACTIONS
+// ==================================================
+//
+// This is intentionally handled by the shared modal
+// system rather than SEARCH or destination code.
+//
+// ==================================================
+
+function geoplayMapUIDimStoryActions()
+{
+    var actions =
+        geoplayMapUIGetStoryActions();
+
+
+    if (!actions)
+    {
+        return 0;
+    }
+
+
+    // ==================================================
+    // AVOID DUPLICATE STATE CAPTURE
+    // ==================================================
+
+    if (
+        window.geoplayModalUnderlyingUIState.element ===
+        actions
+    )
+    {
+        actions.style.opacity =
+            "0.32";
+
+
+        actions.style.filter =
+            "brightness(0.55)";
+
+
+        actions.style.pointerEvents =
+            "none";
+
+
+        return 1;
+    }
+
+
+    // ==================================================
+    // STORE ORIGINAL INLINE STYLES
+    // ==================================================
+
+    window.geoplayModalUnderlyingUIState =
+    {
+        element:
+            actions,
+
+        opacity:
+            actions.style.opacity,
+
+        filter:
+            actions.style.filter,
+
+        pointerEvents:
+            actions.style.pointerEvents,
+
+        transition:
+            actions.style.transition,
+
+        zIndex:
+            actions.style.zIndex
+    };
+
+
+    // ==================================================
+    // APPLY MODAL UNDERLAY STATE
+    // ==================================================
+
+    actions.style.transition =
+        "opacity 300ms ease, filter 300ms ease";
+
+
+    actions.style.opacity =
+        "0.32";
+
+
+    actions.style.filter =
+        "brightness(0.55)";
+
+
+    actions.style.pointerEvents =
+        "none";
+
+
+    return 1;
+}
+
+
+// ==================================================
+// RESTORE UNDERLYING STORY ACTIONS
+// ==================================================
+
+function geoplayMapUIRestoreStoryActions()
+{
+    var state =
+        window.geoplayModalUnderlyingUIState;
+
+
+    if (
+        !state ||
+        !state.element
+    )
+    {
+        return 0;
+    }
+
+
+    var actions =
+        state.element;
+
+
+    // ==================================================
+    // RESTORE ORIGINAL INLINE STYLES
+    // ==================================================
+
+    actions.style.opacity =
+        state.opacity;
+
+
+    actions.style.filter =
+        state.filter;
+
+
+    actions.style.pointerEvents =
+        state.pointerEvents;
+
+
+    actions.style.transition =
+        state.transition;
+
+
+    actions.style.zIndex =
+        state.zIndex;
+
+
+    // ==================================================
+    // CLEAR STORED STATE
+    // ==================================================
+
+    window.geoplayModalUnderlyingUIState =
+    {
+        element: null,
+        opacity: "",
+        filter: "",
+        pointerEvents: "",
+        transition: "",
+        zIndex: ""
+    };
+
+
+    return 1;
+}
 
 
 // ==================================================
@@ -82,6 +310,13 @@ function geoplayMapUIOpenModal(
 
     window.geoplayModalOpening =
         true;
+
+
+    // ==================================================
+    // DIM UNDERLYING SEARCH / HOME UI
+    // ==================================================
+
+    geoplayMapUIDimStoryActions();
 
 
     // ==================================================
@@ -231,6 +466,9 @@ function geoplayMapUICloseModal(
         !panel
     )
     {
+        geoplayMapUIRestoreStoryActions();
+
+
         if (
             typeof onComplete ===
             "function"
@@ -351,6 +589,13 @@ function geoplayMapUICloseModal(
 
             panel.style.transform =
                 "";
+
+
+            // ==================================================
+            // RESTORE UNDERLYING SEARCH / HOME UI
+            // ==================================================
+
+            geoplayMapUIRestoreStoryActions();
 
 
             // ==================================================

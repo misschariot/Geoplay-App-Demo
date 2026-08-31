@@ -467,7 +467,7 @@ function geoplayMapUISetDestinationCollapsed(card)
                 "</span>" +
             "</div>" +
             distanceMarkup +
-            "<span class='geoplay-destination-chevron'>›</span>" +
+            "<span class='geoplay-icon-button geoplay-icon-button-navigation geoplay-destination-chevron'>›</span>" +
         "</div>";
 
     card.setAttribute(
@@ -533,7 +533,7 @@ function geoplayMapUISetDestinationExpanded(card)
             "</span>" +
 
             "<button type='button' " +
-                "class='geoplay-destination-close' " +
+                "class='geoplay-icon-button geoplay-icon-button-close geoplay-destination-close' " +
                 "aria-label='Close " +
                     name +
                     " information'>" +
@@ -556,27 +556,15 @@ function geoplayMapUISetDestinationExpanded(card)
             "</div>" +
 
             "<button type='button' " +
-                "class='geoplay-destination-carousel-arrow geoplay-destination-carousel-arrow-left' " +
+                "class='geoplay-icon-button geoplay-icon-button-navigation geoplay-destination-carousel-arrow geoplay-destination-carousel-arrow-left' " +
                 "aria-label='Previous image'>‹</button>" +
 
             "<button type='button' " +
-                "class='geoplay-destination-carousel-arrow geoplay-destination-carousel-arrow-right' " +
+                "class='geoplay-icon-button geoplay-icon-button-navigation geoplay-destination-carousel-arrow geoplay-destination-carousel-arrow-right' " +
                 "aria-label='Next image'>›</button>" +
 
             "<div class='geoplay-destination-carousel-dots'></div>" +
         "</div>" +
-
-        "<div class='geoplay-destination-marketing'>" +
-            "<div class='geoplay-destination-tagline'>" +
-                "Your night starts here." +
-            "</div>" +
-
-            "<div class='geoplay-destination-marketing-copy'>" +
-                "Big games. Great food. Unforgettable nights." +
-            "</div>" +
-        "</div>" +
-
-        "<div class='geoplay-destination-expanded-divider'></div>" +
 
         "<div class='geoplay-destination-expanded-details'>" +
             distanceMarkup +
@@ -588,6 +576,18 @@ function geoplayMapUISetDestinationExpanded(card)
                     "777 Pine Ridge Road<br>" +
                     "Pine Ridge, CA 95563" +
                 "</span>" +
+            "</div>" +
+        "</div>" +
+
+        "<div class='geoplay-destination-expanded-divider'></div>" +
+
+        "<div class='geoplay-destination-marketing'>" +
+            "<div class='geoplay-destination-tagline'>" +
+                "Your night starts here." +
+            "</div>" +
+
+            "<div class='geoplay-destination-marketing-copy'>" +
+                "Big games. Great food. Unforgettable nights." +
             "</div>" +
         "</div>" +
 

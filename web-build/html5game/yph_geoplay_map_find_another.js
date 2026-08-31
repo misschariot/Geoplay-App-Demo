@@ -41,10 +41,6 @@ window.geoplayFindAnotherUI = null;
 // ==================================================
 // EVENT HELPERS
 // ==================================================
-//
-// Keeps click/touch behavior consistent without
-// duplicating the same event code throughout the file.
-// ==================================================
 
 function geoplayMapUISearchStopEvent(event)
 {
@@ -101,10 +97,6 @@ function geoplayMapUICreateFindAnother()
         return 0;
     }
 
-    // --------------------------------------------------
-    // CREATE OVERLAY
-    // --------------------------------------------------
-
     var overlay =
         document.createElement("div");
 
@@ -122,10 +114,6 @@ function geoplayMapUICreateFindAnother()
         overlay
     );
 
-    // --------------------------------------------------
-    // CREATE PANEL
-    // --------------------------------------------------
-
     var panel =
         document.createElement("div");
 
@@ -140,20 +128,12 @@ function geoplayMapUICreateFindAnother()
         panel
     );
 
-    // --------------------------------------------------
-    // BUILD CONTENT
-    // --------------------------------------------------
-
     geoplayMapUISearchBuildHeader(panel);
     geoplayMapUISearchBuildSubtitle(panel);
     geoplayMapUISearchBuildSearchSection(panel);
     geoplayMapUISearchBuildDivider(panel);
     geoplayMapUISearchBuildLocationButton(panel);
     geoplayMapUISearchBuildFooter(panel);
-
-    // --------------------------------------------------
-    // ADD TO MAP UI
-    // --------------------------------------------------
 
     overlay.appendChild(panel);
     window.geoplayMapUI.appendChild(overlay);
@@ -329,7 +309,7 @@ function geoplayMapUISearchBuildHeader(
     close.type = "button";
 
     close.className =
-        "geoplay-find-another-close";
+        "geoplay-icon-button geoplay-icon-button-close geoplay-find-another-close";
 
     close.textContent = "×";
 
@@ -436,10 +416,6 @@ function geoplayMapUISearchCreateInput(
     inputWrapper.className =
         "geoplay-find-another-input-wrapper";
 
-    // --------------------------------------------------
-    // SEARCH ICON
-    // --------------------------------------------------
-
     var searchIcon =
         document.createElement("span");
 
@@ -471,10 +447,6 @@ function geoplayMapUISearchCreateInput(
 
     inputWrapper.appendChild(searchIcon);
 
-    // --------------------------------------------------
-    // INPUT
-    // --------------------------------------------------
-
     var input =
         document.createElement("input");
 
@@ -492,16 +464,6 @@ function geoplayMapUISearchCreateInput(
     );
 
     input.style.pointerEvents = "auto";
-
-    // --------------------------------------------------
-    // IMPORTANT:
-    // DO NOT AUTO-FOCUS INPUT
-    // --------------------------------------------------
-    //
-    // The mobile keyboard should only appear when
-    // the player deliberately taps the input.
-    //
-    // --------------------------------------------------
 
     inputWrapper.appendChild(input);
     searchRow.appendChild(inputWrapper);
@@ -551,17 +513,6 @@ function geoplayMapUISearchCreateSearchButton(
 
 // ==================================================
 // SEARCH SUBMISSION
-// ==================================================
-//
-// UI ONLY FOR NOW.
-//
-// Future search implementation will connect here:
-// - Geocoding
-// - Results
-// - Property selection
-// - Map movement
-// - Destination card
-//
 // ==================================================
 
 function geoplayMapUISearchSubmit(
@@ -619,10 +570,6 @@ function geoplayMapUISearchBuildDivider(
 // ==================================================
 // BUILD USE MY LOCATION BUTTON
 // ==================================================
-//
-// Display-only for now.
-//
-// ==================================================
 
 function geoplayMapUISearchBuildLocationButton(
     panel
@@ -637,10 +584,6 @@ function geoplayMapUISearchBuildLocationButton(
         "geoplay-find-another-location";
 
     locationButton.style.pointerEvents = "auto";
-
-    // --------------------------------------------------
-    // LOCATION ICON
-    // --------------------------------------------------
 
     var locationIcon =
         document.createElement("span");
@@ -691,10 +634,6 @@ function geoplayMapUISearchBuildLocationButton(
 
     locationButton.appendChild(locationIcon);
 
-    // --------------------------------------------------
-    // LOCATION TEXT
-    // --------------------------------------------------
-
     var locationText =
         document.createElement("span");
 
@@ -724,23 +663,15 @@ function geoplayMapUISearchBuildLocationButton(
 
     locationButton.appendChild(locationText);
 
-    // --------------------------------------------------
-    // LOCATION ARROW
-    // --------------------------------------------------
-
     var locationArrow =
         document.createElement("span");
 
     locationArrow.className =
-        "geoplay-find-another-location-arrow";
+        "geoplay-icon-button geoplay-icon-button-navigation geoplay-find-another-location-arrow";
 
     locationArrow.textContent = "›";
 
     locationButton.appendChild(locationArrow);
-
-    // --------------------------------------------------
-    // LOCATION BUTTON EVENTS
-    // --------------------------------------------------
 
     geoplayMapUISearchAddTouchClick(
         locationButton,
@@ -756,10 +687,6 @@ function geoplayMapUISearchBuildLocationButton(
 
 // ==================================================
 // USE MY LOCATION
-// ==================================================
-//
-// UI ONLY FOR NOW.
-//
 // ==================================================
 
 function geoplayMapUISearchUseMyLocation()
@@ -804,18 +731,10 @@ function geoplayMapUISearchBuildFooter(
 
 function geoplayMapUIOpenFindAnother()
 {
-    // --------------------------------------------------
-    // CREATE UI IF NEEDED
-    // --------------------------------------------------
-
     if (!window.geoplayFindAnotherUI)
     {
         geoplayMapUICreateFindAnother();
     }
-
-    // --------------------------------------------------
-    // VERIFY UI
-    // --------------------------------------------------
 
     if (!window.geoplayFindAnotherUI)
     {
@@ -825,10 +744,6 @@ function geoplayMapUIOpenFindAnother()
 
         return 0;
     }
-
-    // --------------------------------------------------
-    // FIND PANEL
-    // --------------------------------------------------
 
     var panel =
         window.geoplayFindAnotherUI.querySelector(
@@ -843,10 +758,6 @@ function geoplayMapUIOpenFindAnother()
 
         return 0;
     }
-
-    // --------------------------------------------------
-    // SHARED MODAL SYSTEM
-    // --------------------------------------------------
 
     if (
         typeof geoplayMapUIOpenModal !==
@@ -864,16 +775,6 @@ function geoplayMapUIOpenFindAnother()
         window.geoplayFindAnotherUI,
         panel
     );
-
-    // --------------------------------------------------
-    // IMPORTANT:
-    // DO NOT HIDE STORY ACTIONS.
-    //
-    // FIND ANOTHER / BROWSE remain visible underneath
-    // the transparent modal backdrop.
-    //
-    // DO NOT AUTO-FOCUS SEARCH INPUT.
-    // --------------------------------------------------
 
     console.log(
         "GEOPLAY SEARCH: Opened using shared modal system."
@@ -894,10 +795,6 @@ function geoplayMapUICloseFindAnother()
         return 1;
     }
 
-    // --------------------------------------------------
-    // FIND PANEL
-    // --------------------------------------------------
-
     var panel =
         window.geoplayFindAnotherUI.querySelector(
             ".geoplay-find-another"
@@ -907,10 +804,6 @@ function geoplayMapUICloseFindAnother()
     {
         return 0;
     }
-
-    // --------------------------------------------------
-    // SHARED MODAL SYSTEM
-    // --------------------------------------------------
 
     if (
         typeof geoplayMapUICloseModal !==
@@ -934,14 +827,6 @@ function geoplayMapUICloseFindAnother()
             );
         }
     );
-
-    // --------------------------------------------------
-    // IMPORTANT:
-    // DO NOT SHOW/HIDE STORY ACTIONS HERE.
-    //
-    // FIND ANOTHER / BROWSE were never hidden when
-    // SEARCH opened.
-    // --------------------------------------------------
 
     return 1;
 }

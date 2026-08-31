@@ -360,152 +360,6 @@
 }
 
 
-.geoplay-destination-chevron
-{
-    position:
-        absolute;
-
-    right:
-        10px;
-
-    top:
-        50%;
-
-    transform:
-        translateY(
-            -50%
-        );
-
-    flex:
-        0 0 auto;
-
-    width:
-        26px;
-
-    height:
-        26px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    border:
-        1px solid
-        rgba(
-            179,
-            76,
-            255,
-            .38
-        );
-
-    border-radius:
-        50%;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(
-                48,
-                22,
-                71,
-                .95
-            ),
-            rgba(
-                20,
-                8,
-                36,
-                .98
-            )
-        );
-
-    color:
-        #ffb52e;
-
-    font-size:
-        19px;
-
-    font-weight:
-        800;
-
-    line-height:
-        1;
-
-    box-shadow:
-        0 0 7px
-        rgba(
-            179,
-            76,
-            255,
-            .18
-        ),
-
-        inset 0 1px 0
-        rgba(
-            255,
-            255,
-            255,
-            .08
-        );
-
-    transition:
-        transform .15s ease,
-        filter .15s ease,
-        box-shadow .15s ease;
-}
-
-
-.geoplay-destination:hover
-.geoplay-destination-chevron
-{
-    transform:
-        translate(
-            2px,
-            -50%
-        );
-
-    filter:
-        brightness(
-            1.08
-        );
-
-    box-shadow:
-        0 0 10px
-        rgba(
-            179,
-            76,
-            255,
-            .30
-        ),
-
-        inset 0 1px 0
-        rgba(
-            255,
-            255,
-            255,
-            .12
-        );
-}
-
-
-.geoplay-destination:active
-.geoplay-destination-chevron
-{
-    transform:
-        translate(
-            0,
-            -50%
-        )
-        scale(
-            .94
-        );
-}
-
-
 /* ==================================================
    DESTINATION POP-IN / POP-OUT
    ================================================== */
@@ -637,7 +491,7 @@
         );
 
     padding:
-        24px 21px 18px;
+        24px 21px 22px;
 
     border:
         1px solid
@@ -725,7 +579,7 @@
         100%;
 
     margin-bottom:
-        10px;
+        12px;
 }
 
 
@@ -773,10 +627,13 @@
 
 
 /* ==================================================
-   CLOSE BUTTON
+   SHARED GEOPLAY ICON BUTTON
    ================================================== */
 
-.geoplay-destination-close
+.geoplay-destination-close,
+.geoplay-destination-carousel-arrow,
+.geoplay-destination-chevron,
+.geoplay-find-another-close
 {
     position:
         relative;
@@ -785,10 +642,10 @@
         0 0 auto;
 
     width:
-        34px;
+        30px;
 
     height:
-        34px;
+        30px;
 
     padding:
         0;
@@ -831,7 +688,7 @@
         sans-serif;
 
     font-size:
-        18px;
+        17px;
 
     font-weight:
         700;
@@ -898,7 +755,10 @@
 }
 
 
-.geoplay-destination-close::before
+.geoplay-destination-close::before,
+.geoplay-destination-carousel-arrow::before,
+.geoplay-destination-chevron::before,
+.geoplay-find-another-close::before
 {
     content:
         "";
@@ -946,7 +806,10 @@
 }
 
 
-.geoplay-destination-close:hover
+.geoplay-destination-close:hover,
+.geoplay-destination-carousel-arrow:hover,
+.geoplay-destination-chevron:hover,
+.geoplay-find-another-close:hover
 {
     filter:
         brightness(
@@ -980,9 +843,88 @@
 }
 
 
-.geoplay-destination-close:active
+/* ==================================================
+   COLLAPSED CHEVRON POSITIONING
+   ================================================== */
+
+.geoplay-destination-chevron
+{
+    position:
+        absolute;
+
+    right:
+        10px;
+
+    top:
+        50%;
+
+    transform:
+        translateY(
+            -50%
+        );
+}
+
+
+/* ==================================================
+   CLOSE BUTTON
+   ================================================== */
+
+.geoplay-destination-close
+{
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        17px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1;
+}
+
+
+.geoplay-destination-close:active,
+.geoplay-find-another-close:active
 {
     transform:
+        scale(
+            .90
+        );
+
+    filter:
+        brightness(
+            .96
+        );
+}
+
+
+/* ==================================================
+   COLLAPSED CHEVRON ICON
+   ================================================== */
+
+.geoplay-destination-chevron
+{
+    font-size:
+        17px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1;
+}
+
+
+.geoplay-destination-chevron:active
+{
+    transform:
+        translateY(
+            -50%
+        )
         scale(
             .90
         );
@@ -1008,10 +950,13 @@
 
     height:
         clamp(
-            120px,
-            31vw,
-            155px
+            165px,
+            42vw,
+            210px
         );
+
+    margin-bottom:
+        14px;
 
     overflow:
         hidden;
@@ -1100,82 +1045,22 @@
             -50%
         );
 
-    width:
-        30px;
-
-    height:
-        30px;
-
-    padding:
-        0;
-
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            .25
-        );
-
-    border-radius:
-        50%;
-
-    background:
-        rgba(
-            12,
-            5,
-            28,
-            .72
-        );
-
-    color:
-        #ffffff;
+    z-index:
+        3;
 
     font-family:
+        'Poppins',
         Arial,
         sans-serif;
 
     font-size:
-        25px;
+        18px;
 
     font-weight:
-        400;
+        700;
 
     line-height:
-        25px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    cursor:
-        pointer;
-
-    z-index:
-        3;
-
-    box-shadow:
-        0 2px 10px
-        rgba(
-            0,
-            0,
-            0,
-            .30
-        );
-
-    -webkit-tap-highlight-color:
-        transparent;
-
-    transition:
-        transform .15s ease,
-        background .15s ease,
-        filter .15s ease;
+        1;
 }
 
 
@@ -1193,23 +1078,6 @@
 }
 
 
-.geoplay-destination-carousel-arrow:hover
-{
-    filter:
-        brightness(
-            1.12
-        );
-
-    background:
-        rgba(
-            12,
-            5,
-            28,
-            .88
-        );
-}
-
-
 .geoplay-destination-carousel-arrow:active
 {
     transform:
@@ -1217,7 +1085,7 @@
             -50%
         )
         scale(
-            .92
+            .90
         );
 }
 
@@ -1337,7 +1205,7 @@
         100%;
 
     margin-top:
-        13px;
+        0;
 
     text-align:
         left;
@@ -1375,7 +1243,7 @@
 .geoplay-destination-marketing-copy
 {
     margin-top:
-        3px;
+        4px;
 
     color:
         rgba(
@@ -1418,7 +1286,7 @@
         1px;
 
     margin:
-        15px 0 13px;
+        14px 0 14px;
 
     background:
         linear-gradient(
@@ -1480,7 +1348,7 @@
         100%;
 
     margin-bottom:
-        13px;
+        0;
 }
 
 
@@ -1672,6 +1540,9 @@
 
     min-height:
         47px;
+
+    margin-top:
+        15px;
 
     padding:
         0 16px;
@@ -2115,7 +1986,7 @@
             390px;
 
         padding:
-            21px 16px 16px;
+            21px 16px 20px;
 
         border-radius:
             20px;
@@ -2129,27 +2000,37 @@
     }
 
 
+    .geoplay-destination-expanded-header
+    {
+        margin-bottom:
+            11px;
+    }
+
+
     .geoplay-destination-close
     {
         width:
-            33px;
+            30px;
 
         height:
-            33px;
+            30px;
     }
 
 
     .geoplay-destination-carousel
     {
         height:
-            125px;
+            175px;
+
+        margin-bottom:
+            13px;
     }
 
 
     .geoplay-destination-expanded-divider
     {
         margin:
-            12px 0 12px;
+            14px 0 13px;
     }
 
 
@@ -2204,10 +2085,20 @@
     }
 
 
+    .geoplay-destination-marketing-copy
+    {
+        margin-top:
+            4px;
+    }
+
+
     .geoplay-destination-play
     {
         min-height:
             44px;
+
+        margin-top:
+            14px;
 
         border-radius:
             23px;
@@ -2247,13 +2138,16 @@
             );
 
         padding:
-            24px 21px 18px;
+            24px 21px 22px;
     }
 
 
     .geoplay-destination-carousel
     {
         height:
-            155px;
+            210px;
+
+        margin-bottom:
+            15px;
     }
 }
