@@ -220,6 +220,21 @@ function geoplayMapFlowStart()
 // ==================================================
 // SEARCH VISUAL
 // ==================================================
+//
+// The search state is intentionally lightweight and
+// map-focused. The panel remains centered while the
+// search animation uses a stable magnifying glass and
+// moving scan elements around it.
+//
+// Visual language:
+// - Deep Geoplay glass background
+// - Purple / cyan search glow
+// - Geoplay glass / neon edge treatment
+// - Static magnifying glass
+// - Rotating scan point
+// - Rotating search sweep
+//
+// ==================================================
 
 function geoplayMapFlowCreateSearchIndicator()
 {
@@ -248,7 +263,7 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     // ==================================================
-    // CREATE CENTERED SEARCH INDICATOR
+    // CREATE SEARCH INDICATOR
     // ==================================================
 
     var indicator =
@@ -277,12 +292,21 @@ function geoplayMapFlowCreateSearchIndicator()
         "translate(-50%, -50%)";
 
 
+    // ==================================================
+    // SEARCH CARD SIZE
+    // ==================================================
+    //
+    // Slightly smaller than the previous version so
+    // the map remains more visible during the search.
+    //
+    // ==================================================
+
     indicator.style.width =
-        "260px";
+        "248px";
 
 
     indicator.style.minHeight =
-        "150px";
+        "142px";
 
 
     indicator.style.boxSizing =
@@ -306,27 +330,51 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     indicator.style.gap =
-        "12px";
+        "10px";
 
 
     indicator.style.padding =
-        "22px 28px";
+        "20px 24px";
 
 
     indicator.style.borderRadius =
-        "24px";
+        "22px";
 
+
+    // ==================================================
+    // GEOPLAY GLASS BACKGROUND
+    // ==================================================
 
     indicator.style.background =
-        "rgba(10, 8, 35, 0.88)";
+        "linear-gradient(" +
+            "145deg," +
+            "rgba(27, 11, 48, 0.96)," +
+            "rgba(11, 5, 27, 0.97)" +
+        ")";
 
+
+    // ==================================================
+    // GEOPLAY BORDER
+    // ==================================================
+    //
+    // Purple is now the primary accent with the subtle
+    // Geoplay neon treatment used elsewhere in the UI.
+    //
+    // ==================================================
 
     indicator.style.border =
-        "1.5px solid rgba(94, 190, 255, 0.65)";
+        "1px solid rgba(179, 76, 255, 0.70)";
 
+
+    // ==================================================
+    // GEOPLAY GLASS GLOW
+    // ==================================================
 
     indicator.style.boxShadow =
-        "0 0 28px rgba(94, 190, 255, 0.22), inset 0 0 18px rgba(94, 190, 255, 0.06)";
+        "0 0 22px rgba(139, 61, 255, 0.20)," +
+        "0 0 42px rgba(41, 200, 255, 0.08)," +
+        "inset 0 1px 0 rgba(255, 255, 255, 0.08)," +
+        "inset 0 0 20px rgba(139, 92, 255, 0.06)";
 
 
     indicator.style.pointerEvents =
@@ -350,7 +398,12 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     // ==================================================
-    // SEARCH ICON
+    // SEARCH ICON WRAPPER
+    // ==================================================
+    //
+    // The magnifying glass stays stable while the
+    // surrounding scan elements provide the motion.
+    //
     // ==================================================
 
     var icon =
@@ -364,31 +417,181 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     icon.style.width =
-        "52px";
+        "56px";
 
 
     icon.style.height =
-        "52px";
-
-
-    icon.style.border =
-        "2px solid rgba(94, 190, 255, 0.9)";
-
-
-    icon.style.borderRadius =
-        "50%";
+        "56px";
 
 
     icon.style.boxSizing =
         "border-box";
 
 
+    icon.style.flexShrink =
+        "0";
+
+
+    // ==================================================
+    // OUTER SEARCH RING
+    // ==================================================
+
+    icon.style.border =
+        "1.5px solid rgba(139, 92, 255, 0.65)";
+
+
+    icon.style.borderRadius =
+        "50%";
+
+
+    icon.style.boxShadow =
+        "0 0 12px rgba(139, 92, 255, 0.20)," +
+        "inset 0 0 10px rgba(41, 200, 255, 0.06)";
+
+
+    // ==================================================
+    // OUTER RING BREATH
+    // ==================================================
+    //
+    // Very subtle movement keeps the icon alive without
+    // making the whole magnifying glass pulse.
+    //
+    // ==================================================
+
     icon.style.animation =
-        "geoplaySearchIconPulse 1.5s ease-in-out infinite";
+        "geoplaySearchRingBreathe 1.8s ease-in-out infinite";
+
+
+    // ==================================================
+    // SEARCH SWEEP TRACK
+    // ==================================================
+    //
+    // A faint rotating arc gives the player a clear
+    // visual indication that the area is being searched.
+    //
+    // ==================================================
+
+    var sweepTrack =
+        document.createElement(
+            "div"
+        );
+
+
+    sweepTrack.style.position =
+        "absolute";
+
+
+    sweepTrack.style.left =
+        "5px";
+
+
+    sweepTrack.style.top =
+        "5px";
+
+
+    sweepTrack.style.width =
+        "46px";
+
+
+    sweepTrack.style.height =
+        "46px";
+
+
+    sweepTrack.style.border =
+        "1px solid transparent";
+
+
+    sweepTrack.style.borderTop =
+        "1.5px solid rgba(41, 200, 255, 0.55)";
+
+
+    sweepTrack.style.borderRight =
+        "1.5px solid rgba(139, 92, 255, 0.45)";
+
+
+    sweepTrack.style.borderRadius =
+        "50%";
+
+
+    sweepTrack.style.boxSizing =
+        "border-box";
+
+
+    sweepTrack.style.animation =
+        "geoplaySearchSweepRotate 1.8s linear infinite";
+
+
+    // ==================================================
+    // SCAN POINT
+    // ==================================================
+    //
+    // Small cyan point travels around the outer ring.
+    // This is now the primary searching motion.
+    //
+    // ==================================================
+
+    var scanPoint =
+        document.createElement(
+            "div"
+        );
+
+
+    scanPoint.style.position =
+        "absolute";
+
+
+    scanPoint.style.width =
+        "6px";
+
+
+    scanPoint.style.height =
+        "6px";
+
+
+    scanPoint.style.left =
+        "25px";
+
+
+    scanPoint.style.top =
+        "0px";
+
+
+    scanPoint.style.marginLeft =
+        "-3px";
+
+
+    scanPoint.style.marginTop =
+        "-3px";
+
+
+    scanPoint.style.borderRadius =
+        "50%";
+
+
+    scanPoint.style.background =
+        "#29C8FF";
+
+
+    scanPoint.style.boxShadow =
+        "0 0 5px rgba(41, 200, 255, 0.95)," +
+        "0 0 12px rgba(139, 92, 255, 0.65)";
+
+
+    scanPoint.style.transformOrigin =
+        "3px 31px";
+
+
+    scanPoint.style.animation =
+        "geoplaySearchScanPoint 1.8s linear infinite";
 
 
     // ==================================================
     // SEARCH GLASS
+    // ==================================================
+    //
+    // The magnifying glass itself stays completely
+    // stable. The surrounding scanner provides the motion.
+    //
     // ==================================================
 
     var glass =
@@ -402,23 +605,23 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     glass.style.left =
-        "11px";
+        "14px";
 
 
     glass.style.top =
-        "9px";
+        "12px";
 
 
     glass.style.width =
-        "23px";
+        "24px";
 
 
     glass.style.height =
-        "23px";
+        "24px";
 
 
     glass.style.border =
-        "3px solid rgba(255, 255, 255, 0.95)";
+        "2.5px solid rgba(255, 255, 255, 0.96)";
 
 
     glass.style.borderRadius =
@@ -427,6 +630,10 @@ function geoplayMapFlowCreateSearchIndicator()
 
     glass.style.boxSizing =
         "border-box";
+
+
+    glass.style.filter =
+        "drop-shadow(0 0 5px rgba(41, 200, 255, 0.28))";
 
 
     // ==================================================
@@ -448,15 +655,15 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     handle.style.height =
-        "3px";
+        "2.5px";
 
 
     handle.style.left =
-        "30px";
+        "31px";
 
 
     handle.style.top =
-        "33px";
+        "34px";
 
 
     handle.style.borderRadius =
@@ -464,7 +671,7 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     handle.style.background =
-        "rgba(255, 255, 255, 0.95)";
+        "rgba(255, 255, 255, 0.96)";
 
 
     handle.style.transform =
@@ -473,6 +680,20 @@ function geoplayMapFlowCreateSearchIndicator()
 
     handle.style.transformOrigin =
         "left center";
+
+
+    // ==================================================
+    // BUILD SEARCH ICON
+    // ==================================================
+
+    icon.appendChild(
+        sweepTrack
+    );
+
+
+    icon.appendChild(
+        scanPoint
+    );
 
 
     icon.appendChild(
@@ -496,11 +717,11 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     label.style.fontFamily =
-        "Arial, sans-serif";
+        "'Poppins', Arial, sans-serif";
 
 
     label.style.fontSize =
-        "15px";
+        "14px";
 
 
     label.style.fontWeight =
@@ -508,7 +729,7 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     label.style.letterSpacing =
-        "1.5px";
+        "1.4px";
 
 
     label.style.textAlign =
@@ -516,54 +737,23 @@ function geoplayMapFlowCreateSearchIndicator()
 
 
     label.style.color =
-        "rgba(255, 255, 255, 0.95)";
+        "rgba(255, 255, 255, 0.96)";
+
+
+    label.style.lineHeight =
+        "1.2";
+
+
+    label.style.whiteSpace =
+        "nowrap";
 
 
     label.style.textShadow =
-        "0 0 8px rgba(94, 190, 255, 0.45)";
+        "0 0 8px rgba(139, 92, 255, 0.30)";
 
 
     label.textContent =
         "SEARCHING NEARBY";
-
-
-    // ==================================================
-    // SEARCH DOTS
-    // ==================================================
-
-    var dots =
-        document.createElement(
-            "span"
-        );
-
-
-    dots.textContent =
-        "...";
-
-
-    dots.style.display =
-        "inline-block";
-
-
-    dots.style.width =
-        "20px";
-
-
-    dots.style.textAlign =
-        "left";
-
-
-    dots.style.overflow =
-        "hidden";
-
-
-    dots.style.animation =
-        "geoplaySearchDots 1.2s steps(4, end) infinite";
-
-
-    label.appendChild(
-        dots
-    );
 
 
     // ==================================================
@@ -632,37 +822,60 @@ function geoplayMapFlowEnsureSearchAnimations()
 
     style.textContent =
 
-        "@keyframes geoplaySearchIconPulse {" +
+        // ==================================================
+        // OUTER RING BREATHING
+        // ==================================================
+
+        "@keyframes geoplaySearchRingBreathe {" +
 
             "0%, 100% {" +
-                "transform: scale(0.94);" +
-                "opacity: 0.82;" +
+                "transform: scale(0.96);" +
+                "opacity: 0.72;" +
             "}" +
 
             "50% {" +
-                "transform: scale(1.06);" +
+                "transform: scale(1.03);" +
                 "opacity: 1;" +
             "}" +
 
         "}" +
 
 
-        "@keyframes geoplaySearchDots {" +
+        // ==================================================
+        // ROTATING SWEEP TRACK
+        // ==================================================
+
+        "@keyframes geoplaySearchSweepRotate {" +
 
             "0% {" +
-                "width: 0px;" +
-            "}" +
-
-            "25% {" +
-                "width: 7px;" +
+                "transform: rotate(0deg);" +
+                "opacity: 0.55;" +
             "}" +
 
             "50% {" +
-                "width: 12px;" +
+                "opacity: 1;" +
             "}" +
 
-            "75%, 100% {" +
-                "width: 20px;" +
+            "100% {" +
+                "transform: rotate(360deg);" +
+                "opacity: 0.55;" +
+            "}" +
+
+        "}" +
+
+
+        // ==================================================
+        // MOVING SCAN POINT
+        // ==================================================
+
+        "@keyframes geoplaySearchScanPoint {" +
+
+            "0% {" +
+                "transform: rotate(0deg);" +
+            "}" +
+
+            "100% {" +
+                "transform: rotate(360deg);" +
             "}" +
 
         "}";
