@@ -55,10 +55,10 @@ var geoplayDestinationMarkerGap = 16;
 // ==================================================
 
 window.geoplayDestinationLogo =
-    "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine_ridge_logo.png";
+    "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine_ridge_512.png";
 
 window.geoplayDestinationHeroImage =
-    "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine_ridge_casino_img.png";
+    "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine_ridge_loc.png";
 
 
 // ==================================================

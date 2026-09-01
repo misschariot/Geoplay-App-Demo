@@ -514,8 +514,15 @@
     height:
         100%;
 
+    /*
+     * Use contain so the complete 512x512
+     * Pine Ridge logo remains visible.
+     *
+     * The logo itself still fills the available
+     * logo area without being cropped.
+     */
     object-fit:
-        cover;
+        contain;
 
     object-position:
         center;
@@ -884,26 +891,14 @@
     border-radius:
         0;
 
+    /*
+     * Solid purple matching the distance display.
+     */
     background:
-        linear-gradient(
-            105deg,
-            #ff9b18 0%,
-            #ff5a58 40%,
-            #b34cff 72%,
-            #7138ff 100%
-        );
-
-    background-clip:
-        text;
-
-    -webkit-background-clip:
-        text;
-
-    -webkit-text-fill-color:
         transparent;
 
     color:
-        transparent;
+        #b34cff;
 
     font-family:
         Arial,
@@ -968,6 +963,9 @@
 
 .geoplay-destination-card-arrow:hover
 {
+    color:
+        #b34cff;
+
     filter:
         brightness(
             1.20
@@ -991,6 +989,9 @@
 
 .geoplay-destination-card-arrow:active
 {
+    color:
+        #b34cff;
+
     transform:
         translateX(
             3px
