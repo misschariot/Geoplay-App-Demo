@@ -5,7 +5,7 @@
 
 
 /* ==================================================
-   PINE RIDGE DESTINATION CARD
+   DESTINATION CARD
    ================================================== */
 
 .geoplay-destination
@@ -15,8 +15,8 @@
 
     width:
         min(
-            70vw,
-            285px
+            88vw,
+            390px
         );
 
     max-width:
@@ -25,41 +25,37 @@
             20px
         );
 
+    height:
+        240px;
+
     box-sizing:
         border-box;
 
     padding:
-        11px 14px;
+        0;
+
+    overflow:
+        hidden;
 
     border:
         1px solid
         transparent;
 
     border-radius:
-        16px;
+        17px;
 
     background:
         linear-gradient(
             145deg,
-            rgba(
-                25,
-                10,
-                45,
-                .98
-            ),
-            rgba(
-                12,
-                6,
-                28,
-                .99
-            )
+            #08070d,
+            #020205
         )
         padding-box,
 
         linear-gradient(
             105deg,
             #ff9b18 0%,
-            #ff5a58 42%,
+            #ff5a58 40%,
             #b34cff 72%,
             #7138ff 100%
         )
@@ -71,23 +67,23 @@
             255,
             155,
             24,
-            .18
+            .20
         ),
 
-        0 0 20px
+        0 0 22px
         rgba(
             139,
             61,
             255,
-            .13
+            .15
         ),
 
-        0 7px 18px
+        0 8px 20px
         rgba(
             0,
             0,
             0,
-            .35
+            .38
         );
 
     opacity:
@@ -102,6 +98,7 @@
     transition:
         opacity .2s ease,
         width .25s ease,
+        height .25s ease,
         max-height .25s ease,
         transform .25s ease;
 
@@ -140,25 +137,24 @@
 
 .geoplay-destination:not(.expanded)
 {
+    width:
+        min(
+            88vw,
+            390px
+        );
+
+    height:
+        240px;
+
     border:
         1px solid
         transparent;
 
     background:
         linear-gradient(
-            145deg,
-            rgba(
-                27,
-                11,
-                48,
-                .98
-            ),
-            rgba(
-                11,
-                5,
-                27,
-                .99
-            )
+            180deg,
+            #09080f 0%,
+            #030306 100%
         )
         padding-box,
 
@@ -185,61 +181,488 @@
             139,
             61,
             255,
-            .14
+            .15
         ),
 
-        0 7px 18px
+        0 8px 20px
         rgba(
             0,
             0,
             0,
-            .34
+            .38
         );
 }
 
 
+/* ==================================================
+   COLLAPSED CARD ROOT
+   ================================================== */
+
 .geoplay-destination-collapsed
 {
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    align-items:
-        stretch;
-
-    justify-content:
-        center;
-
-    gap:
-        5px;
+    position:
+        relative;
 
     width:
         100%;
+
+    height:
+        100%;
+
+    overflow:
+        hidden;
+
+    background:
+        #030306;
 }
 
 
-.geoplay-destination-collapsed-main
+/* ==================================================
+   HERO IMAGE
+   ================================================== */
+
+.geoplay-destination-card-image
 {
-    display:
-        flex;
+    position:
+        absolute;
 
-    align-items:
-        center;
+    left:
+        0;
 
-    min-width:
+    top:
         0;
 
     width:
         100%;
 
-    gap:
-        8px;
+    height:
+        72%;
+
+    overflow:
+        hidden;
+
+    z-index:
+        0;
+
+    background:
+        #050509;
 }
 
 
-.geoplay-destination-pin
+.geoplay-destination-card-hero
+{
+    position:
+        absolute;
+
+    left:
+        0;
+
+    top:
+        0;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        block;
+
+    object-fit:
+        cover;
+
+    object-position:
+        center 42%;
+
+    opacity:
+        1;
+
+    transform:
+        scale(
+            1.015
+        );
+
+    -webkit-user-drag:
+        none;
+}
+
+
+/* ==================================================
+   IMAGE → BLACK FADE
+   ==================================================
+   
+   The photograph does NOT need to be edited.
+   This overlay creates the transition from the
+   photograph into the black lower section.
+   ================================================== */
+
+.geoplay-destination-card-image-fade
+{
+    position:
+        absolute;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    bottom:
+        -1px;
+
+    height:
+        72%;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(
+                3,
+                3,
+                6,
+                0
+            ) 0%,
+
+            rgba(
+                3,
+                3,
+                6,
+                .03
+            ) 10%,
+
+            rgba(
+                3,
+                3,
+                6,
+                .12
+            ) 24%,
+
+            rgba(
+                3,
+                3,
+                6,
+                .34
+            ) 42%,
+
+            rgba(
+                3,
+                3,
+                6,
+                .62
+            ) 60%,
+
+            rgba(
+                3,
+                3,
+                6,
+                .86
+            ) 78%,
+
+            rgba(
+                3,
+                3,
+                6,
+                .97
+            ) 92%,
+
+            rgba(
+                3,
+                3,
+                6,
+                1
+            ) 100%
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        2;
+}
+
+
+/* ==================================================
+   BLACK LOWER SECTION
+   ================================================== */
+
+.geoplay-destination-collapsed::after
+{
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    bottom:
+        0;
+
+    height:
+        43%;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(
+                3,
+                3,
+                6,
+                0
+            ) 0%,
+
+            rgba(
+                3,
+                3,
+                6,
+                .72
+            ) 25%,
+
+            rgba(
+                3,
+                3,
+                6,
+                .96
+            ) 52%,
+
+            #030306 100%
+        );
+
+    pointer-events:
+        none;
+
+    z-index:
+        1;
+}
+
+
+/* ==================================================
+   LOGO CONTAINER
+   ================================================== */
+
+.geoplay-destination-card-logo-wrap
+{
+    position:
+        absolute;
+
+    left:
+        13px;
+
+    top:
+        13px;
+
+    width:
+        108px;
+
+    height:
+        108px;
+
+    box-sizing:
+        border-box;
+
+    padding:
+        3px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .72
+        );
+
+    border-radius:
+        15px;
+
+    background:
+        rgba(
+            5,
+            3,
+            10,
+            .96
+        );
+
+    box-shadow:
+        0 4px 13px
+        rgba(
+            0,
+            0,
+            0,
+            .45
+        ),
+
+        0 0 10px
+        rgba(
+            255,
+            181,
+            46,
+            .10
+        );
+
+    overflow:
+        hidden;
+
+    z-index:
+        4;
+}
+
+
+.geoplay-destination-card-logo
+{
+    display:
+        block;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        contain;
+
+    border-radius:
+        11px;
+
+    -webkit-user-drag:
+        none;
+}
+
+
+/* ==================================================
+   CARD CONTENT
+   ================================================== */
+
+.geoplay-destination-card-content
+{
+    position:
+        absolute;
+
+    left:
+        15px;
+
+    right:
+        145px;
+
+    bottom:
+        15px;
+
+    z-index:
+        5;
+
+    min-width:
+        0;
+}
+
+
+.geoplay-destination-card-name
+{
+    display:
+        block;
+
+    margin:
+        0;
+
+    color:
+        #ffffff;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        clamp(
+            17px,
+            4.3vw,
+            22px
+        );
+
+    font-weight:
+        800;
+
+    line-height:
+        1.05;
+
+    letter-spacing:
+        .2px;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    text-shadow:
+        0 2px 5px
+        rgba(
+            0,
+            0,
+            0,
+            .65
+        );
+}
+
+
+.geoplay-destination-card-location
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    margin-top:
+        6px;
+
+    min-width:
+        0;
+
+    color:
+        #ffffff;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        clamp(
+            10px,
+            2.7vw,
+            13px
+        );
+
+    font-weight:
+        500;
+
+    line-height:
+        1.2;
+
+    text-shadow:
+        0 2px 5px
+        rgba(
+            0,
+            0,
+            0,
+            .65
+        );
+}
+
+
+.geoplay-destination-card-location-icon
 {
     flex:
         0 0 auto;
@@ -254,32 +677,97 @@
         center;
 
     width:
-        20px;
+        16px;
 
     height:
-        20px;
+        16px;
+
+    color:
+        #b34cff;
 
     font-size:
-        15px;
+        16px;
+
+    line-height:
+        1;
+
+    filter:
+        drop-shadow(
+            0 0 4px
+            rgba(
+                179,
+                76,
+                255,
+                .45
+            )
+        );
+}
+
+
+.geoplay-destination-card-location-text
+{
+    min-width:
+        0;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+
+/* ==================================================
+   DISTANCE
+   ================================================== */
+
+.geoplay-destination-card-distance
+{
+    position:
+        absolute;
+
+    right:
+        47px;
+
+    bottom:
+        18px;
+
+    z-index:
+        6;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-width:
+        58px;
+
+    text-align:
+        center;
 
     line-height:
         1;
 }
 
 
-.geoplay-destination-title
+.geoplay-destination-card-distance-number
 {
     display:
         block;
 
-    min-width:
-        0;
-
-    flex:
-        1;
-
     color:
-        #ffb52e;
+        #b34cff;
 
     font-family:
         'Poppins',
@@ -288,30 +776,145 @@
 
     font-size:
         clamp(
-            12px,
-            3vw,
-            15px
+            30px,
+            7.8vw,
+            42px
+        );
+
+    font-weight:
+        700;
+
+    line-height:
+        .88;
+
+    letter-spacing:
+        -.8px;
+
+    text-shadow:
+        0 0 8px
+        rgba(
+            179,
+            76,
+            255,
+            .42
+        ),
+
+        0 2px 5px
+        rgba(
+            0,
+            0,
+            0,
+            .48
+        );
+}
+
+
+.geoplay-destination-card-distance-label
+{
+    display:
+        block;
+
+    margin-top:
+        5px;
+
+    color:
+        #b34cff;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        clamp(
+            8px,
+            2.1vw,
+            11px
         );
 
     font-weight:
         800;
 
+    line-height:
+        1;
+
     letter-spacing:
-        .2px;
+        .35px;
 
-    white-space:
-        nowrap;
-
-    overflow:
-        hidden;
-
-    text-overflow:
-        ellipsis;
+    text-shadow:
+        0 0 6px
+        rgba(
+            179,
+            76,
+            255,
+            .30
+        );
 }
 
 
-.geoplay-destination-bottom-row
+/* ==================================================
+   STANDALONE DESTINATION ARROW
+   ==================================================
+   
+   IMPORTANT:
+   This is intentionally NOT a circular button.
+   It sits directly beside the distance display.
+   ================================================== */
+
+.geoplay-destination-card-arrow
 {
+    position:
+        absolute;
+
+    right:
+        12px;
+
+    bottom:
+        38px;
+
+    z-index:
+        7;
+
+    width:
+        24px;
+
+    height:
+        46px;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+    border:
+        0;
+
+    outline:
+        none;
+
+    border-radius:
+        0;
+
+    background:
+        transparent;
+
+    color:
+        #b34cff;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size:
+        39px;
+
+    font-weight:
+        300;
+
+    line-height:
+        42px;
+
     display:
         flex;
 
@@ -319,44 +922,73 @@
         center;
 
     justify-content:
-        flex-start;
+        center;
 
-    width:
-        100%;
+    text-align:
+        center;
 
-    padding-left:
-        28px;
+    cursor:
+        pointer;
+
+    pointer-events:
+        auto;
+
+    text-shadow:
+        0 0 7px
+        rgba(
+            179,
+            76,
+            255,
+            .48
+        );
+
+    -webkit-tap-highlight-color:
+        transparent;
+
+    transition:
+        transform .15s ease,
+        filter .15s ease;
 }
 
 
-.geoplay-destination-info
+.geoplay-destination-card-arrow::before
 {
     display:
-        block;
+        none;
 
-    margin:
-        0;
+    content:
+        none;
+}
 
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
 
-    font-size:
-        clamp(
-            10px,
-            2.5vw,
-            12px
+.geoplay-destination-card-arrow:hover
+{
+    filter:
+        brightness(
+            1.20
         );
 
-    font-weight:
-        700;
+    transform:
+        translateX(
+            2px
+        );
+}
 
-    color:
-        #ffffff;
 
-    white-space:
-        nowrap;
+.geoplay-destination-card-arrow:active
+{
+    transform:
+        translateX(
+            3px
+        )
+        scale(
+            .92
+        );
+
+    filter:
+        brightness(
+            1.05
+        );
 }
 
 
@@ -489,6 +1121,9 @@
             100% -
             24px
         );
+
+    height:
+        auto;
 
     padding:
         24px 21px 22px;
@@ -844,28 +1479,6 @@
 
 
 /* ==================================================
-   COLLAPSED CHEVRON POSITIONING
-   ================================================== */
-
-.geoplay-destination-chevron
-{
-    position:
-        absolute;
-
-    right:
-        10px;
-
-    top:
-        50%;
-
-    transform:
-        translateY(
-            -50%
-        );
-}
-
-
-/* ==================================================
    CLOSE BUTTON
    ================================================== */
 
@@ -891,40 +1504,6 @@
 .geoplay-find-another-close:active
 {
     transform:
-        scale(
-            .90
-        );
-
-    filter:
-        brightness(
-            .96
-        );
-}
-
-
-/* ==================================================
-   COLLAPSED CHEVRON ICON
-   ================================================== */
-
-.geoplay-destination-chevron
-{
-    font-size:
-        17px;
-
-    font-weight:
-        700;
-
-    line-height:
-        1;
-}
-
-
-.geoplay-destination-chevron:active
-{
-    transform:
-        translateY(
-            -50%
-        )
         scale(
             .90
         );
@@ -1968,9 +2547,161 @@
     {
         width:
             min(
-                72vw,
-                265px
+                88vw,
+                378px
             );
+
+        height:
+            clamp(
+                220px,
+                55vw,
+                238px
+            );
+    }
+
+
+    .geoplay-destination:not(.expanded)
+    {
+        width:
+            min(
+                88vw,
+                378px
+            );
+
+        height:
+            clamp(
+                220px,
+                55vw,
+                238px
+            );
+    }
+
+
+    .geoplay-destination-card-image
+    {
+        height:
+            72%;
+    }
+
+
+    .geoplay-destination-card-logo-wrap
+    {
+        left:
+            11px;
+
+        top:
+            11px;
+
+        width:
+            94px;
+
+        height:
+            94px;
+
+        border-radius:
+            13px;
+    }
+
+
+    .geoplay-destination-card-logo
+    {
+        border-radius:
+            9px;
+    }
+
+
+    .geoplay-destination-card-content
+    {
+        left:
+            12px;
+
+        right:
+            126px;
+
+        bottom:
+            13px;
+    }
+
+
+    .geoplay-destination-card-name
+    {
+        font-size:
+            16px;
+    }
+
+
+    .geoplay-destination-card-location
+    {
+        margin-top:
+            4px;
+
+        font-size:
+            10px;
+    }
+
+
+    .geoplay-destination-card-location-icon
+    {
+        width:
+            15px;
+
+        height:
+            15px;
+
+        font-size:
+            15px;
+    }
+
+
+    .geoplay-destination-card-distance
+    {
+        right:
+            42px;
+
+        bottom:
+            16px;
+
+        min-width:
+            51px;
+    }
+
+
+    .geoplay-destination-card-distance-number
+    {
+        font-size:
+            30px;
+    }
+
+
+    .geoplay-destination-card-distance-label
+    {
+        margin-top:
+            4px;
+
+        font-size:
+            8px;
+    }
+
+
+    .geoplay-destination-card-arrow
+    {
+        right:
+            8px;
+
+        bottom:
+            34px;
+
+        width:
+            21px;
+
+        height:
+            42px;
+
+        font-size:
+            35px;
+
+        line-height:
+            38px;
     }
 
 
@@ -2129,25 +2860,71 @@
 
 @media (min-width:431px)
 {
-    .geoplay-destination.expanded
+    .geoplay-destination
     {
         width:
             min(
                 78vw,
-                410px
+                390px
             );
 
-        padding:
-            24px 21px 22px;
+        height:
+            240px;
     }
 
 
-    .geoplay-destination-carousel
+    .geoplay-destination:not(.expanded)
     {
-        height:
-            210px;
+        width:
+            min(
+                78vw,
+                390px
+            );
 
-        margin-bottom:
+        height:
+            240px;
+    }
+
+
+    .geoplay-destination-card-logo-wrap
+    {
+        width:
+            108px;
+
+        height:
+            108px;
+    }
+
+
+    .geoplay-destination-card-content
+    {
+        left:
             15px;
+
+        right:
+            145px;
+
+        bottom:
+            15px;
+    }
+
+
+    .geoplay-destination-card-distance
+    {
+        right:
+            47px;
+
+        bottom:
+            18px;
+    }
+
+
+    .geoplay-destination-card-arrow
+    {
+        right:
+            12px;
+
+        bottom:
+            38px;
     }
 }
