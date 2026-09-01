@@ -1589,6 +1589,22 @@ function geoplayMapCreatePlayerMarker()
         "geoplay-player-marker-image";
 
 
+    // ==================================================
+    // PREVENT INITIAL FULL-SIZE IMAGE FLASH
+    // ==================================================
+
+    playerImage.style.width =
+        "56px";
+
+
+    playerImage.style.height =
+        "56px";
+
+
+    playerImage.style.objectFit =
+        "contain";
+
+
     playerImage.draggable =
         false;
 
@@ -1904,6 +1920,22 @@ function geoplayMapCreateDestinationMarker()
 
     destinationImage.className =
         "geoplay-destination-marker-image";
+
+
+    // ==================================================
+    // PREVENT INITIAL FULL-SIZE IMAGE FLASH
+    // ==================================================
+
+    destinationImage.style.width =
+        "56px";
+
+
+    destinationImage.style.height =
+        "56px";
+
+
+    destinationImage.style.objectFit =
+        "contain";
 
 
     destinationImage.draggable =
