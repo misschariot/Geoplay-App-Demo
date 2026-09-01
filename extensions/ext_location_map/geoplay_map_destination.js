@@ -39,6 +39,16 @@ window.geoplayDestinationControlledTransition = false;
 window.geoplayDestinationMapListenersAttached = false;
 window.geoplayDestinationOutsideDismissAttached = false;
 
+// Preserve the collapsed card's exact presentation while
+// the expanded casino information view is open.
+window.geoplayDestinationSavedLeft = "";
+window.geoplayDestinationSavedTop = "";
+window.geoplayDestinationSavedTransform = "";
+window.geoplayDestinationSavedPointerSide = "bottom";
+window.geoplayDestinationSavedPointerLeft = "50%";
+window.geoplayDestinationSavedPointerTop = "50%";
+window.geoplayDestinationSavedWasVisible = false;
+
 
 // ==================================================
 // DESTINATION CONSTANTS
@@ -1457,6 +1467,50 @@ function geoplayMapUIExpandDestination()
         return 0;
     }
 
+    // --------------------------------------------------
+    // SAVE THE COLLAPSED CARD PRESENTATION
+    // --------------------------------------------------
+    //
+    // The expanded casino information view uses the
+    // exact same DOM element as the collapsed card.
+    //
+    // Save the current presentation BEFORE the shared
+    // modal system changes the card position.
+    // --------------------------------------------------
+
+    window.geoplayDestinationSavedLeft =
+        card.style.left;
+
+    window.geoplayDestinationSavedTop =
+        card.style.top;
+
+    window.geoplayDestinationSavedTransform =
+        card.style.transform;
+
+    window.geoplayDestinationSavedPointerSide =
+        card.getAttribute(
+            "data-pointer-side"
+        ) ||
+        "bottom";
+
+    window.geoplayDestinationSavedPointerLeft =
+        card.style.getPropertyValue(
+            "--geoplay-pointer-left"
+        ) ||
+        "50%";
+
+    window.geoplayDestinationSavedPointerTop =
+        card.style.getPropertyValue(
+            "--geoplay-pointer-top"
+        ) ||
+        "50%";
+
+    window.geoplayDestinationSavedWasVisible =
+        card.classList.contains(
+            "visible"
+        );
+
+    // Build the expanded information view.
     geoplayMapUISetDestinationExpanded(
         card
     );
@@ -1517,26 +1571,109 @@ function geoplayMapUICollapseDestination()
                 return;
             }
 
-            geoplayMapUISetDestinationCollapsed(
-                window.geoplayDestinationCard
-            );
-
             var destinationCard =
                 window.geoplayDestinationCard;
 
+            // --------------------------------------------------
+            // RESTORE THE NORMAL COLLAPSED CARD
+            // --------------------------------------------------
+
+            geoplayMapUISetDestinationCollapsed(
+                destinationCard
+            );
+
+            // --------------------------------------------------
+            // RESTORE EXACT POSITION
+            // --------------------------------------------------
+            //
+            // Do NOT calculate a new position here.
+            //
+            // The user closed the information popup, so the
+            // destination card should return to exactly where
+            // it was before the popup opened.
+            // --------------------------------------------------
+
             destinationCard.style.left =
-                "";
+                window.geoplayDestinationSavedLeft;
 
             destinationCard.style.top =
-                "";
+                window.geoplayDestinationSavedTop;
 
             destinationCard.style.transform =
-                "";
+                window.geoplayDestinationSavedTransform;
+
+            destinationCard.setAttribute(
+                "data-pointer-side",
+                window.geoplayDestinationSavedPointerSide
+            );
+
+            destinationCard.style.setProperty(
+                "--geoplay-pointer-left",
+                window.geoplayDestinationSavedPointerLeft
+            );
+
+            destinationCard.style.setProperty(
+                "--geoplay-pointer-top",
+                window.geoplayDestinationSavedPointerTop
+            );
 
             destinationCard.style.zIndex =
                 geoplayDestinationSceneZIndex;
 
-            geoplayMapUIPositionDestination();
+            // --------------------------------------------------
+            // RESTORE VISIBILITY WITHOUT ANIMATION
+            // --------------------------------------------------
+            //
+            // IMPORTANT:
+            // geoplayMapUISetDestinationCollapsed() removes
+            // the "visible" class because it rebuilds the card.
+            //
+            // We add it back directly instead of calling
+            // geoplayMapUIShowDestinationCard().
+            //
+            // This prevents the casino card from appearing to
+            // disappear and then pop back into place.
+            // --------------------------------------------------
+
+            if (
+                window.geoplayDestinationSavedWasVisible
+            )
+            {
+                destinationCard.classList.add(
+                    "visible"
+                );
+            }
+            else
+            {
+                destinationCard.classList.remove(
+                    "visible"
+                );
+            }
+
+            // --------------------------------------------------
+            // CLEAR TEMPORARY SAVED PRESENTATION
+            // --------------------------------------------------
+
+            window.geoplayDestinationSavedLeft =
+                "";
+
+            window.geoplayDestinationSavedTop =
+                "";
+
+            window.geoplayDestinationSavedTransform =
+                "";
+
+            window.geoplayDestinationSavedPointerSide =
+                "bottom";
+
+            window.geoplayDestinationSavedPointerLeft =
+                "50%";
+
+            window.geoplayDestinationSavedPointerTop =
+                "50%";
+
+            window.geoplayDestinationSavedWasVisible =
+                false;
 
             window.geoplayDestinationClosing =
                 false;
@@ -2515,6 +2652,28 @@ function geoplayMapUIHideDestination()
         false;
 
     window.geoplayDestinationControlledTransition =
+        false;
+
+    // Clear any saved expanded-card presentation.
+    window.geoplayDestinationSavedLeft =
+        "";
+
+    window.geoplayDestinationSavedTop =
+        "";
+
+    window.geoplayDestinationSavedTransform =
+        "";
+
+    window.geoplayDestinationSavedPointerSide =
+        "bottom";
+
+    window.geoplayDestinationSavedPointerLeft =
+        "50%";
+
+    window.geoplayDestinationSavedPointerTop =
+        "50%";
+
+    window.geoplayDestinationSavedWasVisible =
         false;
 
     return 1;

@@ -530,6 +530,15 @@
 
 /* ==================================================
    COLLAPSED CARD CLOSE BUTTON
+   ==================================================
+   
+   Styled to match the SEARCH popup close button:
+   - 30px circular button
+   - Gold/orange border
+   - Dark purple gradient interior
+   - Purple + gold glow
+   - Glossy highlight
+   - Same interaction feel
    ================================================== */
 
 .geoplay-destination-card-close
@@ -547,10 +556,10 @@
         8;
 
     width:
-        29px;
+        30px;
 
     height:
-        29px;
+        30px;
 
     margin:
         0;
@@ -558,41 +567,54 @@
     padding:
         0;
 
+    box-sizing:
+        border-box;
+
     border:
         1px solid
         rgba(
-            179,
-            76,
             255,
-            .72
+            155,
+            24,
+            .55
         );
 
     border-radius:
         50%;
 
     background:
-        rgba(
-            10,
-            5,
-            20,
-            .84
+        linear-gradient(
+            145deg,
+            rgba(
+                42,
+                20,
+                61,
+                .96
+            ),
+            rgba(
+                20,
+                8,
+                35,
+                .98
+            )
         );
 
     color:
         #ffffff;
 
     font-family:
+        'Poppins',
         Arial,
         sans-serif;
 
     font-size:
-        20px;
+        17px;
 
     font-weight:
-        300;
+        700;
 
     line-height:
-        25px;
+        1;
 
     display:
         flex;
@@ -610,20 +632,20 @@
         auto;
 
     box-shadow:
-        0 0 7px
+        0 0 8px
         rgba(
-            179,
-            76,
+            173,
+            78,
             255,
-            .32
+            .20
         ),
 
-        0 2px 7px
+        0 0 14px
         rgba(
-            0,
-            0,
-            0,
-            .45
+            255,
+            155,
+            24,
+            .08
         ),
 
         inset 0 1px 0
@@ -635,12 +657,12 @@
         );
 
     text-shadow:
-        0 0 6px
+        0 0 7px
         rgba(
             255,
             255,
             255,
-            .30
+            .28
         );
 
     -webkit-tap-highlight-color:
@@ -648,34 +670,67 @@
 
     transition:
         transform .15s ease,
-        background .15s ease,
-        border-color .15s ease,
-        box-shadow .15s ease,
-        filter .15s ease;
+        box-shadow .2s ease,
+        filter .2s ease;
+}
+
+
+/* Glossy highlight — same visual treatment
+   used by the shared Geoplay icon buttons. */
+
+.geoplay-destination-card-close::before
+{
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        4px;
+
+    top:
+        3px;
+
+    width:
+        calc(
+            100% -
+            8px
+        );
+
+    height:
+        45%;
+
+    border-radius:
+        50%;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(
+                255,
+                255,
+                255,
+                .12
+            ),
+            rgba(
+                255,
+                255,
+                255,
+                0
+            )
+        );
+
+    pointer-events:
+        none;
 }
 
 
 .geoplay-destination-card-close:hover
 {
-    background:
-        rgba(
-            25,
-            10,
-            42,
-            .94
-        );
-
-    border-color:
-        rgba(
-            179,
-            76,
-            255,
-            .95
-        );
-
     filter:
         brightness(
-            1.12
+            1.10
         );
 
     box-shadow:
@@ -684,15 +739,23 @@
             179,
             76,
             255,
-            .48
+            .34
         ),
 
-        0 2px 8px
+        0 0 18px
         rgba(
-            0,
-            0,
-            0,
-            .50
+            255,
+            155,
+            24,
+            .12
+        ),
+
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .16
         );
 }
 
@@ -701,7 +764,7 @@
 {
     transform:
         scale(
-            .88
+            .90
         );
 
     filter:
@@ -715,7 +778,15 @@
             179,
             76,
             255,
-            .35
+            .30
+        ),
+
+        0 0 10px
+        rgba(
+            255,
+            155,
+            24,
+            .08
         );
 }
 
@@ -2829,16 +2900,16 @@
             8px;
 
         width:
-            28px;
+            30px;
 
         height:
-            28px;
+            30px;
 
         font-size:
-            19px;
+            17px;
 
         line-height:
-            24px;
+            1;
     }
 
 
@@ -3137,10 +3208,16 @@
             10px;
 
         width:
-            29px;
+            30px;
 
         height:
-            29px;
+            30px;
+
+        font-size:
+            17px;
+
+        line-height:
+            1;
     }
 
 
