@@ -331,7 +331,9 @@ function geoplayMapGetRealPlayerLocation(
 //
 // After the FTUE:
 // - Marker becomes interactive
-// - Tapping it opens the existing Casino Card
+// - Tapping it begins the destination-focus camera
+//   movement.
+// - The Casino Card appears after the camera finishes.
 //
 // ==================================================
 
@@ -388,8 +390,12 @@ function geoplayMapUpdateDestinationMarkerInteraction()
 // The marker only becomes pointer-interactive after
 // geoplayMapStoryLocked becomes false.
 //
-// Tapping the marker shows the existing collapsed
-// Casino Card.
+// Tapping the marker begins the controlled destination
+// camera transition.
+//
+// The Casino Card remains hidden during the movement
+// and is revealed after the camera reaches the new
+// focal point.
 //
 // ==================================================
 
@@ -408,12 +414,12 @@ function geoplayMapDestinationMarkerSelect()
 
 
     if (
-        typeof geoplayMapUIShowDestination !==
+        typeof geoplayMapUIGoToDestination !==
         "function"
     )
     {
         console.error(
-            "GEOPLAY MAP: Casino destination card system is unavailable."
+            "GEOPLAY MAP: Destination focus system is unavailable."
         );
 
         return 0;
@@ -421,11 +427,26 @@ function geoplayMapDestinationMarkerSelect()
 
 
     console.log(
-        "GEOPLAY MAP: Casino marker selected."
+        "GEOPLAY MAP: Casino marker selected. Centering destination composition."
     );
 
 
-    geoplayMapUIShowDestination();
+    // ==================================================
+    // MOVE CAMERA + REVEAL CARD AFTER MOVE
+    // ==================================================
+    //
+    // IMPORTANT:
+    // Do NOT call geoplayMapUIShowDestination()
+    // directly here.
+    //
+    // geoplayMapUIGoToDestination() prepares the card,
+    // calculates the focal position, moves the camera,
+    // and then reveals the card from the map moveend
+    // handler.
+    //
+    // ==================================================
+
+    geoplayMapUIGoToDestination();
 
 
     return 1;
@@ -1303,6 +1324,87 @@ function initGeoplayMap()
     );
 
 
+    // ==================================================
+    // USER MAP MOVEMENT
+    // ==================================================
+    //
+    // Once the FTUE is complete, manually moving the
+    // map dismisses the Casino Card.
+    //
+    // This prevents the card from fighting the user's
+    // map navigation or causing the map to feel like
+    // it is snapping back to the casino.
+    //
+    // Programmatic camera movements used by the
+    // destination flow are ignored.
+    //
+    // ==================================================
+
+    window.geoplayMap.on(
+        "movestart",
+        function()
+        {
+            // ==================================================
+            // DO NOTHING DURING CONTROLLED CAMERA MOVEMENT
+            // ==================================================
+
+            if (
+                window.geoplayDestinationControlledTransition
+            )
+            {
+                return;
+            }
+
+
+            // ==================================================
+            // DO NOTHING DURING FTUE
+            // ==================================================
+
+            if (
+                window.geoplayMapStoryLocked
+            )
+            {
+                return;
+            }
+
+
+            // ==================================================
+            // DO NOT CLOSE THE CASINO INFO MODAL
+            // ==================================================
+
+            if (
+                window.geoplayDestinationExpanded
+            )
+            {
+                return;
+            }
+
+
+            // ==================================================
+            // CLOSE CASINO CARD ON MANUAL MAP MOVEMENT
+            // ==================================================
+
+            if (
+                window.geoplayDestinationVisible &&
+                typeof geoplayMapUIHideDestination ===
+                "function"
+            )
+            {
+                console.log(
+                    "GEOPLAY MAP: Manual map movement detected. Closing Casino Card."
+                );
+
+
+                geoplayMapUIHideDestination();
+            }
+        }
+    );
+
+
+    // ==================================================
+    // MAP MOVE
+    // ==================================================
+
     window.geoplayMap.on(
         "move",
         function()
@@ -1319,6 +1421,10 @@ function initGeoplayMap()
         }
     );
 
+
+    // ==================================================
+    // MAP ERROR
+    // ==================================================
 
     window.geoplayMap.on(
         "error",

@@ -50,6 +50,14 @@ var geoplayDestinationOverlayZIndex = 500;
 var geoplayDestinationVisibilityMargin = 45;
 var geoplayDestinationMarkerGap = 16;
 
+// Extra breathing room between the card and the
+// browser/map edges.
+var geoplayDestinationViewportPadding = 12;
+
+// Vertical relationship between the Casino Marker
+// and the Casino Card when the composition is centered.
+var geoplayDestinationFocusGap = 16;
+
 
 // ==================================================
 // PINE RIDGE BRAND ASSETS
@@ -357,17 +365,6 @@ function geoplayMapUIDestinationEventIsInternal(
 // ==================================================
 // OUTSIDE CARD DISMISSAL
 // ==================================================
-//
-// Collapsed Casino Card:
-//
-// - Tap inside card -> stays open.
-// - Tap X -> closes.
-// - Tap arrow -> opens Casino Info.
-// - Tap outside card -> closes.
-//
-// Expanded Casino Info is ignored.
-//
-// ==================================================
 
 function geoplayMapUIAttachDestinationOutsideDismiss()
 {
@@ -426,8 +423,6 @@ function geoplayMapUIAttachDestinationOutsideDismiss()
             return;
         }
 
-        // Anything inside the card is not an
-        // outside interaction.
         if (
             card.contains(
                 event.target
@@ -437,7 +432,6 @@ function geoplayMapUIAttachDestinationOutsideDismiss()
             return;
         }
 
-        // Protect the Casino Marker.
         if (
             event.target &&
             event.target.closest &&
@@ -449,8 +443,6 @@ function geoplayMapUIAttachDestinationOutsideDismiss()
             return;
         }
 
-        // Do not interfere with the map's
-        // normal interaction handling.
         if (
             event.type === "touchend"
         )
@@ -729,7 +721,7 @@ function geoplayMapUISetDestinationCollapsed(
         card.getAttribute(
             "data-pointer-side"
         ) ||
-        "top"
+        "bottom"
     );
 
     card.style.setProperty(
@@ -1832,6 +1824,16 @@ function geoplayMapUIShowDestination()
     window.geoplayDestinationFinalPresentation =
         true;
 
+    // IMPORTANT:
+    // The card is temporarily hidden while the camera
+    // moves. Clear those temporary inline styles here
+    // so the normal .visible CSS can reveal the card.
+    card.style.visibility =
+        "";
+
+    card.style.opacity =
+        "";
+
     geoplayMapUISetDestinationCollapsed(
         card
     );
@@ -2052,7 +2054,9 @@ function geoplayMapUIPositionExpandedDestination(
 function geoplayMapUIPositionVisibleDestination(
     card,
     indicator,
-    point
+    point,
+    width,
+    height
 )
 {
     indicator.classList.remove(
@@ -2065,9 +2069,18 @@ function geoplayMapUIPositionVisibleDestination(
     card.style.zIndex =
         geoplayDestinationSceneZIndex;
 
+    card.style.left =
+        point.x + "px";
+
+    card.style.top =
+        point.y + "px";
+
+    card.style.transform =
+        "translate(-50%,-100%)";
+
     card.setAttribute(
         "data-pointer-side",
-        "top"
+        "bottom"
     );
 
     card.style.setProperty(
@@ -2080,21 +2093,11 @@ function geoplayMapUIPositionVisibleDestination(
         "50%"
     );
 
-    card.style.left =
-        point.x + "px";
-
-    card.style.top =
-        (
-            point.y -
-            geoplayDestinationMarkerGap
-        ) + "px";
-
-    card.style.transform =
-        "translate(-50%,-100%)";
-
     geoplayMapUIShowDestinationCard(
         card
     );
+
+    return;
 }
 
 
@@ -2459,7 +2462,7 @@ function geoplayMapUIHideDestination()
 
         card.setAttribute(
             "data-pointer-side",
-            "top"
+            "bottom"
         );
 
         card.style.setProperty(
@@ -2537,6 +2540,147 @@ function geoplayMapUIUpdatePositions()
 
 
 // ==================================================
+// PREPARE DESTINATION FOCUS
+// ==================================================
+
+function geoplayMapUIPrepareDestinationFocus(
+    card,
+    mapContainer
+)
+{
+    if (
+        !card ||
+        !mapContainer
+    )
+    {
+        return null;
+    }
+
+    geoplayMapUISetDestinationCollapsed(
+        card
+    );
+
+    card.style.zIndex =
+        geoplayDestinationSceneZIndex;
+
+    card.style.visibility =
+        "hidden";
+
+    card.style.opacity =
+        "0";
+
+    card.style.display =
+        "";
+
+    card.style.left =
+        "50%";
+
+    card.style.top =
+        "50%";
+
+    card.style.transform =
+        "translate(-50%,-100%)";
+
+    card.classList.remove(
+        "visible"
+    );
+
+    void card.offsetWidth;
+
+    var cardWidth =
+        card.offsetWidth;
+
+    var cardHeight =
+        card.offsetHeight;
+
+    if (
+        cardWidth <= 0 ||
+        cardHeight <= 0
+    )
+    {
+        card.style.visibility =
+            "";
+
+        card.style.opacity =
+            "";
+
+        card.style.left =
+            "";
+
+        card.style.top =
+            "";
+
+        card.style.transform =
+            "";
+
+        return null;
+    }
+
+    return {
+        width:
+            cardWidth,
+
+        height:
+            cardHeight
+    };
+}
+
+
+// ==================================================
+// CALCULATE DESTINATION FOCUS CENTER
+// ==================================================
+
+function geoplayMapUICalculateDestinationFocusCenter(
+    cardHeight,
+    width,
+    height
+)
+{
+    var viewportCenterX =
+        width / 2;
+
+    var compositionHeight =
+        cardHeight +
+        geoplayDestinationFocusGap;
+
+    var compositionCenterY =
+        height / 2;
+
+    var markerY =
+        compositionCenterY +
+        (
+            compositionHeight / 2
+        );
+
+    var minimumMarkerY =
+        geoplayDestinationViewportPadding +
+        cardHeight +
+        geoplayDestinationFocusGap;
+
+    var maximumMarkerY =
+        height -
+        geoplayDestinationViewportPadding;
+
+    markerY =
+        Math.max(
+            minimumMarkerY,
+            Math.min(
+                maximumMarkerY,
+                markerY
+            )
+        );
+
+    return {
+        x:
+            viewportCenterX,
+
+        y:
+            markerY
+    };
+}
+
+
+// ==================================================
 // GO TO DESTINATION
 // ==================================================
 
@@ -2571,30 +2715,36 @@ function geoplayMapUIGoToDestination()
     }
 
     console.log(
-        "GEOPLAY UI: Pine Ridge indicator selected."
+        "GEOPLAY UI: Pine Ridge destination selected."
     );
 
-    var indicator =
+    var mapContainer =
         document.getElementById(
-            "geoplay-destination-offscreen"
+            "geoplay-map"
         );
-
-    if (indicator)
-    {
-        indicator.classList.remove(
-            "visible"
-        );
-    }
 
     var card =
         document.getElementById(
             "geoplay-destination"
         );
 
-    if (card)
+    var indicator =
+        document.getElementById(
+            "geoplay-destination-offscreen"
+        );
+
+    if (
+        !mapContainer ||
+        !card
+    )
     {
-        geoplayMapUIHideDestinationCard(
-            card
+        return 0;
+    }
+
+    if (indicator)
+    {
+        indicator.classList.remove(
+            "visible"
         );
     }
 
@@ -2607,7 +2757,132 @@ function geoplayMapUIGoToDestination()
     window.geoplayDestinationControlledTransition =
         true;
 
+    window.geoplayDestinationVisible =
+        true;
+
+
+    // ==================================================
+    // PREPARE CARD FOR MEASUREMENT
+    // ==================================================
+
+    var cardMeasurement =
+        geoplayMapUIPrepareDestinationFocus(
+            card,
+            mapContainer
+        );
+
+
+    // ==================================================
+    // VIEWPORT SIZE
+    // ==================================================
+
+    var width =
+        mapContainer.clientWidth;
+
+    var height =
+        mapContainer.clientHeight;
+
+
+    if (
+        width <= 0 ||
+        height <= 0
+    )
+    {
+        window.geoplayDestinationControlledTransition =
+            false;
+
+        card.style.visibility =
+            "";
+
+        card.style.opacity =
+            "";
+
+        return 0;
+    }
+
+
+    // ==================================================
+    // CALCULATE IDEAL MARKER POSITION
+    // ==================================================
+
+    var focusPoint =
+        geoplayMapUICalculateDestinationFocusCenter(
+            cardMeasurement
+                ? cardMeasurement.height
+                : 0,
+            width,
+            height
+        );
+
+
+    // ==================================================
+    // CALCULATE MAP OFFSET
+    // ==================================================
+
+    var viewportCenterX =
+        width / 2;
+
+    var viewportCenterY =
+        height / 2;
+
+    var offsetX =
+        focusPoint.x -
+        viewportCenterX;
+
+    var offsetY =
+        focusPoint.y -
+        viewportCenterY;
+
+
+    // ==================================================
+    // HIDE CARD DURING CAMERA MOVEMENT
+    // ==================================================
+
+    card.classList.remove(
+        "visible"
+    );
+
+    card.classList.remove(
+        "geoplay-destination-pop-in"
+    );
+
+    card.classList.remove(
+        "geoplay-destination-pop-out"
+    );
+
+    card.style.visibility =
+        "hidden";
+
+    card.style.opacity =
+        "0";
+
+
+    // ==================================================
+    // KEEP CARD ABOVE MARKER AFTER TRANSITION
+    // ==================================================
+
+    card.setAttribute(
+        "data-pointer-side",
+        "bottom"
+    );
+
+    card.style.setProperty(
+        "--geoplay-pointer-left",
+        "50%"
+    );
+
+    card.style.setProperty(
+        "--geoplay-pointer-top",
+        "50%"
+    );
+
+
     geoplayMapUIAttachDestinationMapListeners();
+
+
+    // ==================================================
+    // CAMERA TRANSITION
+    // ==================================================
 
     window.geoplayMap.easeTo(
     {
@@ -2626,12 +2901,19 @@ function geoplayMapUIGoToDestination()
         pitch:
             0,
 
+        offset:
+        [
+            offsetX,
+            offsetY
+        ],
+
         duration:
             900,
 
         essential:
             true
     });
+
 
     return 1;
 }
