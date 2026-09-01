@@ -322,6 +322,117 @@ function geoplayMapGetRealPlayerLocation(
 
 
 // ==================================================
+// UPDATE DESTINATION MARKER INTERACTION
+// ==================================================
+//
+// During the FTUE:
+// - Marker is visible
+// - Marker cannot receive pointer/touch input
+//
+// After the FTUE:
+// - Marker becomes interactive
+// - Tapping it opens the existing Casino Card
+//
+// ==================================================
+
+function geoplayMapUpdateDestinationMarkerInteraction()
+{
+    if (
+        !window.geoplayDestinationMarker
+    )
+    {
+        return 0;
+    }
+
+
+    var markerElement =
+        window.geoplayDestinationMarker.getElement();
+
+
+    if (!markerElement)
+    {
+        return 0;
+    }
+
+
+    if (
+        window.geoplayMapStoryLocked
+    )
+    {
+        markerElement.style.pointerEvents =
+            "none";
+
+        markerElement.style.cursor =
+            "default";
+    }
+    else
+    {
+        markerElement.style.pointerEvents =
+            "auto";
+
+        markerElement.style.cursor =
+            "pointer";
+    }
+
+
+    return 1;
+}
+
+
+// ==================================================
+// DESTINATION MARKER INTERACTION
+// ==================================================
+//
+// This is intentionally separate from the FTUE.
+//
+// The marker only becomes pointer-interactive after
+// geoplayMapStoryLocked becomes false.
+//
+// Tapping the marker shows the existing collapsed
+// Casino Card.
+//
+// ==================================================
+
+function geoplayMapDestinationMarkerSelect()
+{
+    if (
+        window.geoplayMapStoryLocked
+    )
+    {
+        console.log(
+            "GEOPLAY MAP: Casino marker selection blocked during story."
+        );
+
+        return 0;
+    }
+
+
+    if (
+        typeof geoplayMapUIShowDestination !==
+        "function"
+    )
+    {
+        console.error(
+            "GEOPLAY MAP: Casino destination card system is unavailable."
+        );
+
+        return 0;
+    }
+
+
+    console.log(
+        "GEOPLAY MAP: Casino marker selected."
+    );
+
+
+    geoplayMapUIShowDestination();
+
+
+    return 1;
+}
+
+
+// ==================================================
 // LOCK MAP INTERACTION
 // ==================================================
 
@@ -401,6 +512,13 @@ function geoplayMapLockInteraction()
     {
         window.geoplayMap.touchPitch.disable();
     }
+
+
+    // ==================================================
+    // LOCK CASINO MARKER
+    // ==================================================
+
+    geoplayMapUpdateDestinationMarkerInteraction();
 
 
     console.log(
@@ -492,6 +610,13 @@ function geoplayMapUnlockInteraction()
     {
         window.geoplayMap.touchPitch.enable();
     }
+
+
+    // ==================================================
+    // UNLOCK CASINO MARKER
+    // ==================================================
+
+    geoplayMapUpdateDestinationMarkerInteraction();
 
 
     console.log(
@@ -1124,10 +1249,6 @@ function initGeoplayMap()
             ],
 
 
-            // CHANGED:
-            // Start zoomed farther out so the player
-            // can visually experience the location
-            // discovery when the camera moves in.
             zoom:
                 11.8,
 
@@ -1516,6 +1637,8 @@ function geoplayMapCreateDestinationMarker()
         window.geoplayDestinationMarker
     )
     {
+        geoplayMapUpdateDestinationMarkerInteraction();
+
         return 1;
     }
 
@@ -1573,6 +1696,10 @@ function geoplayMapCreateDestinationMarker()
     markerElement.style.display =
         "block";
 
+
+    // IMPORTANT:
+    // This is updated immediately below based on
+    // whether the FTUE is currently locked.
 
     markerElement.style.pointerEvents =
         "none";
@@ -1635,11 +1762,11 @@ function geoplayMapCreateDestinationMarker()
 
 
     destinationImage.src =
-        "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine-ridge.png";
+        "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine_ridge_512.png";
 
 
     destinationImage.alt =
-        "Pine Ridge";
+        "Pine Ridge Casino";
 
 
     destinationImage.className =
@@ -1654,7 +1781,7 @@ function geoplayMapCreateDestinationMarker()
         function()
         {
             console.log(
-                "GEOPLAY MAP: Pine Ridge image loaded from Cloudflare R2."
+                "GEOPLAY MAP: Pine Ridge Casino logo loaded from Cloudflare R2."
             );
         };
 
@@ -1663,7 +1790,7 @@ function geoplayMapCreateDestinationMarker()
         function(error)
         {
             console.error(
-                "GEOPLAY MAP: Pine Ridge image FAILED to load from Cloudflare R2.",
+                "GEOPLAY MAP: Pine Ridge Casino logo FAILED to load from Cloudflare R2.",
                 error
             );
         };
@@ -1671,6 +1798,50 @@ function geoplayMapCreateDestinationMarker()
 
     markerElement.appendChild(
         destinationImage
+    );
+
+
+    // ==================================================
+    // DESTINATION MARKER CLICK / TAP
+    // ==================================================
+
+    function handleDestinationMarkerInteraction(
+        event
+    )
+    {
+        if (
+            window.geoplayMapStoryLocked
+        )
+        {
+            return;
+        }
+
+
+        if (
+            event
+        )
+        {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+
+        geoplayMapDestinationMarkerSelect();
+    }
+
+
+    markerElement.addEventListener(
+        "click",
+        handleDestinationMarkerInteraction
+    );
+
+
+    markerElement.addEventListener(
+        "touchend",
+        handleDestinationMarkerInteraction,
+        {
+            passive: false
+        }
     );
 
 
@@ -1697,8 +1868,15 @@ function geoplayMapCreateDestinationMarker()
         );
 
 
+    // ==================================================
+    // APPLY CURRENT STORY INTERACTION STATE
+    // ==================================================
+
+    geoplayMapUpdateDestinationMarkerInteraction();
+
+
     console.log(
-        "GEOPLAY MAP: Pine Ridge destination marker created."
+        "GEOPLAY MAP: Pine Ridge Casino destination marker created."
     );
 
 
@@ -1731,6 +1909,8 @@ function geoplayMapShowDestinationMarker()
         window.geoplayDestinationMarker.addTo(
             window.geoplayMap
         );
+
+        geoplayMapUpdateDestinationMarkerInteraction();
     }
 
 
