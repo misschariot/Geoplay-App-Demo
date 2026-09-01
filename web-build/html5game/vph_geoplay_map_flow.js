@@ -738,7 +738,21 @@ function geoplayMapFlowRequestPlayerLocation()
                             }
                         );
 
-                        window.geoplayMap.easeTo(
+                        // ==================================================
+                        // U.S. VIEW → PLAYER LOCATION
+                        // ==================================================
+                        //
+                        // Use MapLibre flyTo() instead of easeTo() so the
+                        // transition feels like a deliberate journey from
+                        // the national U.S. view into the player's location.
+                        //
+                        // This preserves the real player coordinates while
+                        // giving the opening FTUE a more cinematic camera
+                        // transition.
+                        //
+                        // ==================================================
+
+                        window.geoplayMap.flyTo(
                         {
                             center:
                             [
@@ -747,10 +761,16 @@ function geoplayMapFlowRequestPlayerLocation()
                             ],
 
                             zoom: 15.5,
+
                             bearing: 0,
                             pitch: 0,
 
-                            duration: 1400,
+                            duration: 2600,
+
+                            curve: 1.35,
+
+                            speed: 0.8,
+
                             essential: true
                         });
 

@@ -48,7 +48,9 @@ window.geoplayMapStoryLocked =
 // ==================================================
 //
 // These coordinates remain as the fallback location
-// used while the map is initializing.
+// used if the real player location cannot be obtained.
+//
+// They are NOT the initial map camera position.
 //
 // They are replaced with the player's real device
 // location once geoplayMapGetRealPlayerLocation()
@@ -61,6 +63,31 @@ var geoplayMapLongitude =
 
 var geoplayMapLatitude =
     34.1123;
+
+
+// ==================================================
+// INITIAL MAP VIEW
+// ==================================================
+//
+// The map begins with a deliberate United States-wide
+// view before the device location is requested.
+//
+// These coordinates are ONLY the initial camera position.
+// They are not treated as the player location.
+//
+// The real player coordinates above remain available as
+// the fallback location if geolocation cannot be obtained.
+//
+// ==================================================
+
+var geoplayMapInitialLongitude =
+    -98.5795;
+
+var geoplayMapInitialLatitude =
+    39.8283;
+
+var geoplayMapInitialZoom =
+    3.6;
 
 
 // ==================================================
@@ -1265,13 +1292,13 @@ function initGeoplayMap()
 
             center:
             [
-                geoplayMapLongitude,
-                geoplayMapLatitude
+                geoplayMapInitialLongitude,
+                geoplayMapInitialLatitude
             ],
 
 
             zoom:
-                11.8,
+                geoplayMapInitialZoom,
 
 
             style:
