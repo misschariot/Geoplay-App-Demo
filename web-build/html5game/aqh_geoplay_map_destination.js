@@ -37,6 +37,7 @@ window.geoplayDestinationClosing = false;
 window.geoplayDestinationFinalPresentation = false;
 window.geoplayDestinationControlledTransition = false;
 window.geoplayDestinationMapListenersAttached = false;
+window.geoplayDestinationOutsideDismissAttached = false;
 
 
 // ==================================================
@@ -264,6 +265,8 @@ function geoplayMapUICreateDestinationCard()
         card
     );
 
+    geoplayMapUIAttachDestinationOutsideDismiss();
+
     console.log(
         "GEOPLAY UI: Pine Ridge destination callout created."
     );
@@ -344,7 +347,135 @@ function geoplayMapUIDestinationEventIsInternal(
 
     return !!event.target.closest(
         ".geoplay-destination-close, " +
-        ".geoplay-destination-play"
+        ".geoplay-destination-play, " +
+        ".geoplay-destination-card-arrow, " +
+        ".geoplay-destination-card-close"
+    );
+}
+
+
+// ==================================================
+// OUTSIDE CARD DISMISSAL
+// ==================================================
+//
+// Collapsed Casino Card:
+//
+// - Tap inside card -> stays open.
+// - Tap X -> closes.
+// - Tap arrow -> opens Casino Info.
+// - Tap outside card -> closes.
+//
+// Expanded Casino Info is ignored.
+//
+// ==================================================
+
+function geoplayMapUIAttachDestinationOutsideDismiss()
+{
+    if (
+        window.geoplayDestinationOutsideDismissAttached
+    )
+    {
+        return;
+    }
+
+    window.geoplayDestinationOutsideDismissAttached =
+        true;
+
+    function handleOutsideInteraction(event)
+    {
+        var card =
+            window.geoplayDestinationCard;
+
+        if (!card)
+        {
+            return;
+        }
+
+        if (
+            !window.geoplayDestinationVisible
+        )
+        {
+            return;
+        }
+
+        if (
+            window.geoplayDestinationExpanded
+        )
+        {
+            return;
+        }
+
+        if (
+            window.geoplayDestinationClosing
+        )
+        {
+            return;
+        }
+
+        if (
+            window.geoplayMapStoryLocked
+        )
+        {
+            return;
+        }
+
+        if (
+            !card.classList.contains("visible")
+        )
+        {
+            return;
+        }
+
+        // Anything inside the card is not an
+        // outside interaction.
+        if (
+            card.contains(
+                event.target
+            )
+        )
+        {
+            return;
+        }
+
+        // Protect the Casino Marker.
+        if (
+            event.target &&
+            event.target.closest &&
+            event.target.closest(
+                ".maplibregl-marker"
+            )
+        )
+        {
+            return;
+        }
+
+        // Do not interfere with the map's
+        // normal interaction handling.
+        if (
+            event.type === "touchend"
+        )
+        {
+            event.preventDefault();
+        }
+
+        console.log(
+            "GEOPLAY UI: Destination card dismissed by outside interaction."
+        );
+
+        geoplayMapUIHideDestination();
+    }
+
+    document.addEventListener(
+        "click",
+        handleOutsideInteraction
+    );
+
+    document.addEventListener(
+        "touchend",
+        handleOutsideInteraction,
+        {
+            passive: false
+        }
     );
 }
 
@@ -461,19 +592,6 @@ function geoplayMapUIHideDestinationCard(
 // ==================================================
 // COLLAPSED DESTINATION
 // ==================================================
-//
-// VISUAL LAYOUT:
-//
-// - Taller / more square destination card
-// - Large casino image across upper section
-// - Large overlapping casino logo
-// - Image fades into black lower section
-// - Casino name and location at bottom-left
-// - Large distance at bottom-right
-// - Standalone purple arrow beside distance
-// - Geoplay gradient border
-//
-// ==================================================
 
 function geoplayMapUISetDestinationCollapsed(
     card
@@ -564,6 +682,15 @@ function geoplayMapUISetDestinationCollapsed(
 
             "</div>" +
 
+            "<button " +
+                "type='button' " +
+                "class='geoplay-destination-card-close' " +
+                "aria-label='Close " +
+                    name +
+                    " destination card'>" +
+                "×" +
+            "</button>" +
+
             "<div class='geoplay-destination-card-content'>" +
 
                 "<div class='geoplay-destination-card-name'>" +
@@ -617,6 +744,56 @@ function geoplayMapUISetDestinationCollapsed(
 
     window.geoplayDestinationExpanded =
         false;
+
+    geoplayMapUIAttachDestinationCardClose(
+        card
+    );
+}
+
+
+// ==================================================
+// DESTINATION CARD CLOSE BUTTON
+// ==================================================
+
+function geoplayMapUIAttachDestinationCardClose(
+    card
+)
+{
+    if (!card)
+    {
+        return;
+    }
+
+    var closeButton =
+        card.querySelector(
+            ".geoplay-destination-card-close"
+        );
+
+    if (!closeButton)
+    {
+        return;
+    }
+
+    function handleClose(event)
+    {
+        event.preventDefault();
+        event.stopPropagation();
+
+        geoplayMapUIHideDestination();
+    }
+
+    closeButton.addEventListener(
+        "click",
+        handleClose
+    );
+
+    closeButton.addEventListener(
+        "touchend",
+        handleClose,
+        {
+            passive: false
+        }
+    );
 }
 
 
@@ -1646,6 +1823,8 @@ function geoplayMapUIShowDestination()
     {
         return 0;
     }
+
+    geoplayMapUIAttachDestinationOutsideDismiss();
 
     window.geoplayDestinationVisible =
         true;
