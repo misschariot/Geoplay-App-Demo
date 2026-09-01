@@ -459,6 +459,9 @@
 
 /* ==================================================
    PINE RIDGE DESTINATION IMAGE
+   ==================================================
+   The casino logo is clipped into a circular
+   image so it sits cleanly inside the gold ring.
    ================================================== */
 
 .geoplay-destination-marker-image
@@ -473,13 +476,19 @@
         50%;
 
     width:
-        56px;
+        50px;
 
     height:
-        56px;
+        50px;
 
     object-fit:
-        contain;
+        cover;
+
+    border-radius:
+        50%;
+
+    overflow:
+        hidden;
 
     transform:
         translate(
