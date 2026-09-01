@@ -276,10 +276,6 @@ function geoplayMapUICreateDestinationCard()
         );
     }
 
-    geoplayMapUIDelegateDestinationInteraction(
-        card
-    );
-
     geoplayMapUIAttachDestinationOutsideDismiss();
 
     console.log(
@@ -293,6 +289,16 @@ function geoplayMapUICreateDestinationCard()
 // ==================================================
 // DESTINATION INTERACTION
 // ==================================================
+//
+// IMPORTANT:
+// The collapsed casino card itself is NOT clickable.
+//
+// Only the purple arrow opens the casino
+// information popup.
+//
+// The card background, image, logo, name,
+// location, and distance do nothing when tapped.
+// ==================================================
 
 function geoplayMapUIDelegateDestinationInteraction(
     card
@@ -303,16 +309,20 @@ function geoplayMapUIDelegateDestinationInteraction(
         return;
     }
 
-    function handleInteraction(event)
+    var arrow =
+        card.querySelector(
+            ".geoplay-destination-card-arrow"
+        );
+
+    if (!arrow)
     {
-        if (
-            geoplayMapUIDestinationEventIsInternal(
-                event
-            )
-        )
-        {
-            return;
-        }
+        return;
+    }
+
+    function handleArrowInteraction(event)
+    {
+        event.preventDefault();
+        event.stopPropagation();
 
         if (
             window.geoplayMapStoryLocked ||
@@ -323,48 +333,20 @@ function geoplayMapUIDelegateDestinationInteraction(
             return;
         }
 
-        if (
-            event.type === "touchend"
-        )
-        {
-            event.preventDefault();
-        }
-
         geoplayMapUIExpandDestination();
     }
 
-    card.addEventListener(
+    arrow.addEventListener(
         "click",
-        handleInteraction
+        handleArrowInteraction
     );
 
-    card.addEventListener(
+    arrow.addEventListener(
         "touchend",
-        handleInteraction,
+        handleArrowInteraction,
         {
             passive: false
         }
-    );
-}
-
-
-function geoplayMapUIDestinationEventIsInternal(
-    event
-)
-{
-    if (
-        !event ||
-        !event.target
-    )
-    {
-        return false;
-    }
-
-    return !!event.target.closest(
-        ".geoplay-destination-close, " +
-        ".geoplay-destination-play, " +
-        ".geoplay-destination-card-arrow, " +
-        ".geoplay-destination-card-close"
     );
 }
 
@@ -743,6 +725,14 @@ function geoplayMapUISetDestinationCollapsed(
 
     window.geoplayDestinationExpanded =
         false;
+
+    // IMPORTANT:
+    // The collapsed card HTML is rebuilt here, so the
+    // arrow button is also rebuilt. Reattach the arrow
+    // interaction every time the card is rebuilt.
+    geoplayMapUIDelegateDestinationInteraction(
+        card
+    );
 
     geoplayMapUIAttachDestinationCardClose(
         card
@@ -1310,7 +1300,7 @@ function geoplayMapUIAttachDestinationCarousel(
 
             var deltaY =
                 event.changedTouches[0].clientY -
-                window.geoplayDestinationCarouselCarouselTouchStartY;
+                window.geoplayDestinationCarouselTouchStartY;
 
             window.geoplayDestinationCarouselTouchStartX =
                 null;
