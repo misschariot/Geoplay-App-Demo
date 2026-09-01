@@ -58,6 +58,13 @@ var geoplayDestinationViewportPadding = 12;
 // and the Casino Card when the composition is centered.
 var geoplayDestinationFocusGap = 16;
 
+// Vertical lift applied to the complete Casino Card +
+// Casino Marker composition when the camera focuses
+// on the destination.
+//
+// Positive values move the composition upward.
+var geoplayDestinationFocusLift = 70;
+
 
 // ==================================================
 // PINE RIDGE BRAND ASSETS
@@ -1303,7 +1310,7 @@ function geoplayMapUIAttachDestinationCarousel(
 
             var deltaY =
                 event.changedTouches[0].clientY -
-                window.geoplayDestinationCarouselTouchStartY;
+                window.geoplayDestinationCarouselCarouselTouchStartY;
 
             window.geoplayDestinationCarouselTouchStartX =
                 null;
@@ -2650,7 +2657,8 @@ function geoplayMapUICalculateDestinationFocusCenter(
         compositionCenterY +
         (
             compositionHeight / 2
-        );
+        ) -
+        geoplayDestinationFocusLift;
 
     var minimumMarkerY =
         geoplayDestinationViewportPadding +
