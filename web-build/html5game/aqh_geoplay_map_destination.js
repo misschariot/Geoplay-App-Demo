@@ -58,7 +58,7 @@ window.geoplayDestinationLogo =
     "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine_ridge_logo.png";
 
 window.geoplayDestinationHeroImage =
-    "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine1.png";
+    "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/pine_ridge_casino_img.png";
 
 
 // ==================================================
@@ -1181,6 +1181,7 @@ function geoplayMapUIAttachDestinationCarousel(
         0
     );
 }
+
 
 // ==================================================
 // CLOSE / PLAY BUTTONS

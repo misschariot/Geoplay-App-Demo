@@ -290,11 +290,6 @@
 
 /* ==================================================
    IMAGE → BLACK FADE
-   ==================================================
-   
-   The photograph does NOT need to be edited.
-   This overlay creates the transition from the
-   photograph into the black lower section.
    ================================================== */
 
 .geoplay-destination-card-image-fade
@@ -466,7 +461,7 @@
         border-box;
 
     padding:
-        3px;
+        0;
 
     border:
         1px solid
@@ -481,12 +476,7 @@
         15px;
 
     background:
-        rgba(
-            5,
-            3,
-            10,
-            .96
-        );
+        transparent;
 
     box-shadow:
         0 4px 13px
@@ -525,10 +515,13 @@
         100%;
 
     object-fit:
-        contain;
+        cover;
+
+    object-position:
+        center;
 
     border-radius:
-        11px;
+        14px;
 
     -webkit-user-drag:
         none;
@@ -854,11 +847,6 @@
 
 /* ==================================================
    STANDALONE DESTINATION ARROW
-   ==================================================
-   
-   IMPORTANT:
-   This is intentionally NOT a circular button.
-   It sits directly beside the distance display.
    ================================================== */
 
 .geoplay-destination-card-arrow
@@ -897,10 +885,25 @@
         0;
 
     background:
+        linear-gradient(
+            105deg,
+            #ff9b18 0%,
+            #ff5a58 40%,
+            #b34cff 72%,
+            #7138ff 100%
+        );
+
+    background-clip:
+        text;
+
+    -webkit-background-clip:
+        text;
+
+    -webkit-text-fill-color:
         transparent;
 
     color:
-        #b34cff;
+        transparent;
 
     font-family:
         Arial,
@@ -933,13 +936,15 @@
     pointer-events:
         auto;
 
-    text-shadow:
-        0 0 7px
-        rgba(
-            179,
-            76,
-            255,
-            .48
+    filter:
+        drop-shadow(
+            0 0 5px
+            rgba(
+                179,
+                76,
+                255,
+                .42
+            )
         );
 
     -webkit-tap-highlight-color:
@@ -966,6 +971,15 @@
     filter:
         brightness(
             1.20
+        )
+        drop-shadow(
+            0 0 7px
+            rgba(
+                179,
+                76,
+                255,
+                .55
+            )
         );
 
     transform:
@@ -988,6 +1002,15 @@
     filter:
         brightness(
             1.05
+        )
+        drop-shadow(
+            0 0 5px
+            rgba(
+                179,
+                76,
+                255,
+                .45
+            )
         );
 }
 
@@ -2606,7 +2629,7 @@
     .geoplay-destination-card-logo
     {
         border-radius:
-            9px;
+            12px;
     }
 
 
