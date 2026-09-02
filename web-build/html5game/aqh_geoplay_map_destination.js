@@ -9,7 +9,7 @@
 // - Casino image
 // - Casino logo
 // - Distance / address
-// - PLAY HERE
+// - PLAY NOW
 // - Off-screen indicator
 // - Destination positioning
 // - Directional arrow
@@ -799,6 +799,19 @@ function geoplayMapUIAttachDestinationCardClose(
 // ==================================================
 // EXPANDED DESTINATION
 // ==================================================
+//
+// Layout:
+// - Geoplay-style CASINO INFO title
+// - Casino logo / name / location / distance
+// - Large image carousel
+// - ABOUT
+// - AVAILABLE GAMES
+// - PLAY NOW
+//
+// The visual styling for this structure will be
+// handled in geoplay_map_destination.css using the
+// SEARCH popup as the Geoplay visual reference.
+// ==================================================
 
 function geoplayMapUISetDestinationExpanded(
     card
@@ -824,7 +837,7 @@ function geoplayMapUISetDestinationExpanded(
                         "➜" +
                     "</span>" +
 
-                    "<span>" +
+                    "<span class='geoplay-destination-distance-value'>" +
                         geoplayMapUIDestinationDistance() +
                     "</span>" +
 
@@ -846,9 +859,10 @@ function geoplayMapUISetDestinationExpanded(
     card.innerHTML =
         "<div class='geoplay-destination-expanded-header'>" +
 
-            "<span class='geoplay-destination-expanded-title'>" +
-                name.toUpperCase() +
-            "</span>" +
+            "<h2 " +
+                "class='geoplay-destination-expanded-title geoplay-find-another-title'>" +
+                "CASINO INFO" +
+            "</h2>" +
 
             "<button " +
                 "type='button' " +
@@ -858,6 +872,47 @@ function geoplayMapUISetDestinationExpanded(
                     " information'>" +
                 "×" +
             "</button>" +
+
+        "</div>" +
+
+        "<div class='geoplay-destination-expanded-identity'>" +
+
+            "<div class='geoplay-destination-expanded-logo-wrap'>" +
+
+                "<img " +
+                    "class='geoplay-destination-expanded-logo' " +
+                    "src='" +
+                        window.geoplayDestinationLogo +
+                    "' " +
+                    "alt='" +
+                        name +
+                        " logo" +
+                    "' " +
+                    "draggable='false'>" +
+
+            "</div>" +
+
+            "<div class='geoplay-destination-expanded-identity-content'>" +
+
+                "<div class='geoplay-destination-expanded-name'>" +
+                    name.toUpperCase() +
+                "</div>" +
+
+                "<div class='geoplay-destination-expanded-location'>" +
+
+                    "<span class='geoplay-destination-location-icon'>" +
+                        "⌖" +
+                    "</span>" +
+
+                    "<span class='geoplay-destination-location-text'>" +
+                        "Pine Ridge, CA" +
+                    "</span>" +
+
+                "</div>" +
+
+                distanceMarkup +
+
+            "</div>" +
 
         "</div>" +
 
@@ -896,35 +951,83 @@ function geoplayMapUISetDestinationExpanded(
 
         "</div>" +
 
-        "<div class='geoplay-destination-expanded-details'>" +
+        "<div class='geoplay-destination-about'>" +
 
-            distanceMarkup +
+            "<div class='geoplay-destination-section-title'>" +
+                "ABOUT" +
+            "</div>" +
 
-            "<div class='geoplay-destination-expanded-address'>" +
-
-                "<span class='geoplay-destination-address-icon'>" +
-                    "⌖" +
-                "</span>" +
-
-                "<span class='geoplay-destination-address-text'>" +
-                    "777 Pine Ridge Road<br>" +
-                    "Pine Ridge, CA 95563" +
-                "</span>" +
-
+            "<div class='geoplay-destination-about-copy'>" +
+                "Pine Ridge Casino offers an unforgettable experience with " +
+                "thrilling games, exceptional dining, and unmatched hospitality " +
+                "in the heart of Northern California." +
             "</div>" +
 
         "</div>" +
 
         "<div class='geoplay-destination-expanded-divider'></div>" +
 
-        "<div class='geoplay-destination-marketing'>" +
+        "<div class='geoplay-destination-games'>" +
 
-            "<div class='geoplay-destination-tagline'>" +
-                "Your night starts here." +
+            "<div class='geoplay-destination-games-header'>" +
+
+                "<div class='geoplay-destination-section-title'>" +
+                    "AVAILABLE GAMES" +
+                "</div>" +
+
+                "<span class='geoplay-destination-games-view-all'>" +
+                    "VIEW ALL" +
+                    " ›" +
+                "</span>" +
+
             "</div>" +
 
-            "<div class='geoplay-destination-marketing-copy'>" +
-                "Big games. Great food. Unforgettable nights." +
+            "<div class='geoplay-destination-games-grid'>" +
+
+                "<div class='geoplay-destination-game-card'>" +
+
+                    "<div class='geoplay-destination-game-image geoplay-destination-game-image-cosmic'>" +
+                    "</div>" +
+
+                    "<div class='geoplay-destination-game-name'>" +
+                        "COSMIC CLASH" +
+                    "</div>" +
+
+                "</div>" +
+
+                "<div class='geoplay-destination-game-card'>" +
+
+                    "<div class='geoplay-destination-game-image geoplay-destination-game-image-dragon'>" +
+                    "</div>" +
+
+                    "<div class='geoplay-destination-game-name'>" +
+                        "DRAGON'S FURY" +
+                    "</div>" +
+
+                "</div>" +
+
+                "<div class='geoplay-destination-game-card'>" +
+
+                    "<div class='geoplay-destination-game-image geoplay-destination-game-image-cyber'>" +
+                    "</div>" +
+
+                    "<div class='geoplay-destination-game-name'>" +
+                        "CYBER CITY" +
+                    "</div>" +
+
+                "</div>" +
+
+                "<div class='geoplay-destination-game-card'>" +
+
+                    "<div class='geoplay-destination-game-image geoplay-destination-game-image-bandit'>" +
+                    "</div>" +
+
+                    "<div class='geoplay-destination-game-name'>" +
+                        "BANDIT'S GOLD" +
+                    "</div>" +
+
+                "</div>" +
+
             "</div>" +
 
         "</div>" +
@@ -932,7 +1035,15 @@ function geoplayMapUISetDestinationExpanded(
         "<button " +
             "type='button' " +
             "class='geoplay-destination-play'>" +
-            "<span>PLAY HERE</span>" +
+
+            "<span class='geoplay-destination-play-label'>" +
+                "PLAY NOW" +
+            "</span>" +
+
+            "<span class='geoplay-destination-play-arrow'>" +
+                "›" +
+            "</span>" +
+
         "</button>";
 
     window.geoplayDestinationExpanded =
@@ -1696,7 +1807,7 @@ function geoplayMapUIPlayHere()
     }
 
     console.log(
-        "GEOPLAY UI: PLAY HERE selected."
+        "GEOPLAY UI: PLAY NOW selected."
     );
 
     return 1;

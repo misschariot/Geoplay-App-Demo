@@ -530,15 +530,6 @@
 
 /* ==================================================
    COLLAPSED CARD CLOSE BUTTON
-   ==================================================
-   
-   Styled to match the SEARCH popup close button:
-   - 30px circular button
-   - Gold/orange border
-   - Dark purple gradient interior
-   - Purple + gold glow
-   - Glossy highlight
-   - Same interaction feel
    ================================================== */
 
 .geoplay-destination-card-close
@@ -571,47 +562,29 @@
         border-box;
 
     border:
-        1px solid
-        rgba(
-            255,
-            155,
-            24,
-            .55
-        );
+        0;
+
+    outline:
+        none;
 
     border-radius:
-        50%;
+        0;
 
     background:
-        linear-gradient(
-            145deg,
-            rgba(
-                42,
-                20,
-                61,
-                .96
-            ),
-            rgba(
-                20,
-                8,
-                35,
-                .98
-            )
-        );
+        transparent;
 
     color:
         #ffffff;
 
     font-family:
-        'Poppins',
         Arial,
         sans-serif;
 
     font-size:
-        17px;
+        27px;
 
     font-weight:
-        700;
+        400;
 
     line-height:
         1;
@@ -631,38 +604,21 @@
     pointer-events:
         auto;
 
-    box-shadow:
+    text-shadow:
+        0 1px 3px
+        rgba(
+            0,
+            0,
+            0,
+            .95
+        ),
+
         0 0 8px
         rgba(
-            173,
-            78,
-            255,
-            .20
-        ),
-
-        0 0 14px
-        rgba(
-            255,
-            155,
-            24,
-            .08
-        ),
-
-        inset 0 1px 0
-        rgba(
-            255,
-            255,
-            255,
-            .10
-        );
-
-    text-shadow:
-        0 0 7px
-        rgba(
-            255,
-            255,
-            255,
-            .28
+            0,
+            0,
+            0,
+            .70
         );
 
     -webkit-tap-highlight-color:
@@ -670,59 +626,7 @@
 
     transition:
         transform .15s ease,
-        box-shadow .2s ease,
-        filter .2s ease;
-}
-
-
-/* Glossy highlight — same visual treatment
-   used by the shared Geoplay icon buttons. */
-
-.geoplay-destination-card-close::before
-{
-    content:
-        "";
-
-    position:
-        absolute;
-
-    left:
-        4px;
-
-    top:
-        3px;
-
-    width:
-        calc(
-            100% -
-            8px
-        );
-
-    height:
-        45%;
-
-    border-radius:
-        50%;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(
-                255,
-                255,
-                255,
-                .12
-            ),
-            rgba(
-                255,
-                255,
-                255,
-                0
-            )
-        );
-
-    pointer-events:
-        none;
+        filter .15s ease;
 }
 
 
@@ -730,32 +634,12 @@
 {
     filter:
         brightness(
-            1.10
+            1.18
         );
 
-    box-shadow:
-        0 0 10px
-        rgba(
-            179,
-            76,
-            255,
-            .34
-        ),
-
-        0 0 18px
-        rgba(
-            255,
-            155,
-            24,
-            .12
-        ),
-
-        inset 0 1px 0
-        rgba(
-            255,
-            255,
-            255,
-            .16
+    transform:
+        scale(
+            1.06
         );
 }
 
@@ -764,35 +648,13 @@
 {
     transform:
         scale(
-            .90
-        );
-
-    filter:
-        brightness(
-            .96
-        );
-
-    box-shadow:
-        0 0 6px
-        rgba(
-            179,
-            76,
-            255,
-            .30
-        ),
-
-        0 0 10px
-        rgba(
-            255,
-            155,
-            24,
-            .08
+            .92
         );
 }
 
 
 /* ==================================================
-   CARD CONTENT
+   COLLAPSED CARD CONTENT
    ================================================== */
 
 .geoplay-destination-card-content
@@ -977,7 +839,7 @@
 
 
 /* ==================================================
-   DISTANCE
+   COLLAPSED DISTANCE
    ================================================== */
 
 .geoplay-destination-card-distance
@@ -1023,7 +885,7 @@
         block;
 
     color:
-        #b34cff;
+        #ffb52e;
 
     font-family:
         'Poppins',
@@ -1049,9 +911,9 @@
     text-shadow:
         0 0 8px
         rgba(
-            179,
-            76,
             255,
+            181,
+            46,
             .42
         ),
 
@@ -1074,7 +936,7 @@
         5px;
 
     color:
-        #b34cff;
+        #ffb52e;
 
     font-family:
         'Poppins',
@@ -1100,16 +962,16 @@
     text-shadow:
         0 0 6px
         rgba(
-            179,
-            76,
             255,
+            181,
+            46,
             .30
         );
 }
 
 
 /* ==================================================
-   STANDALONE DESTINATION ARROW
+   COLLAPSED DESTINATION ARROW
    ================================================== */
 
 .geoplay-destination-card-arrow
@@ -1151,7 +1013,7 @@
         transparent;
 
     color:
-        #b34cff;
+        #ffb52e;
 
     font-family:
         Arial,
@@ -1188,9 +1050,9 @@
         drop-shadow(
             0 0 5px
             rgba(
-                179,
-                76,
                 255,
+                181,
+                46,
                 .42
             )
         );
@@ -1204,21 +1066,8 @@
 }
 
 
-.geoplay-destination-card-arrow::before
-{
-    display:
-        none;
-
-    content:
-        none;
-}
-
-
 .geoplay-destination-card-arrow:hover
 {
-    color:
-        #b34cff;
-
     filter:
         brightness(
             1.20
@@ -1226,9 +1075,9 @@
         drop-shadow(
             0 0 7px
             rgba(
-                179,
-                76,
                 255,
+                181,
+                46,
                 .55
             )
         );
@@ -1242,29 +1091,12 @@
 
 .geoplay-destination-card-arrow:active
 {
-    color:
-        #b34cff;
-
     transform:
         translateX(
             3px
         )
         scale(
             .92
-        );
-
-    filter:
-        brightness(
-            1.05
-        )
-        drop-shadow(
-            0 0 5px
-            rgba(
-                179,
-                76,
-                255,
-                .45
-            )
         );
 }
 
@@ -1402,6 +1234,12 @@
     height:
         auto;
 
+    max-height:
+        calc(
+            100vh -
+            32px
+        );
+
     padding:
         24px 21px 22px;
 
@@ -1466,6 +1304,25 @@
 
     cursor:
         default;
+
+    overflow-y:
+        auto;
+
+    overflow-x:
+        hidden;
+
+    scrollbar-width:
+        none;
+}
+
+
+.geoplay-destination.expanded::-webkit-scrollbar
+{
+    width:
+        0;
+
+    height:
+        0;
 }
 
 
@@ -1485,7 +1342,7 @@
         space-between;
 
     gap:
-        8px;
+        10px;
 
     width:
         100%;
@@ -1542,8 +1399,118 @@
    SHARED GEOPLAY ICON BUTTON
    ================================================== */
 
-.geoplay-destination-close,
-.geoplay-destination-carousel-arrow,
+.geoplay-destination-close
+{
+    position:
+        relative;
+
+    flex:
+        0 0 auto;
+
+    width:
+        30px;
+
+    height:
+        30px;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+    border:
+        0;
+
+    outline:
+        none;
+
+    border-radius:
+        0;
+
+    background:
+        transparent;
+
+    color:
+        #ffffff;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size:
+        27px;
+
+    font-weight:
+        400;
+
+    line-height:
+        1;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    cursor:
+        pointer;
+
+    pointer-events:
+        auto;
+
+    text-shadow:
+        0 1px 3px
+        rgba(
+            0,
+            0,
+            0,
+            .95
+        ),
+
+        0 0 8px
+        rgba(
+            0,
+            0,
+            0,
+            .70
+        );
+
+    -webkit-tap-highlight-color:
+        transparent;
+
+    transition:
+        transform .15s ease,
+        filter .15s ease;
+}
+
+
+.geoplay-destination-close:hover
+{
+    filter:
+        brightness(
+            1.18
+        );
+
+    transform:
+        scale(
+            1.06
+        );
+}
+
+
+.geoplay-destination-close:active
+{
+    transform:
+        scale(
+            .92
+        );
+}
+
+
 .geoplay-destination-chevron,
 .geoplay-find-another-close
 {
@@ -1667,8 +1634,6 @@
 }
 
 
-.geoplay-destination-close::before,
-.geoplay-destination-carousel-arrow::before,
 .geoplay-destination-chevron::before,
 .geoplay-find-another-close::before
 {
@@ -1718,8 +1683,6 @@
 }
 
 
-.geoplay-destination-close:hover,
-.geoplay-destination-carousel-arrow:hover,
 .geoplay-destination-chevron:hover,
 .geoplay-find-another-close:hover
 {
@@ -1755,40 +1718,281 @@
 }
 
 
-/* ==================================================
-   CLOSE BUTTON
-   ================================================== */
-
-.geoplay-destination-close
-{
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    font-size:
-        17px;
-
-    font-weight:
-        700;
-
-    line-height:
-        1;
-}
-
-
-.geoplay-destination-close:active,
 .geoplay-find-another-close:active
 {
     transform:
         scale(
             .90
         );
+}
+
+
+/* ==================================================
+   EXPANDED CASINO IDENTITY
+   ================================================== */
+
+.geoplay-destination-expanded-identity
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    width:
+        100%;
+
+    margin-bottom:
+        14px;
+}
+
+
+.geoplay-destination-expanded-logo-wrap
+{
+    flex:
+        0 0 auto;
+
+    width:
+        66px;
+
+    height:
+        66px;
+
+    box-sizing:
+        border-box;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .68
+        );
+
+    border-radius:
+        12px;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            .18
+        );
+
+    box-shadow:
+        0 4px 12px
+        rgba(
+            0,
+            0,
+            0,
+            .32
+        ),
+
+        0 0 9px
+        rgba(
+            255,
+            181,
+            46,
+            .10
+        );
+}
+
+
+.geoplay-destination-expanded-logo
+{
+    display:
+        block;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        contain;
+
+    border-radius:
+        11px;
+
+    -webkit-user-drag:
+        none;
+}
+
+
+.geoplay-destination-expanded-identity-content
+{
+    min-width:
+        0;
+
+    flex:
+        1;
+}
+
+
+.geoplay-destination-expanded-name
+{
+    color:
+        #ffffff;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        clamp(
+            17px,
+            4.3vw,
+            21px
+        );
+
+    font-weight:
+        800;
+
+    line-height:
+        1.08;
+
+    letter-spacing:
+        .15px;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+}
+
+
+.geoplay-destination-expanded-location
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        5px;
+
+    margin-top:
+        4px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            .80
+        );
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        10px;
+
+    font-weight:
+        500;
+
+    line-height:
+        1.2;
+}
+
+
+.geoplay-destination-location-icon
+{
+    flex:
+        0 0 auto;
+
+    color:
+        #b34cff;
+
+    font-size:
+        14px;
+
+    line-height:
+        1;
 
     filter:
-        brightness(
-            .96
+        drop-shadow(
+            0 0 4px
+            rgba(
+                179,
+                76,
+                255,
+                .45
+            )
         );
+}
+
+
+.geoplay-destination-expanded-distance
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        5px;
+
+    margin-top:
+        4px;
+
+    color:
+        #b34cff;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1;
+}
+
+
+.geoplay-destination-distance-icon
+{
+    color:
+        #b34cff;
+
+    font-size:
+        11px;
+
+    line-height:
+        1;
+}
+
+
+.geoplay-destination-distance-value
+{
+    color:
+        #b34cff;
+
+    letter-spacing:
+        .25px;
 }
 
 
@@ -1812,7 +2016,7 @@
         );
 
     margin-bottom:
-        14px;
+        15px;
 
     overflow:
         hidden;
@@ -1885,6 +2089,100 @@
 
 
 /* ==================================================
+   CAROUSEL EDGE CONTRAST
+   ================================================== */
+
+.geoplay-destination-carousel::before,
+.geoplay-destination-carousel::after
+{
+    content:
+        "";
+
+    position:
+        absolute;
+
+    top:
+        0;
+
+    bottom:
+        0;
+
+    width:
+        58px;
+
+    pointer-events:
+        none;
+
+    z-index:
+        2;
+}
+
+
+.geoplay-destination-carousel::before
+{
+    left:
+        0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(
+                0,
+                0,
+                0,
+                .36
+            ) 0%,
+
+            rgba(
+                0,
+                0,
+                0,
+                .16
+            ) 42%,
+
+            rgba(
+                0,
+                0,
+                0,
+                0
+            ) 100%
+        );
+}
+
+
+.geoplay-destination-carousel::after
+{
+    right:
+        0;
+
+    background:
+        linear-gradient(
+            270deg,
+            rgba(
+                0,
+                0,
+                0,
+                .36
+            ) 0%,
+
+            rgba(
+                0,
+                0,
+                0,
+                .16
+            ) 42%,
+
+            rgba(
+                0,
+                0,
+                0,
+                0
+            ) 100%
+        );
+}
+
+
+/* ==================================================
    CAROUSEL ARROWS
    ================================================== */
 
@@ -1904,33 +2202,123 @@
     z-index:
         3;
 
+    width:
+        28px;
+
+    height:
+        54px;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+    border:
+        0;
+
+    outline:
+        none;
+
+    border-radius:
+        0;
+
+    background:
+        transparent;
+
+    color:
+        #ffb52e;
+
     font-family:
-        'Poppins',
         Arial,
         sans-serif;
 
     font-size:
-        18px;
+        36px;
 
     font-weight:
-        700;
+        400;
 
     line-height:
         1;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    cursor:
+        pointer;
+
+    pointer-events:
+        auto;
+
+    text-shadow:
+        0 1px 3px
+        rgba(
+            0,
+            0,
+            0,
+            .95
+        ),
+
+        0 0 8px
+        rgba(
+            0,
+            0,
+            0,
+            .70
+        ),
+
+        0 0 8px
+        rgba(
+            255,
+            181,
+            46,
+            .38
+        );
+
+    -webkit-tap-highlight-color:
+        transparent;
+
+    transition:
+        transform .15s ease,
+        filter .15s ease;
 }
 
 
 .geoplay-destination-carousel-arrow-left
 {
     left:
-        9px;
+        7px;
 }
 
 
 .geoplay-destination-carousel-arrow-right
 {
     right:
-        9px;
+        7px;
+}
+
+
+.geoplay-destination-carousel-arrow:hover
+{
+    filter:
+        brightness(
+            1.18
+        );
+
+    transform:
+        translateY(
+            -50%
+        )
+        scale(
+            1.06
+        );
 }
 
 
@@ -1941,7 +2329,7 @@
             -50%
         )
         scale(
-            .90
+            .92
         );
 }
 
@@ -2052,23 +2440,20 @@
 
 
 /* ==================================================
-   MARKETING CONTENT
+   ABOUT SECTION
    ================================================== */
 
-.geoplay-destination-marketing
+.geoplay-destination-about
 {
     width:
         100%;
 
-    margin-top:
+    margin:
         0;
-
-    text-align:
-        left;
 }
 
 
-.geoplay-destination-tagline
+.geoplay-destination-section-title
 {
     color:
         #ffb52e;
@@ -2079,34 +2464,33 @@
         sans-serif;
 
     font-size:
-        clamp(
-            15px,
-            4vw,
-            19px
-        );
+        13px;
 
     font-weight:
         800;
 
     line-height:
-        1.2;
+        1.15;
 
     letter-spacing:
-        .1px;
+        .35px;
+
+    text-transform:
+        uppercase;
 }
 
 
-.geoplay-destination-marketing-copy
+.geoplay-destination-about-copy
 {
     margin-top:
-        4px;
+        5px;
 
     color:
         rgba(
             255,
             255,
             255,
-            .82
+            .80
         );
 
     font-family:
@@ -2115,22 +2499,18 @@
         sans-serif;
 
     font-size:
-        clamp(
-            10px,
-            2.7vw,
-            12px
-        );
+        10px;
 
     font-weight:
         500;
 
     line-height:
-        1.4;
+        1.45;
 }
 
 
 /* ==================================================
-   DIVIDER
+   EXPANDED DIVIDER
    ================================================== */
 
 .geoplay-destination-expanded-divider
@@ -2142,7 +2522,7 @@
         1px;
 
     margin:
-        14px 0 14px;
+        14px 0;
 
     background:
         linear-gradient(
@@ -2176,54 +2556,45 @@
 
 
 /* ==================================================
-   DISTANCE + ADDRESS
+   AVAILABLE GAMES
    ================================================== */
 
-.geoplay-destination-expanded-details
+.geoplay-destination-games
+{
+    width:
+        100%;
+}
+
+
+.geoplay-destination-games-header
 {
     display:
-        grid;
-
-    grid-template-columns:
-        minmax(
-            0,
-            1fr
-        )
-        minmax(
-            0,
-            1.35fr
-        );
-
-    column-gap:
-        12px;
+        flex;
 
     align-items:
-        start;
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
 
     width:
         100%;
 
     margin-bottom:
-        0;
+        9px;
 }
 
 
-.geoplay-destination-expanded-distance
+.geoplay-destination-games-view-all
 {
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        8px;
-
-    min-width:
-        0;
+    flex:
+        0 0 auto;
 
     color:
-        #ffffff;
+        #ffb52e;
 
     font-family:
         'Poppins',
@@ -2231,153 +2602,314 @@
         sans-serif;
 
     font-size:
-        clamp(
-            11px,
-            3vw,
-            14px
-        );
+        9px;
 
     font-weight:
-        700;
+        800;
 
     line-height:
-        1.35;
-}
-
-
-.geoplay-destination-distance-icon
-{
-    flex:
-        0 0 auto;
-
-    width:
-        26px;
-
-    height:
-        26px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    border-radius:
-        50%;
-
-    background:
-        rgba(
-            173,
-            78,
-            255,
-            .18
-        );
-
-    color:
-        #d6a8ff;
-
-    font-size:
-        14px;
-}
-
-
-.geoplay-destination-expanded-address
-{
-    display:
-        flex;
-
-    align-items:
-        flex-start;
-
-    gap:
-        8px;
-
-    min-width:
-        0;
-
-    color:
-        #ffffff;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    font-size:
-        clamp(
-            10px,
-            2.7vw,
-            12px
-        );
-
-    font-weight:
-        500;
-
-    line-height:
-        1.45;
-}
-
-
-.geoplay-destination-address-icon
-{
-    flex:
-        0 0 auto;
-
-    width:
-        26px;
-
-    height:
-        26px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    border-radius:
-        50%;
-
-    background:
-        rgba(
-            173,
-            78,
-            255,
-            .18
-        );
-
-    color:
-        #d6a8ff;
-
-    font-size:
-        14px;
-}
-
-
-.geoplay-destination-address-text
-{
-    flex:
         1;
 
+    letter-spacing:
+        .25px;
+
+    white-space:
+        nowrap;
+
+    cursor:
+        pointer;
+
+    transition:
+        filter .15s ease,
+        transform .15s ease;
+}
+
+
+.geoplay-destination-games-view-all:hover
+{
+    filter:
+        brightness(
+            1.15
+        );
+
+    transform:
+        translateX(
+            1px
+        );
+}
+
+
+.geoplay-destination-games-grid
+{
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap:
+        8px;
+
+    width:
+        100%;
+}
+
+
+.geoplay-destination-game-card
+{
+    position:
+        relative;
+
     min-width:
         0;
 
-    overflow-wrap:
-        break-word;
+    overflow:
+        hidden;
 
-    word-break:
-        normal;
+    border:
+        1px solid
+        rgba(
+            179,
+            76,
+            255,
+            .28
+        );
+
+    border-radius:
+        9px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(
+                35,
+                15,
+                53,
+                .95
+            ),
+            rgba(
+                12,
+                5,
+                25,
+                .98
+            )
+        );
+
+    box-shadow:
+        0 3px 10px
+        rgba(
+            0,
+            0,
+            0,
+            .25
+        );
+
+    transition:
+        transform .15s ease,
+        border-color .15s ease,
+        box-shadow .15s ease;
+}
+
+
+.geoplay-destination-game-card:hover
+{
+    transform:
+        translateY(
+            -1px
+        );
+
+    border-color:
+        rgba(
+            255,
+            181,
+            46,
+            .55
+        );
+
+    box-shadow:
+        0 4px 12px
+        rgba(
+            0,
+            0,
+            0,
+            .32
+        );
+}
+
+
+.geoplay-destination-game-image
+{
+    position:
+        relative;
+
+    width:
+        100%;
+
+    height:
+        76px;
+
+    overflow:
+        hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #251038,
+            #0b0712
+        );
+}
+
+
+/*
+   Temporary artwork treatments.
+
+   These classes intentionally do not point to
+   invented external image URLs. Once the actual
+   four game assets are selected, they can be
+   assigned here without changing the JS.
+*/
+
+.geoplay-destination-game-image-cosmic
+{
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            rgba(
+                179,
+                76,
+                255,
+                .48
+            ),
+            rgba(
+                43,
+                14,
+                67,
+                .92
+            ) 42%,
+            #09050f 100%
+        );
+}
+
+
+.geoplay-destination-game-image-dragon
+{
+    background:
+        radial-gradient(
+            circle at 58% 40%,
+            rgba(
+                255,
+                90,
+                88,
+                .50
+            ),
+            rgba(
+                76,
+                18,
+                28,
+                .90
+            ) 44%,
+            #0c0509 100%
+        );
+}
+
+
+.geoplay-destination-game-image-cyber
+{
+    background:
+        radial-gradient(
+            circle at 45% 38%,
+            rgba(
+                54,
+                176,
+                255,
+                .42
+            ),
+            rgba(
+                25,
+                32,
+                68,
+                .92
+            ) 45%,
+            #05070d 100%
+        );
+}
+
+
+.geoplay-destination-game-image-bandit
+{
+    background:
+        radial-gradient(
+            circle at 50% 40%,
+            rgba(
+                255,
+                181,
+                46,
+                .50
+            ),
+            rgba(
+                80,
+                43,
+                12,
+                .90
+            ) 45%,
+            #0d0703 100%
+        );
+}
+
+
+.geoplay-destination-game-name
+{
+    min-height:
+        28px;
+
+    box-sizing:
+        border-box;
+
+    padding:
+        7px 7px 6px;
+
+    color:
+        #ffffff;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1.15;
+
+    letter-spacing:
+        .15px;
+
+    text-align:
+        left;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
 }
 
 
 /* ==================================================
-   PLAY HERE
+   PLAY NOW
    ================================================== */
 
 .geoplay-destination-play
@@ -2459,6 +2991,9 @@
 
     justify-content:
         center;
+
+    gap:
+        7px;
 
     cursor:
         pointer;
@@ -2574,6 +3109,38 @@
 
     z-index:
         2;
+}
+
+
+.geoplay-destination-play-label
+{
+    color:
+        #2a1600;
+}
+
+
+.geoplay-destination-play-arrow
+{
+    color:
+        #7a4300;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size:
+        23px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1;
+
+    transform:
+        translateY(
+            -1px
+        );
 }
 
 
@@ -2887,10 +3454,6 @@
     }
 
 
-    /* ----------------------------------------------
-       MOBILE CLOSE BUTTON
-       ---------------------------------------------- */
-
     .geoplay-destination-card-close
     {
         top:
@@ -2906,7 +3469,7 @@
             30px;
 
         font-size:
-            17px;
+            27px;
 
         line-height:
             1;
@@ -3019,6 +3582,12 @@
         max-width:
             390px;
 
+        max-height:
+            calc(
+                100vh -
+                24px
+            );
+
         padding:
             21px 16px 20px;
 
@@ -3027,17 +3596,17 @@
     }
 
 
+    .geoplay-destination-expanded-header
+    {
+        margin-bottom:
+            10px;
+    }
+
+
     .geoplay-destination-expanded-title
     {
         font-size:
             20px;
-    }
-
-
-    .geoplay-destination-expanded-header
-    {
-        margin-bottom:
-            11px;
     }
 
 
@@ -3051,78 +3620,129 @@
     }
 
 
-    .geoplay-destination-carousel
+    .geoplay-destination-expanded-identity
     {
-        height:
-            175px;
+        gap:
+            10px;
 
         margin-bottom:
-            13px;
+            12px;
     }
 
 
-    .geoplay-destination-expanded-divider
+    .geoplay-destination-expanded-logo-wrap
     {
-        margin:
-            14px 0 13px;
+        width:
+            58px;
+
+        height:
+            58px;
+
+        border-radius:
+            11px;
     }
 
 
-    .geoplay-destination-expanded-details
+    .geoplay-destination-expanded-logo
     {
-        grid-template-columns:
-            minmax(
-                0,
-                0.9fr
-            )
-            minmax(
-                0,
-                1.3fr
-            );
+        border-radius:
+            10px;
+    }
 
-        column-gap:
+
+    .geoplay-destination-expanded-name
+    {
+        font-size:
+            17px;
+    }
+
+
+    .geoplay-destination-expanded-location
+    {
+        font-size:
             9px;
     }
 
 
     .geoplay-destination-expanded-distance
     {
-        gap:
-            6px;
-
         font-size:
-            10px;
+            8px;
     }
 
 
-    .geoplay-destination-expanded-address
+    .geoplay-destination-carousel
     {
-        gap:
-            6px;
-
-        font-size:
-            10px;
-    }
-
-
-    .geoplay-destination-distance-icon,
-    .geoplay-destination-address-icon
-    {
-        width:
-            24px;
-
         height:
-            24px;
+            175px;
 
-        font-size:
-            13px;
+        margin-bottom:
+            12px;
     }
 
 
-    .geoplay-destination-marketing-copy
+    .geoplay-destination-expanded-divider
     {
-        margin-top:
-            4px;
+        margin:
+            12px 0;
+    }
+
+
+    .geoplay-destination-section-title
+    {
+        font-size:
+            12px;
+    }
+
+
+    .geoplay-destination-about-copy
+    {
+        font-size:
+            9px;
+
+        line-height:
+            1.4;
+    }
+
+
+    .geoplay-destination-games-header
+    {
+        margin-bottom:
+            8px;
+    }
+
+
+    .geoplay-destination-games-view-all
+    {
+        font-size:
+            8px;
+    }
+
+
+    .geoplay-destination-games-grid
+    {
+        gap:
+            7px;
+    }
+
+
+    .geoplay-destination-game-image
+    {
+        height:
+            64px;
+    }
+
+
+    .geoplay-destination-game-name
+    {
+        min-height:
+            25px;
+
+        padding:
+            6px 6px 5px;
+
+        font-size:
+            7px;
     }
 
 
@@ -3132,13 +3752,20 @@
             44px;
 
         margin-top:
-            14px;
+            13px;
 
         border-radius:
             23px;
 
         font-size:
             12px;
+    }
+
+
+    .geoplay-destination-play-arrow
+    {
+        font-size:
+            21px;
     }
 
 
@@ -3214,7 +3841,7 @@
             30px;
 
         font-size:
-            17px;
+            27px;
 
         line-height:
             1;
@@ -3251,5 +3878,41 @@
 
         bottom:
             38px;
+    }
+
+
+    .geoplay-destination.expanded
+    {
+        width:
+            min(
+                78vw,
+                410px
+            );
+
+        max-width:
+            410px;
+
+        max-height:
+            calc(
+                100vh -
+                32px
+            );
+    }
+
+
+    .geoplay-destination-expanded-logo-wrap
+    {
+        width:
+            66px;
+
+        height:
+            66px;
+    }
+
+
+    .geoplay-destination-game-image
+    {
+        height:
+            78px;
     }
 }

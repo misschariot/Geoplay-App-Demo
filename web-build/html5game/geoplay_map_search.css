@@ -294,10 +294,14 @@
 /* ==================================================
    SEARCH CLOSE BUTTON
    ==================================================
-   Visual styling is provided by the shared
-   Geoplay icon-button system.
+   Clean action-control treatment matching
+   the Casino Info close button and carousel
+   arrows.
 
-   This file only controls positioning.
+   The shared map stylesheet provides the original
+   close-button styling. This local rule intentionally
+   overrides only the visual treatment for the
+   SEARCH popup close control.
    ================================================== */
 
 .geoplay-find-another-close
@@ -310,6 +314,121 @@
 
     top:
         14px;
+
+    width:
+        30px;
+
+    height:
+        30px;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+    border:
+        0;
+
+    outline:
+        none;
+
+    border-radius:
+        0;
+
+    background:
+        transparent;
+
+    color:
+        #ffffff;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size:
+        27px;
+
+    font-weight:
+        400;
+
+    line-height:
+        1;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    cursor:
+        pointer;
+
+    pointer-events:
+        auto;
+
+    box-shadow:
+        none;
+
+    text-shadow:
+        0 1px 3px
+        rgba(
+            0,
+            0,
+            0,
+            .95
+        ),
+
+        0 0 8px
+        rgba(
+            0,
+            0,
+            0,
+            .70
+        );
+
+    -webkit-tap-highlight-color:
+        transparent;
+
+    transition:
+        transform .15s ease,
+        filter .15s ease;
+}
+
+
+.geoplay-find-another-close::before
+{
+    display:
+        none;
+
+    content:
+        none;
+}
+
+
+.geoplay-find-another-close:hover
+{
+    filter:
+        brightness(
+            1.18
+        );
+
+    transform:
+        scale(
+            1.06
+        );
+}
+
+
+.geoplay-find-another-close:active
+{
+    transform:
+        scale(
+            .92
+        );
 }
 
 
@@ -1498,6 +1617,15 @@
 
         top:
             10px;
+
+        width:
+            30px;
+
+        height:
+            30px;
+
+        font-size:
+            27px;
     }
 
 
