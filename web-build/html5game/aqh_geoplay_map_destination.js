@@ -105,6 +105,67 @@ window.geoplayDestinationCarouselTouchStartY = null;
 
 
 // ==================================================
+// AVAILABLE GAMES
+// ==================================================
+//
+// These are the actual game assets hosted in
+// Cloudflare R2.
+//
+// Artwork contains no game titles.
+// Titles are rendered separately below each image.
+// ==================================================
+
+window.geoplayDestinationGames =
+[
+    {
+        name:
+            "Realmfall",
+
+        type:
+            "RPG",
+
+        image:
+            "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/game%201.png"
+    },
+
+    {
+        name:
+            "Gem Garden",
+
+        type:
+            "Match 3",
+
+        image:
+            "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/game%202.png"
+    },
+
+    {
+        name:
+            "Cosmic Clash",
+
+        type:
+            "Alien Shooter",
+
+        image:
+            "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/game%203.png"
+    },
+
+    {
+        name:
+            "Bloom Bingo",
+
+        type:
+            "Bingo",
+
+        image:
+            "https://pub-7bad344aee1845d9b50489f2add5b7f7.r2.dev/game%204.png"
+    }
+];
+
+window.geoplayDestinationGamesIndex = 0;
+
+
+// ==================================================
 // DESTINATION NAME
 // ==================================================
 
@@ -736,10 +797,6 @@ function geoplayMapUISetDestinationCollapsed(
     window.geoplayDestinationExpanded =
         false;
 
-    // IMPORTANT:
-    // The collapsed card HTML is rebuilt here, so the
-    // arrow button is also rebuilt. Reattach the arrow
-    // interaction every time the card is rebuilt.
     geoplayMapUIDelegateDestinationInteraction(
         card
     );
@@ -805,12 +862,8 @@ function geoplayMapUIAttachDestinationCardClose(
 // - Casino logo / name / location / distance
 // - Large image carousel
 // - ABOUT
-// - AVAILABLE GAMES
+// - AVAILABLE GAMES carousel
 // - PLAY NOW
-//
-// The visual styling for this structure will be
-// handled in geoplay_map_destination.css using the
-// SEARCH popup as the Geoplay visual reference.
 // ==================================================
 
 function geoplayMapUISetDestinationExpanded(
@@ -975,60 +1028,23 @@ function geoplayMapUISetDestinationExpanded(
                     "AVAILABLE GAMES" +
                 "</div>" +
 
-                "<span class='geoplay-destination-games-view-all'>" +
-                    "VIEW ALL" +
-                    " ›" +
-                "</span>" +
-
             "</div>" +
 
-            "<div class='geoplay-destination-games-grid'>" +
+            "<div class='geoplay-destination-games-grid'></div>" +
 
-                "<div class='geoplay-destination-game-card'>" +
+            "<button " +
+                "type='button' " +
+                "class='geoplay-destination-games-arrow geoplay-destination-games-arrow-left' " +
+                "aria-label='Previous games'>" +
+                "‹" +
+            "</button>" +
 
-                    "<div class='geoplay-destination-game-image geoplay-destination-game-image-cosmic'>" +
-                    "</div>" +
-
-                    "<div class='geoplay-destination-game-name'>" +
-                        "COSMIC CLASH" +
-                    "</div>" +
-
-                "</div>" +
-
-                "<div class='geoplay-destination-game-card'>" +
-
-                    "<div class='geoplay-destination-game-image geoplay-destination-game-image-dragon'>" +
-                    "</div>" +
-
-                    "<div class='geoplay-destination-game-name'>" +
-                        "DRAGON'S FURY" +
-                    "</div>" +
-
-                "</div>" +
-
-                "<div class='geoplay-destination-game-card'>" +
-
-                    "<div class='geoplay-destination-game-image geoplay-destination-game-image-cyber'>" +
-                    "</div>" +
-
-                    "<div class='geoplay-destination-game-name'>" +
-                        "CYBER CITY" +
-                    "</div>" +
-
-                "</div>" +
-
-                "<div class='geoplay-destination-game-card'>" +
-
-                    "<div class='geoplay-destination-game-image geoplay-destination-game-image-bandit'>" +
-                    "</div>" +
-
-                    "<div class='geoplay-destination-game-name'>" +
-                        "BANDIT'S GOLD" +
-                    "</div>" +
-
-                "</div>" +
-
-            "</div>" +
+            "<button " +
+                "type='button' " +
+                "class='geoplay-destination-games-arrow geoplay-destination-games-arrow-right' " +
+                "aria-label='Next games'>" +
+                "›" +
+            "</button>" +
 
         "</div>" +
 
@@ -1052,6 +1068,13 @@ function geoplayMapUISetDestinationExpanded(
     window.geoplayDestinationCarouselIndex =
         0;
 
+    window.geoplayDestinationGamesIndex =
+        0;
+
+    geoplayMapUIBuildAvailableGames(
+        card
+    );
+
     geoplayMapUIAttachDestinationCarousel(
         card
     );
@@ -1067,7 +1090,332 @@ function geoplayMapUISetDestinationExpanded(
 
 
 // ==================================================
-// CAROUSEL
+// BUILD AVAILABLE GAMES
+// ==================================================
+
+function geoplayMapUIBuildAvailableGames(
+    card
+)
+{
+    if (!card)
+    {
+        return;
+    }
+
+    var games =
+        window.geoplayDestinationGames ||
+        [];
+
+    var container =
+        card.querySelector(
+            ".geoplay-destination-games-grid"
+        );
+
+    if (!container)
+    {
+        return;
+    }
+
+    container.innerHTML =
+        "";
+
+    games.forEach(
+        function(
+            game,
+            index
+        )
+        {
+            var gameCard =
+                document.createElement(
+                    "div"
+                );
+
+            gameCard.className =
+                "geoplay-destination-game-card";
+
+            gameCard.setAttribute(
+                "data-game-index",
+                index
+            );
+
+            var imageWrap =
+                document.createElement(
+                    "div"
+                );
+
+            imageWrap.className =
+                "geoplay-destination-game-image";
+
+            var image =
+                document.createElement(
+                    "img"
+                );
+
+            image.src =
+                game.image;
+
+            image.alt =
+                game.name;
+
+            image.draggable =
+                false;
+
+            image.loading =
+                "eager";
+
+            imageWrap.appendChild(
+                image
+            );
+
+            var name =
+                document.createElement(
+                    "div"
+                );
+
+            name.className =
+                "geoplay-destination-game-name";
+
+            name.textContent =
+                game.name.toUpperCase();
+
+            gameCard.appendChild(
+                imageWrap
+            );
+
+            gameCard.appendChild(
+                name
+            );
+
+            container.appendChild(
+                gameCard
+            );
+        }
+    );
+
+    geoplayMapUIAttachAvailableGamesCarousel(
+        card
+    );
+
+    // Preload all four game assets.
+    games.forEach(
+        function(game)
+        {
+            var preload =
+                new Image();
+
+            preload.src =
+                game.image;
+        }
+    );
+}
+
+
+// ==================================================
+// AVAILABLE GAMES CAROUSEL
+// ==================================================
+
+function geoplayMapUIAttachAvailableGamesCarousel(
+    card
+)
+{
+    if (!card)
+    {
+        return;
+    }
+
+    var container =
+        card.querySelector(
+            ".geoplay-destination-games-grid"
+        );
+
+    var left =
+        card.querySelector(
+            ".geoplay-destination-games-arrow-left"
+        );
+
+    var right =
+        card.querySelector(
+            ".geoplay-destination-games-arrow-right"
+        );
+
+    if (!container)
+    {
+        return;
+    }
+
+    function scrollGames(
+        direction
+    )
+    {
+        var amount =
+            container.clientWidth *
+            0.82;
+
+        if (amount <= 0)
+        {
+            amount = 180;
+        }
+
+        container.scrollBy(
+        {
+            left:
+                amount *
+                direction,
+
+            behavior:
+                "smooth"
+        });
+    }
+
+    if (left)
+    {
+        left.addEventListener(
+            "click",
+            function(event)
+            {
+                event.preventDefault();
+                event.stopPropagation();
+
+                scrollGames(
+                    -1
+                );
+            }
+        );
+
+        left.addEventListener(
+            "touchend",
+            function(event)
+            {
+                event.preventDefault();
+                event.stopPropagation();
+
+                scrollGames(
+                    -1
+                );
+            },
+            {
+                passive: false
+            }
+        );
+    }
+
+    if (right)
+    {
+        right.addEventListener(
+            "click",
+            function(event)
+            {
+                event.preventDefault();
+                event.stopPropagation();
+
+                scrollGames(
+                    1
+                );
+            }
+        );
+
+        right.addEventListener(
+            "touchend",
+            function(event)
+            {
+                event.preventDefault();
+                event.stopPropagation();
+
+                scrollGames(
+                    1
+                );
+            },
+            {
+                passive: false
+            }
+        );
+    }
+
+    var touchStartX =
+        null;
+
+    var touchStartY =
+        null;
+
+    container.addEventListener(
+        "touchstart",
+        function(event)
+        {
+            if (
+                !event.touches ||
+                !event.touches.length
+            )
+            {
+                return;
+            }
+
+            touchStartX =
+                event.touches[0].clientX;
+
+            touchStartY =
+                event.touches[0].clientY;
+        },
+        {
+            passive: true
+        }
+    );
+
+    container.addEventListener(
+        "touchend",
+        function(event)
+        {
+            if (
+                touchStartX === null ||
+                touchStartY === null ||
+                !event.changedTouches ||
+                !event.changedTouches.length
+            )
+            {
+                return;
+            }
+
+            var deltaX =
+                event.changedTouches[0].clientX -
+                touchStartX;
+
+            var deltaY =
+                event.changedTouches[0].clientY -
+                touchStartY;
+
+            touchStartX =
+                null;
+
+            touchStartY =
+                null;
+
+            if (
+                Math.abs(deltaX) < 35 ||
+                Math.abs(deltaX) < Math.abs(deltaY)
+            )
+            {
+                return;
+            }
+
+            container.scrollBy(
+            {
+                left:
+                    deltaX < 0
+                        ? container.clientWidth * 0.82
+                        : -container.clientWidth * 0.82,
+
+                behavior:
+                    "smooth"
+            });
+        },
+        {
+            passive: true
+        }
+    );
+}
+
+
+// ==================================================
+// CASINO PHOTO CAROUSEL
 // ==================================================
 
 function geoplayMapUIDestinationNormalizeCarouselIndex(
@@ -1205,7 +1553,7 @@ function geoplayMapUIDestinationCarouselShow(
 
 
 // ==================================================
-// ATTACH CAROUSEL
+// ATTACH CASINO PHOTO CAROUSEL
 // ==================================================
 
 function geoplayMapUIAttachDestinationCarousel(
@@ -1376,6 +1724,12 @@ function geoplayMapUIAttachDestinationCarousel(
         );
     }
 
+    var touchStartX =
+        null;
+
+    var touchStartY =
+        null;
+
     card.addEventListener(
         "touchstart",
         function(event)
@@ -1388,10 +1742,10 @@ function geoplayMapUIAttachDestinationCarousel(
                 return;
             }
 
-            window.geoplayDestinationCarouselTouchStartX =
+            touchStartX =
                 event.touches[0].clientX;
 
-            window.geoplayDestinationCarouselTouchStartY =
+            touchStartY =
                 event.touches[0].clientY;
         },
         {
@@ -1404,10 +1758,8 @@ function geoplayMapUIAttachDestinationCarousel(
         function(event)
         {
             if (
-                window.geoplayDestinationCarouselTouchStartX ===
-                    null ||
-                window.geoplayDestinationCarouselTouchStartY ===
-                    null ||
+                touchStartX === null ||
+                touchStartY === null ||
                 !event.changedTouches ||
                 !event.changedTouches.length
             )
@@ -1417,16 +1769,16 @@ function geoplayMapUIAttachDestinationCarousel(
 
             var deltaX =
                 event.changedTouches[0].clientX -
-                window.geoplayDestinationCarouselTouchStartX;
+                touchStartX;
 
             var deltaY =
                 event.changedTouches[0].clientY -
-                window.geoplayDestinationCarouselTouchStartY;
+                touchStartY;
 
-            window.geoplayDestinationCarouselTouchStartX =
+            touchStartX =
                 null;
 
-            window.geoplayDestinationCarouselTouchStartY =
+            touchStartY =
                 null;
 
             if (
@@ -1578,17 +1930,6 @@ function geoplayMapUIExpandDestination()
         return 0;
     }
 
-    // --------------------------------------------------
-    // SAVE THE COLLAPSED CARD PRESENTATION
-    // --------------------------------------------------
-    //
-    // The expanded casino information view uses the
-    // exact same DOM element as the collapsed card.
-    //
-    // Save the current presentation BEFORE the shared
-    // modal system changes the card position.
-    // --------------------------------------------------
-
     window.geoplayDestinationSavedLeft =
         card.style.left;
 
@@ -1621,7 +1962,6 @@ function geoplayMapUIExpandDestination()
             "visible"
         );
 
-    // Build the expanded information view.
     geoplayMapUISetDestinationExpanded(
         card
     );
@@ -1685,24 +2025,9 @@ function geoplayMapUICollapseDestination()
             var destinationCard =
                 window.geoplayDestinationCard;
 
-            // --------------------------------------------------
-            // RESTORE THE NORMAL COLLAPSED CARD
-            // --------------------------------------------------
-
             geoplayMapUISetDestinationCollapsed(
                 destinationCard
             );
-
-            // --------------------------------------------------
-            // RESTORE EXACT POSITION
-            // --------------------------------------------------
-            //
-            // Do NOT calculate a new position here.
-            //
-            // The user closed the information popup, so the
-            // destination card should return to exactly where
-            // it was before the popup opened.
-            // --------------------------------------------------
 
             destinationCard.style.left =
                 window.geoplayDestinationSavedLeft;
@@ -1731,21 +2056,6 @@ function geoplayMapUICollapseDestination()
             destinationCard.style.zIndex =
                 geoplayDestinationSceneZIndex;
 
-            // --------------------------------------------------
-            // RESTORE VISIBILITY WITHOUT ANIMATION
-            // --------------------------------------------------
-            //
-            // IMPORTANT:
-            // geoplayMapUISetDestinationCollapsed() removes
-            // the "visible" class because it rebuilds the card.
-            //
-            // We add it back directly instead of calling
-            // geoplayMapUIShowDestinationCard().
-            //
-            // This prevents the casino card from appearing to
-            // disappear and then pop back into place.
-            // --------------------------------------------------
-
             if (
                 window.geoplayDestinationSavedWasVisible
             )
@@ -1760,10 +2070,6 @@ function geoplayMapUICollapseDestination()
                     "visible"
                 );
             }
-
-            // --------------------------------------------------
-            // CLEAR TEMPORARY SAVED PRESENTATION
-            // --------------------------------------------------
 
             window.geoplayDestinationSavedLeft =
                 "";
@@ -2069,10 +2375,6 @@ function geoplayMapUIShowDestination()
     window.geoplayDestinationFinalPresentation =
         true;
 
-    // IMPORTANT:
-    // The card is temporarily hidden while the camera
-    // moves. Clear those temporary inline styles here
-    // so the normal .visible CSS can reveal the card.
     card.style.visibility =
         "";
 
@@ -2266,29 +2568,99 @@ function geoplayMapUIPositionExpandedDestination(
     card.style.zIndex =
         geoplayDestinationModalZIndex;
 
+    // --------------------------------------------------
+    // CENTER CASINO INFO IN THE BROWSER VIEWPORT
+    // --------------------------------------------------
+
+    var viewportWidth =
+        window.innerWidth ||
+        document.documentElement.clientWidth ||
+        mapContainer.clientWidth;
+
+    var viewportHeight =
+        window.innerHeight ||
+        document.documentElement.clientHeight ||
+        mapContainer.clientHeight;
+
+    var viewportOffsetLeft =
+        0;
+
+    var viewportOffsetTop =
+        0;
+
+    if (window.visualViewport)
+    {
+        if (
+            typeof window.visualViewport.width ===
+                "number" &&
+            window.visualViewport.width > 0
+        )
+        {
+            viewportWidth =
+                window.visualViewport.width;
+        }
+
+        if (
+            typeof window.visualViewport.height ===
+                "number" &&
+            window.visualViewport.height > 0
+        )
+        {
+            viewportHeight =
+                window.visualViewport.height;
+        }
+
+        if (
+            typeof window.visualViewport.offsetLeft ===
+                "number"
+        )
+        {
+            viewportOffsetLeft =
+                window.visualViewport.offsetLeft;
+        }
+
+        if (
+            typeof window.visualViewport.offsetTop ===
+                "number"
+        )
+        {
+            viewportOffsetTop =
+                window.visualViewport.offsetTop;
+        }
+    }
+
     if (
-        typeof geoplayMapUICenterModal ===
-        "function"
+        viewportWidth <= 0 ||
+        viewportHeight <= 0
     )
     {
-        geoplayMapUICenterModal(
-            card
-        );
+        viewportWidth =
+            mapContainer.clientWidth;
 
-        return;
+        viewportHeight =
+            mapContainer.clientHeight;
+
+        viewportOffsetLeft =
+            0;
+
+        viewportOffsetTop =
+            0;
     }
 
     card.style.left =
         (
-            mapContainer.clientWidth /
-            2
+            viewportOffsetLeft +
+            viewportWidth / 2
         ) + "px";
 
     card.style.top =
         (
-            mapContainer.clientHeight /
-            2
+            viewportOffsetTop +
+            viewportHeight / 2
         ) + "px";
+
+    card.style.transform =
+        "translate(-50%,-50%)";
 }
 
 
@@ -2765,7 +3137,9 @@ function geoplayMapUIHideDestination()
     window.geoplayDestinationControlledTransition =
         false;
 
-    // Clear any saved expanded-card presentation.
+    window.geoplayDestinationGamesIndex =
+        0;
+
     window.geoplayDestinationSavedLeft =
         "";
 

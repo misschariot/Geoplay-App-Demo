@@ -1399,7 +1399,9 @@
    SHARED GEOPLAY ICON BUTTON
    ================================================== */
 
-.geoplay-destination-close
+.geoplay-destination-close,
+.geoplay-destination-chevron,
+.geoplay-find-another-close
 {
     position:
         relative;
@@ -1488,7 +1490,9 @@
 }
 
 
-.geoplay-destination-close:hover
+.geoplay-destination-close:hover,
+.geoplay-destination-chevron:hover,
+.geoplay-find-another-close:hover
 {
     filter:
         brightness(
@@ -1502,7 +1506,9 @@
 }
 
 
-.geoplay-destination-close:active
+.geoplay-destination-close:active,
+.geoplay-destination-chevron:active,
+.geoplay-find-another-close:active
 {
     transform:
         scale(
@@ -1511,219 +1517,11 @@
 }
 
 
-.geoplay-destination-chevron,
-.geoplay-find-another-close
-{
-    position:
-        relative;
-
-    flex:
-        0 0 auto;
-
-    width:
-        30px;
-
-    height:
-        30px;
-
-    padding:
-        0;
-
-    border:
-        1px solid
-        rgba(
-            255,
-            155,
-            24,
-            .55
-        );
-
-    border-radius:
-        50%;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(
-                42,
-                20,
-                61,
-                .96
-            ),
-            rgba(
-                20,
-                8,
-                35,
-                .98
-            )
-        );
-
-    color:
-        #ffffff;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    font-size:
-        17px;
-
-    font-weight:
-        700;
-
-    line-height:
-        1;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    cursor:
-        pointer;
-
-    pointer-events:
-        auto;
-
-    box-shadow:
-        0 0 8px
-        rgba(
-            173,
-            78,
-            255,
-            .20
-        ),
-
-        0 0 14px
-        rgba(
-            255,
-            155,
-            24,
-            .08
-        ),
-
-        inset 0 1px 0
-        rgba(
-            255,
-            255,
-            255,
-            .10
-        );
-
-    text-shadow:
-        0 0 7px
-        rgba(
-            255,
-            255,
-            255,
-            .28
-        );
-
-    -webkit-tap-highlight-color:
-        transparent;
-
-    transition:
-        transform .15s ease,
-        box-shadow .2s ease,
-        filter .2s ease;
-}
-
-
 .geoplay-destination-chevron::before,
 .geoplay-find-another-close::before
 {
-    content:
-        "";
-
-    position:
-        absolute;
-
-    left:
-        4px;
-
-    top:
-        3px;
-
-    width:
-        calc(
-            100% -
-            8px
-        );
-
-    height:
-        45%;
-
-    border-radius:
-        50%;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(
-                255,
-                255,
-                255,
-                .12
-            ),
-            rgba(
-                255,
-                255,
-                255,
-                0
-            )
-        );
-
-    pointer-events:
+    display:
         none;
-}
-
-
-.geoplay-destination-chevron:hover,
-.geoplay-find-another-close:hover
-{
-    filter:
-        brightness(
-            1.10
-        );
-
-    box-shadow:
-        0 0 10px
-        rgba(
-            179,
-            76,
-            255,
-            .34
-        ),
-
-        0 0 18px
-        rgba(
-            255,
-            155,
-            24,
-            .12
-        ),
-
-        inset 0 1px 0
-        rgba(
-            255,
-            255,
-            255,
-            .16
-        );
-}
-
-
-.geoplay-find-another-close:active
-{
-    transform:
-        scale(
-            .90
-        );
 }
 
 
@@ -1955,7 +1753,7 @@
         4px;
 
     color:
-        #b34cff;
+        #ffb52e;
 
     font-family:
         'Poppins',
@@ -1970,13 +1768,22 @@
 
     line-height:
         1;
+
+    text-shadow:
+        0 0 6px
+        rgba(
+            255,
+            181,
+            46,
+            .24
+        );
 }
 
 
 .geoplay-destination-distance-icon
 {
     color:
-        #b34cff;
+        #ffb52e;
 
     font-size:
         11px;
@@ -1989,7 +1796,7 @@
 .geoplay-destination-distance-value
 {
     color:
-        #b34cff;
+        #ffb52e;
 
     letter-spacing:
         .25px;
@@ -2340,102 +2147,8 @@
 
 .geoplay-destination-carousel-dots
 {
-    position:
-        absolute;
-
-    left:
-        50%;
-
-    bottom:
-        8px;
-
-    transform:
-        translateX(
-            -50%
-        );
-
     display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    gap:
-        5px;
-
-    z-index:
-        4;
-}
-
-
-.geoplay-destination-carousel-dot
-{
-    width:
-        6px;
-
-    height:
-        6px;
-
-    padding:
-        0;
-
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            .75
-        );
-
-    border-radius:
-        50%;
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            .35
-        );
-
-    cursor:
-        pointer;
-
-    -webkit-tap-highlight-color:
-        transparent;
-
-    transition:
-        transform .15s ease,
-        background .15s ease,
-        box-shadow .15s ease;
-}
-
-
-.geoplay-destination-carousel-dot.active
-{
-    transform:
-        scale(
-            1.35
-        );
-
-    background:
-        #ffb52e;
-
-    border-color:
-        #ffb52e;
-
-    box-shadow:
-        0 0 6px
-        rgba(
-            255,
-            181,
-            46,
-            .55
-        );
+        none;
 }
 
 
@@ -2561,6 +2274,9 @@
 
 .geoplay-destination-games
 {
+    position:
+        relative;
+
     width:
         100%;
 }
@@ -2574,97 +2290,97 @@
     align-items:
         center;
 
-    justify-content:
-        space-between;
-
-    gap:
-        10px;
-
     width:
         100%;
 
     margin-bottom:
-        9px;
+        10px;
 }
 
 
 .geoplay-destination-games-view-all
 {
-    flex:
-        0 0 auto;
-
-    color:
-        #ffb52e;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    font-size:
-        9px;
-
-    font-weight:
-        800;
-
-    line-height:
-        1;
-
-    letter-spacing:
-        .25px;
-
-    white-space:
-        nowrap;
-
-    cursor:
-        pointer;
-
-    transition:
-        filter .15s ease,
-        transform .15s ease;
+    display:
+        none;
 }
 
 
-.geoplay-destination-games-view-all:hover
-{
-    filter:
-        brightness(
-            1.15
-        );
-
-    transform:
-        translateX(
-            1px
-        );
-}
-
+/* ==================================================
+   GAMES HORIZONTAL CAROUSEL
+   ================================================== */
 
 .geoplay-destination-games-grid
 {
     display:
-        grid;
+        flex;
 
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(
-                0,
-                1fr
-            )
-        );
+    align-items:
+        stretch;
 
     gap:
-        8px;
+        9px;
 
     width:
         100%;
+
+    overflow-x:
+        auto;
+
+    overflow-y:
+        hidden;
+
+    padding:
+        1px 2px 5px;
+
+    box-sizing:
+        border-box;
+
+    scrollbar-width:
+        none;
+
+    scroll-behavior:
+        smooth;
+
+    overscroll-behavior-x:
+        contain;
+
+    -webkit-overflow-scrolling:
+        touch;
+
+    touch-action:
+        pan-x;
+
+    scroll-snap-type:
+        x
+        mandatory;
 }
 
+
+.geoplay-destination-games-grid::-webkit-scrollbar
+{
+    width:
+        0;
+
+    height:
+        0;
+}
+
+
+/* ==================================================
+   GAME CARD
+   ================================================== */
 
 .geoplay-destination-game-card
 {
     position:
         relative;
+
+    flex:
+        0 0
+        calc(
+            50% -
+            4.5px
+        );
 
     min-width:
         0;
@@ -2672,17 +2388,20 @@
     overflow:
         hidden;
 
+    box-sizing:
+        border-box;
+
     border:
         1px solid
         rgba(
-            179,
-            76,
             255,
-            .28
+            181,
+            46,
+            .48
         );
 
     border-radius:
-        9px;
+        11px;
 
     background:
         linear-gradient(
@@ -2691,13 +2410,13 @@
                 35,
                 15,
                 53,
-                .95
+                .96
             ),
             rgba(
                 12,
                 5,
                 25,
-                .98
+                .99
             )
         );
 
@@ -2707,8 +2426,25 @@
             0,
             0,
             0,
-            .25
+            .28
+        ),
+
+        0 0 8px
+        rgba(
+            255,
+            181,
+            46,
+            .08
         );
+
+    scroll-snap-align:
+        start;
+
+    cursor:
+        pointer;
+
+    -webkit-tap-highlight-color:
+        transparent;
 
     transition:
         transform .15s ease,
@@ -2729,19 +2465,40 @@
             255,
             181,
             46,
-            .55
+            .75
         );
 
     box-shadow:
-        0 4px 12px
+        0 5px 13px
         rgba(
             0,
             0,
             0,
             .32
+        ),
+
+        0 0 11px
+        rgba(
+            255,
+            181,
+            46,
+            .12
         );
 }
 
+
+.geoplay-destination-game-card:active
+{
+    transform:
+        scale(
+            .985
+        );
+}
+
+
+/* ==================================================
+   GAME IMAGE
+   ================================================== */
 
 .geoplay-destination-game-image
 {
@@ -2752,127 +2509,116 @@
         100%;
 
     height:
-        76px;
+        94px;
 
     overflow:
         hidden;
 
     background:
-        linear-gradient(
-            135deg,
-            #251038,
-            #0b0712
-        );
+        #09050f;
+}
+
+
+.geoplay-destination-game-image img
+{
+    display:
+        block;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+
+    object-position:
+        center;
+
+    -webkit-user-drag:
+        none;
 }
 
 
 /*
-   Temporary artwork treatments.
+   Legacy artwork treatment classes.
 
-   These classes intentionally do not point to
-   invented external image URLs. Once the actual
-   four game assets are selected, they can be
-   assigned here without changing the JS.
+   These remain harmless if older markup references
+   them, but actual game artwork now comes from the
+   real Cloudflare image assets.
 */
 
-.geoplay-destination-game-image-cosmic
-{
-    background:
-        radial-gradient(
-            circle at 50% 35%,
-            rgba(
-                179,
-                76,
-                255,
-                .48
-            ),
-            rgba(
-                43,
-                14,
-                67,
-                .92
-            ) 42%,
-            #09050f 100%
-        );
-}
-
-
-.geoplay-destination-game-image-dragon
-{
-    background:
-        radial-gradient(
-            circle at 58% 40%,
-            rgba(
-                255,
-                90,
-                88,
-                .50
-            ),
-            rgba(
-                76,
-                18,
-                28,
-                .90
-            ) 44%,
-            #0c0509 100%
-        );
-}
-
-
-.geoplay-destination-game-image-cyber
-{
-    background:
-        radial-gradient(
-            circle at 45% 38%,
-            rgba(
-                54,
-                176,
-                255,
-                .42
-            ),
-            rgba(
-                25,
-                32,
-                68,
-                .92
-            ) 45%,
-            #05070d 100%
-        );
-}
-
-
+.geoplay-destination-game-image-cosmic,
+.geoplay-destination-game-image-dragon,
+.geoplay-destination-game-image-cyber,
 .geoplay-destination-game-image-bandit
 {
     background:
-        radial-gradient(
-            circle at 50% 40%,
-            rgba(
-                255,
-                181,
-                46,
-                .50
-            ),
-            rgba(
-                80,
-                43,
-                12,
-                .90
-            ) 45%,
-            #0d0703 100%
-        );
+        #09050f;
 }
 
+
+/* ==================================================
+   GAME IMAGE EDGE
+   ================================================== */
+
+.geoplay-destination-game-image::after
+{
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    bottom:
+        0;
+
+    height:
+        35%;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(
+                0,
+                0,
+                0,
+                0
+            ),
+            rgba(
+                0,
+                0,
+                0,
+                .46
+            )
+        );
+
+    pointer-events:
+        none;
+}
+
+
+/* ==================================================
+   GAME NAME
+   ================================================== */
 
 .geoplay-destination-game-name
 {
     min-height:
-        28px;
+        34px;
 
     box-sizing:
         border-box;
 
     padding:
-        7px 7px 6px;
+        8px 8px 7px;
 
     color:
         #ffffff;
@@ -2883,7 +2629,7 @@
         sans-serif;
 
     font-size:
-        8px;
+        9px;
 
     font-weight:
         800;
@@ -2905,6 +2651,164 @@
 
     text-overflow:
         ellipsis;
+}
+
+
+/* ==================================================
+   AVAILABLE GAMES CAROUSEL ARROWS
+   READY FOR JS
+   ================================================== */
+
+.geoplay-destination-games-arrow
+{
+    position:
+        absolute;
+
+    top:
+        50%;
+
+    z-index:
+        5;
+
+    width:
+        28px;
+
+    height:
+        54px;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+    border:
+        0;
+
+    outline:
+        none;
+
+    border-radius:
+        0;
+
+    background:
+        transparent;
+
+    color:
+        #ffb52e;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size:
+        36px;
+
+    font-weight:
+        400;
+
+    line-height:
+        1;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    cursor:
+        pointer;
+
+    pointer-events:
+        auto;
+
+    text-shadow:
+        0 1px 3px
+        rgba(
+            0,
+            0,
+            0,
+            .95
+        ),
+
+        0 0 8px
+        rgba(
+            0,
+            0,
+            0,
+            .70
+        ),
+
+        0 0 8px
+        rgba(
+            255,
+            181,
+            46,
+            .38
+        );
+
+    -webkit-tap-highlight-color:
+        transparent;
+
+    transition:
+        transform .15s ease,
+        filter .15s ease;
+}
+
+
+.geoplay-destination-games-arrow-left
+{
+    left:
+        -3px;
+
+    transform:
+        translateY(
+            -50%
+        );
+}
+
+
+.geoplay-destination-games-arrow-right
+{
+    right:
+        -3px;
+
+    transform:
+        translateY(
+            -50%
+        );
+}
+
+
+.geoplay-destination-games-arrow:hover
+{
+    filter:
+        brightness(
+            1.18
+        );
+
+    transform:
+        translateY(
+            -50%
+        )
+        scale(
+            1.06
+        );
+}
+
+
+.geoplay-destination-games-arrow:active
+{
+    transform:
+        translateY(
+            -50%
+        )
+        scale(
+            .92
+        );
 }
 
 
@@ -2991,9 +2895,6 @@
 
     justify-content:
         center;
-
-    gap:
-        7px;
 
     cursor:
         pointer;
@@ -3119,28 +3020,16 @@
 }
 
 
+/*
+   The old arrow remains in the DOM for now so the
+   JS does not need to change in this CSS-only pass.
+   It is visually removed until the JS cleanup.
+*/
+
 .geoplay-destination-play-arrow
 {
-    color:
-        #7a4300;
-
-    font-family:
-        Arial,
-        sans-serif;
-
-    font-size:
-        23px;
-
-    font-weight:
-        700;
-
-    line-height:
-        1;
-
-    transform:
-        translateY(
-            -1px
-        );
+    display:
+        none;
 }
 
 
@@ -3712,37 +3601,74 @@
     }
 
 
-    .geoplay-destination-games-view-all
-    {
-        font-size:
-            8px;
-    }
-
-
     .geoplay-destination-games-grid
     {
         gap:
-            7px;
+            8px;
+
+        padding:
+            1px 2px 5px;
+    }
+
+
+    .geoplay-destination-game-card
+    {
+        flex:
+            0 0
+            calc(
+                50% -
+                4px
+            );
+
+        border-radius:
+            10px;
     }
 
 
     .geoplay-destination-game-image
     {
         height:
-            64px;
+            70px;
     }
 
 
     .geoplay-destination-game-name
     {
         min-height:
-            25px;
+            27px;
 
         padding:
-            6px 6px 5px;
+            6px 7px 5px;
 
         font-size:
             7px;
+    }
+
+
+    .geoplay-destination-games-arrow
+    {
+        width:
+            24px;
+
+        height:
+            46px;
+
+        font-size:
+            32px;
+    }
+
+
+    .geoplay-destination-games-arrow-left
+    {
+        left:
+            -2px;
+    }
+
+
+    .geoplay-destination-games-arrow-right
+    {
+        right:
+            -2px;
     }
 
 
@@ -3759,13 +3685,6 @@
 
         font-size:
             12px;
-    }
-
-
-    .geoplay-destination-play-arrow
-    {
-        font-size:
-            21px;
     }
 
 
@@ -3910,9 +3829,20 @@
     }
 
 
+    .geoplay-destination-game-card
+    {
+        flex:
+            0 0
+            calc(
+                50% -
+                4.5px
+            );
+    }
+
+
     .geoplay-destination-game-image
     {
         height:
-            78px;
+            86px;
     }
 }
